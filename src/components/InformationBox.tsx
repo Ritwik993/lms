@@ -2,7 +2,7 @@ import { FC } from "react";
 import { DashItem } from "../types/type";
 const InformationBox:FC<DashItem> = ({count,title,image}) => {
   return (
-    <div className="md:p-[24px] p-[18px]  bg-white flex md:gap-[24px] gap-[16px] items-center md:justify-center">
+    <div className="md:p-[24px] p-[18px]  bg-white flex md:gap-[24px] gap-[16px] items-center">
         <div>
             <img src={image} />
         </div>
