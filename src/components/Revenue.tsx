@@ -42,7 +42,7 @@ const Revenue = () => {
                 <option>Prev month</option>
             </select>
         </div>
-        <div className="graph w-full max-h-[465px] h-full">
+        <div className="graph w-full md:max-h-[465px] lg:h-full h-[465px]">
         <ResponsiveContainer width="99%" height="100%">
         <AreaChart
         data={data}
