@@ -1,0 +1,30 @@
+import MagnifyingGlass from "../assets/MagnifyingGlass.svg"
+import Bell from "../assets/Bell.svg";
+import person from "../assets/p.svg";
+
+const Navbar = () => {
+  return (
+    <div className="font-sans flex xl:px-[160px] md:px-[80px] px-[40px] justify-between items-center md:py-[24px] py-[16px] bg-white">
+        <div className="bg-white">
+            <p className="text-[#6E7485] font-medium md:text-[14px] text-[10px] md:leading-[20px] leading:[16px] font-sans">Good Morning</p>
+            <p className="font-semibold md:text-[20px] text-[14px] md:leading-[26px] leading-[20px] text-[#1D2026] font-sans">Dashboard</p>
+        </div>
+        <div className="flex md:gap-x-[16px] gap-x-[10px]">
+          <div className="hidden md:block searchbox bg-[#F5F7FA] w-[312px] ">
+            <div className="flex px-[18px] py-[12px]">
+            <img src={MagnifyingGlass} className="mr-[12px] w-[24px] h-[24px]"/>
+            <input type="text" placeholder="Search" className="w-full h-full border-none outline-none placeholder-[#8C94A3]  text-[16px] leading-[24px] bg-[#F5F7FA] "/>
+            </div>
+          </div>
+
+            <div className="md:p-[12px] p-[8px] sm:block hidden bg-[#F5F7FA]">
+              <img src={Bell} alt="bell_img"/>
+            </div>
+
+            <img src={person} className="w-[48px] h-[48px]"/>
+        </div>
+    </div>
+  )
+}
+
+export default Navbar;
