@@ -1,13 +1,22 @@
 import MagnifyingGlass from "../assets/MagnifyingGlass.svg"
 import Bell from "../assets/Bell.svg";
 import person from "../assets/p.svg";
+import { useLocation } from "react-router-dom";
 
 const Navbar = () => {
+  const location=useLocation();
+  const routeNames: Record<string, string>={
+    "/":"Home",
+    "/dashboard":"Dashboard",
+    "/createcourse":"Create a new course"
+  }
+
+  const currentPage = routeNames[location.pathname] || "UnknZown Page";
   return (
     <div className="font-sans flex xl:px-[160px] md:px-[80px] px-[40px] justify-between items-center md:py-[24px] py-[16px] bg-white">
         <div className="bg-white">
             <p className="text-[#6E7485] font-medium md:text-[14px] text-[10px] md:leading-[20px] leading:[16px] font-sans">Good Morning</p>
-            <p className="font-semibold md:text-[20px] text-[14px] md:leading-[26px] leading-[20px] text-[#1D2026] font-sans">Dashboard</p>
+            <p className="font-semibold md:text-[20px] text-[14px] md:leading-[26px] leading-[20px] text-[#1D2026] font-sans">{currentPage}</p>
         </div>
         <div className="flex md:gap-x-[16px] gap-x-[10px]">
           <div className="hidden md:block searchbox bg-[#F5F7FA] w-[312px] ">

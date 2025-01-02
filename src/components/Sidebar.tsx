@@ -9,7 +9,7 @@ import signOut from "../assets/SignOut.svg";
 
 const Sidebar = () => {
   return (
-    <div className="hidden lg:block flex-1 bg-[#1D2026]">
+    <div className="hidden xl:block flex-1  bg-[#1D2026]">
         <div className="header flex gap-[10px] px-[24px] py-[20px] border-b-[2px] border-opacity-30 border-b-[#6E7485] mb-[10px]">
             <img src={icon} alt="icon" className="object-contain"/>
             <p className="text-white font-semibold lg:text-[24px] text-[20px]">OS Code</p>
