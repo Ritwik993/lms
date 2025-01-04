@@ -8,10 +8,12 @@ const Navbar = () => {
   const routeNames: Record<string, string>={
     "/":"Home",
     "/dashboard":"Dashboard",
-    "/createcourse":"Create a new course"
+    "/createcourse":"Create a new course",
+    "/query":"Query",
+    "/scheduleClass":"Schedule Class",
   }
 
-  const currentPage = routeNames[location.pathname] || "UnknZown Page";
+  const currentPage = routeNames[location.pathname] || "Unkown Page";
   return (
     <div className="font-sans flex xl:px-[160px] md:px-[80px] px-[40px] justify-between items-center md:py-[24px] py-[16px] bg-white">
         <div className="bg-white">

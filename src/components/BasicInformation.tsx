@@ -10,15 +10,17 @@ const BasicInformation = () => {
             </div>
         </div>
         <form className="mt-[32px] flex flex-col gap-y-[24px]">
-          <div className="w-[90%] m-auto">
+          <div className="w-[90%] m-auto relative">
           <p className="text-[#1D2026] md:text-[14px] text-[12px] md:leading-[22px] leading-[20px]">Title</p>
           <input placeholder="Your course title" className=" placeholder:text-[#8C94A3] border-[#E9EAF0] w-full h-full border-[2px] py-[10px] px-[10px]  outline-none"/>
+          <span className="text-[#8C94A3] md:text-[14px] text-[12px] absolute right-[20px] bottom-[10px]">0/80</span>
           </div>
 
 
-          <div className="w-[90%] m-auto">
+          <div className="w-[90%] m-auto relative">
           <p className="text-[#1D2026] md:text-[14px] text-[12px] md:leading-[22px] leading-[20px]">Subtitle</p>
           <input placeholder="Your course subtitle" className=" placeholder:text-[#8C94A3] border-[#E9EAF0] w-full h-full border-[2px] py-[10px] px-[10px]  outline-none"/>
+          <span className="text-[#8C94A3] md:text-[14px] text-[12px] absolute right-[20px] bottom-[10px]">0/80</span>
           </div>
 
 

@@ -6,6 +6,8 @@ import Sidebar from './components/Sidebar'
 import CreateCourse from './pages/CreateCourse';
 import Dashboard from './pages/Dashboard'
 import { createBrowserRouter, Outlet, RouterProvider } from "react-router-dom";
+import Query from './pages/Query';
+import ScheduledClass from './pages/ScheduledClass';
 
 function App() {
 
@@ -31,6 +33,14 @@ function App() {
         {
           path:"/createCourse",
           element:<CreateCourse/>
+        },
+        {
+          path:"/query",
+          element:<Query/>
+        },
+        {
+          path:"/scheduleClass",
+          element:<ScheduledClass/>
         }
       ]
     }
