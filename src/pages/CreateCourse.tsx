@@ -1,38 +1,93 @@
-import Navbar from "../components/Navbar"
+import React, { useState } from "react";
+import Navbar from "../components/Navbar";
 import stack1 from "../assets/Stack1.svg";
 import playCircle from "../assets/PlayCircle.svg";
 import clipBoard from "../assets/ClipboardText.svg";
+import monitor from "../assets/MonitorPlay.svg";
 import BasicInformation from "../components/BasicInformation";
 import AdvanceInformation from "../components/AdvanceInformation";
+import Curriculm from "../components/Curriculm";
+import PublishCourse from "../components/PublishCourse";
 
-const CreateCourse = () => {
+type Tab = "basic" | "advance" | "curriculum" | "publish";
+
+const CreateCourse: React.FC = () => {
+  const [activeTab, setActiveTab] = useState<Tab>("basic");
+
+  const renderTabContent = () => {
+    switch (activeTab) {
+      case "basic":
+        return <BasicInformation />;
+      case "advance":
+        return <AdvanceInformation />;
+      case "curriculum":
+        return <Curriculm />;
+      case "publish":
+        return <PublishCourse />;
+      default:
+        return null;
+    }
+  };
+
   return (
-    <div className="flex-6 bg-[#F5F7FA]">
-      <Navbar/>
-      <div className="heading mx-auto w-[80%] mt-[40px] bg-white ">
-        <div className="flex border-b-[2px] border-opacity-10 border-b-[#6E7485]">
-        <div className="py-[20px] pl-[20px] xl:pr-[126px] pr-[40px]  flex items-center gap-x-[5px]">
-          <img src={stack1} className="object-contain"/>
-          <p className="text-[#1D2026] font-medium lg:text-[16px] text-[14px] md:leading-[22px] leading-[20px]">Basic Information</p>
-        </div>
+    <div className="flex-6 bg-[#F5F7FA] overflow-x-hidden">
+      <Navbar />
+      <div className="heading mx-auto lg:w-[80%] w-[90%] mt-[40px] bg-white">
+        <div className="overflow-x-auto overflow-y-hidden scrollbar-hidden px-[10px]">
+          <div className="flex justify-around border-b-[2px] border-opacity-10 border-b-[#6E7485] min-w-max gap-x-[10px]">
+            <div
+              className={`py-[20px] flex items-center gap-x-2 min-w-0 cursor-pointer ${
+                activeTab === "basic" ? "border-b-2 border-[#1D2026]" : ""
+              }`}
+              onClick={() => setActiveTab("basic")}
+            >
+              <img src={stack1} className="object-contain" />
+              <p className="text-[#1D2026] font-medium lg:text-[16px] text-[14px] md:leading-[22px] leading-[20px]">
+                Basic Information
+              </p>
+            </div>
 
-        <div className="py-[20px] pl-[20px] xl:pr-[126px] pr-[40px] flex items-center gap-x-[5px]">
-          <img src={clipBoard} className="object-contain"/>
-          <p className="text-[#1D2026] font-medium lg:text-[16px] text-[14px] md:leading-[22px] leading-[20px]">Advance Information</p>
-        </div>
+            <div
+              className={`py-[20px] flex items-center gap-x-2 min-w-0 cursor-pointer ${
+                activeTab === "advance" ? "border-b-2 border-[#1D2026]" : ""
+              }`}
+              onClick={() => setActiveTab("advance")}
+            >
+              <img src={clipBoard} className="object-contain" />
+              <p className="text-[#1D2026] font-medium lg:text-[16px] text-[14px] md:leading-[22px] leading-[20px]">
+                Advance Information
+              </p>
+            </div>
 
+            <div
+              className={`py-[20px] flex items-center gap-x-2 min-w-0 cursor-pointer ${
+                activeTab === "curriculum" ? "border-b-2 border-[#1D2026]" : ""
+              }`}
+              onClick={() => setActiveTab("curriculum")}
+            >
+              <img src={monitor} className="object-contain" />
+              <p className="text-[#1D2026] font-medium lg:text-[16px] text-[14px] md:leading-[22px] leading-[20px]">
+                Curriculum
+              </p>
+            </div>
 
-        <div className="py-[20px] pl-[20px] xl:pr-[126px] pr-[40px]  flex items-center gap-x-[5px]">
-          <img src={playCircle} className="object-contain"/>
-          <p className="text-[#1D2026] font-medium lg:text-[16px] text-[14px] md:leading-[22px] leading-[20px]">Publish a course</p>
+            <div
+              className={`py-[20px] flex items-center gap-x-2 min-w-0 cursor-pointer ${
+                activeTab === "publish" ? "border-b-2 border-[#1D2026]" : ""
+              }`}
+              onClick={() => setActiveTab("publish")}
+            >
+              <img src={playCircle} className="object-contain" />
+              <p className="text-[#1D2026] font-medium lg:text-[16px] text-[14px] md:leading-[22px] leading-[20px]">
+                Publish a Course
+              </p>
+            </div>
+          </div>
         </div>
-        </div>
-        {/* <BasicInformation/> */}
-        <AdvanceInformation/>
+        <div className="p-5">{renderTabContent()}</div>
       </div>
-
     </div>
-  )
-}
+  );
+};
 
-export default CreateCourse
+export default CreateCourse;

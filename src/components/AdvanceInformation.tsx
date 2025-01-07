@@ -7,15 +7,15 @@ import "react-quill/dist/quill.snow.css";
 const AdvanceInformation = () => {
   return (
     <div className="mb-[37px] min-h-[100vh]">
-      <div className="heading px-[40px] py-[24px] bg-white flex justify-between items-center border-b-[2px] border-opacity-10 border-b-[#6E7485]">
-        <p className="font-semibold text-[#1D2026] md:text-[24px] text-[20px] md:leading-[32px] leading-[28px]">
-          Advance Informations
+      <div className="heading lg:px-[40px] px-[10px] py-[24px] bg-white flex gap-x-[20px] justify-between items-center border-b-[2px] border-opacity-10 border-b-[#6E7485]">
+        <p className="font-semibold text-[#1D2026] lg:text-[24px] text-[18px] md:leading-[32px] leading-[26px] whitespace-nowrap">
+          Advance Information
         </p>
         <div>
-          <button className="bg-[#E8EEFF] text-[#3A6BE4] px-[24px]  md:text-[16px] text-[14px] font-semibold md:leading-[48px] leading-[40px]">
+          <button className="bg-[#E8EEFF] text-[#3A6BE4] lg:px-[24px] px-[10px]  lg:text-[16px] text-[14px] font-semibold lg:leading-[48px] leading-[40px]">
             Save
           </button>
-          <button className="text-[#3A6BE4] px-[24px] md:text-[16px] text-[14px] font-semibold md:leading-[48px] leading-[40px]">
+          <button className="text-[#3A6BE4] lg:px-[24px] px-[10px] lg:text-[16px] text-[14px] font-semibold lg:leading-[48px] leading-[40px]">
             Save and Preview
           </button>
         </div>
@@ -321,10 +321,14 @@ const AdvanceInformation = () => {
           </div>
         </div>
 
-        <div className="flex justify-between items-center mt-[32px] mb-[40px] w-[90%] mx-auto">
-          <button className="border-[#E9EAF0] bg-white md:text-[18px] text-[16px] text-[#6E7485] font-semibold md:leading-[56px] leading-[50px] outline-none border-[1px]  px-[32px]">Previous</button>
-          <button className="text-white md:text-[18px] text-[16px]  font-semibold md:leading-[56px] leading-[50px] outline-none border-[1px]  px-[32px] bg-[#3A6BE4]">Create Course and notify instructor</button>
-        </div>
+        <div className="flex justify-between items-center mt-[32px] pb-[40px] pt-[60px] w-[90%] m-auto">
+        <button className="text-[#6E7485] lg:text-[18px] text-[14px] font-semibold lg:leading-[56px] leading-[40px] px-[32px] border-[#E9EAF0] border-[1px]">
+          Previous
+        </button>
+        <button className="lg:text-[18px] text-[14px] font-semibold lg:leading-[56px] leading-[40px] text-white px-[32px] bg-[#3A6BE4]">
+          Save & next
+        </button>
+      </div>
       </form>
     </div>
   );

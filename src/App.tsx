@@ -1,13 +1,13 @@
 
 
 import './App.css'
-import Navbar from './components/Navbar'
 import Sidebar from './components/Sidebar'
 import CreateCourse from './pages/CreateCourse';
 import Dashboard from './pages/Dashboard'
 import { createBrowserRouter, Outlet, RouterProvider } from "react-router-dom";
 import Query from './pages/Query';
 import ScheduledClass from './pages/ScheduledClass';
+import Setting from './pages/Setting';
 
 function App() {
 
@@ -41,6 +41,10 @@ function App() {
         {
           path:"/scheduleClass",
           element:<ScheduledClass/>
+        },
+        {
+          path:"/setting",
+          element:<Setting/>
         }
       ]
     }
