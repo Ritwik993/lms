@@ -2,6 +2,8 @@ import menu from "../assets/Menu.svg";
 import plus from "../assets/Plus.svg";
 import pencil from "../assets/PencilLine.svg";
 import trash from "../assets/Trash.svg";
+import { Link } from "react-router-dom";
+import DownArrow from "../assets/CaretDown.svg";
 
 const Curriculm = () => {
   return (
@@ -59,9 +61,14 @@ const Curriculm = () => {
             </div>
 
             <div className="flex gap-2 lg:p-[24px] p-[12px]">
-              <select className="bg-[#3D70F5] text-[#3A6BE4] font-semibold lg:text-[14px] text-[12px] lg:leading-[40px] leading-[35px] lg:px-[16px] px-[10px] bg-opacity-25 py-[10px]">
-                <option>Contents</option>
-              </select>
+              <Link to="/contentcourse">
+                <div className="flex bg-[#3D70F5] bg-opacity-25 lg:px-[16px] px-[10px]  gap-x-[4px]">
+                <p className=" text-[#3A6BE4] font-semibold lg:text-[14px] text-[12px] lg:leading-[40px] leading-[35px]  ">
+                  Contents
+                </p>
+                  <img src={DownArrow} className="object-contain "/>
+                </div>
+              </Link>
               {/* <img src={plus} alt="" className="object-contain" /> */}
               <img src={pencil} alt="" className="object-contain" />
               <img src={trash} alt="" className="object-contain" />

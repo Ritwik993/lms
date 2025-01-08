@@ -8,6 +8,10 @@ import { createBrowserRouter, Outlet, RouterProvider } from "react-router-dom";
 import Query from './pages/Query';
 import ScheduledClass from './pages/ScheduledClass';
 import Setting from './pages/Setting';
+import ContentCourse from './pages/ContentCourse';
+import NotificationBox from './components/NotificationBox';
+import AttachFileModal from './components/AttachBanner';
+import NotificationBoxModal from './components/NotificationBox';
 
 function App() {
 
@@ -45,8 +49,17 @@ function App() {
         {
           path:"/setting",
           element:<Setting/>
-        }
+        },
+        {
+          path:"/contentcourse",
+          element:<ContentCourse/>
+        },
+        
       ]
+    },
+    {
+      path:"/notification",
+      element:<NotificationBoxModal/>
     }
   ])
 

@@ -11,7 +11,8 @@ const Navbar = () => {
     "/createcourse":"Create a new course",
     "/query":"Query",
     "/scheduleClass":"Schedule Class",
-    "/setting":"Setting"
+    "/setting":"Setting",
+    "/contentcourse":"Create a new course",
   }
 
   const currentPage = routeNames[location.pathname] || "Unkown Page";
