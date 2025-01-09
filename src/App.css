@@ -20,3 +20,5 @@ body {
 .scrollbar-hidden::-webkit-scrollbar {
   display: none; /* For Chrome, Safari, and Opera */
 }
+
+

@@ -12,6 +12,10 @@ import ContentCourse from './pages/ContentCourse';
 import NotificationBox from './components/NotificationBox';
 import AttachFileModal from './components/AttachBanner';
 import NotificationBoxModal from './components/NotificationBox';
+import TestSeries from './pages/TestSeries';
+import Form from './components/Form';
+import AddTest from './pages/AddTest';
+import TestForm from './components/TestForm';
 
 function App() {
 
@@ -54,12 +58,32 @@ function App() {
           path:"/contentcourse",
           element:<ContentCourse/>
         },
+        {
+          path:"/testseries",
+          element:<TestSeries/>
+        },
+        {
+          path:"/addTest",
+          element:<AddTest/>
+        },
+        {
+          path:"/testform",
+          element:<TestForm/>
+        },
+        {
+          path:"/createTest",
+          element:<AddTest/>
+        }
         
       ]
     },
     {
       path:"/notification",
       element:<NotificationBoxModal/>
+    },
+    {
+      path:"/form",
+      element:<Form/>
     }
   ])
 

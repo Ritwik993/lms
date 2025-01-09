@@ -13,6 +13,11 @@ const Navbar = () => {
     "/scheduleClass":"Schedule Class",
     "/setting":"Setting",
     "/contentcourse":"Create a new course",
+    "/testseries":"Add a New Test Series",
+    "/addTest":"Add a New Test Series",
+    "/testform":"Add a New Test Series",
+    "/createtest":"Add a New Test Series",
+
   }
 
   const currentPage = routeNames[location.pathname] || "Unkown Page";
