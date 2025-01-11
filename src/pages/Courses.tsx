@@ -1,0 +1,102 @@
+import Navbar from "../components/Navbar";
+import MagnifyingGlass from "../assets/MagnifyingGlass.svg";
+import VideoCard from "../components/VideoCard";
+
+const Courses = () => {
+  return (
+    <div className="flex-6 bg-[#F5F7FA] overflow-x-hidden pb-[100px]">
+      <Navbar />
+
+      <div className=" w-[96%] mx-auto  mt-[80px] pt-[20px]">
+        <div className="w-[96%] mx-auto flex gap-x-4 items-center">
+          <div className="searchbox  flex-2 ">
+            <p className="text-[#6E7485] text-[12px] leading-[16px]">Search:</p>
+
+            <div className="flex px-[18px] lg:py-[12px] bg-white py-[10px] border-[#E9EAF0] border mt-2">
+              <img
+                src={MagnifyingGlass}
+                className="mr-[12px] w-[24px] h-[24px]"
+              />
+              <input
+                type="text"
+                placeholder="Search in your courses..."
+                className="w-full h-full border-none outline-none placeholder-[#8C94A3]  lg:text-[16px] text-[12px] leading-[24px] bg-white  "
+              />
+            </div>
+          </div>
+          <div className="flex-1">
+            <p className="text-[#6E7485] text-[12px] leading-[16px]">
+              Sort by:
+            </p>
+            <select className="w-full lg:py-[14px] py-[12px] lg:text-[16px] text-[12px] outline-none mt-2 border-[#E9EAF0] border text-[#8C94A3]">
+              <option>Latest</option>
+              <option>Popular</option>
+            </select>
+          </div>
+
+          <div className="flex-1">
+            <p className="text-[#6E7485] text-[12px] leading-[16px]">Status:</p>
+            <select className="w-full lg:py-[14px] py-[12px] text-[#8C94A3] lg:text-[16px] text-[12px] outline-none mt-2 border-[#E9EAF0] border">
+              <option>All Courses</option>
+              <option>Web Development</option>
+              <option>Android Development</option>
+            </select>
+          </div>
+
+          <div className="flex-1">
+            <p className="text-[#6E7485] text-[12px] leading-[16px]">Rating:</p>
+            <select className="w-full lg:py-[14px] py-[12px] text-[#8C94A3] lg:text-[16px] text-[12px] outline-none mt-2 border-[#E9EAF0] border">
+              <option>4 stars & up</option>
+              <option>3 stars & up</option>
+              <option>2 stars & up</option>
+              <option>1 stars & up</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <div className=" w-[96%] mx-auto  mt-[80px] pt-[20px]">
+        <div className="w-[96%] mx-auto flex flex-wrap gap-x-[20px] gap-y-[10px] items-center justify-center">
+          <VideoCard />
+          <VideoCard />
+          <VideoCard />
+          <VideoCard />
+          <VideoCard />
+          <VideoCard />
+          <VideoCard />
+          <VideoCard />
+          <VideoCard />
+          <VideoCard />
+          <VideoCard />
+          <VideoCard />
+          <VideoCard />
+          <VideoCard />
+          <VideoCard />
+          <VideoCard />
+
+
+          
+        </div>
+
+        {/* <div className=" w-[96%] mx-auto flex justify-between mt-[40px] items-center">
+        <p className="text-[#92959A] lg:text-[16px] text-[14px] font-semibold">
+          Showing 1 of 30 enteries
+        </p>
+        <div>
+          <button className="lg:px-3 px-1 lg:text-[16px] text-[14px] py-1 bg-gray-200 rounded">
+            Previous
+          </button>
+          <button className="lg:px-3 px-1 lg:text-[16px] text-[14px] py-1 bg-gray-200 rounded ml-2">
+            Next
+          </button>
+        </div>
+      </div> */}
+        
+      </div>
+
+      
+    </div>
+  );
+};
+
+export default Courses;

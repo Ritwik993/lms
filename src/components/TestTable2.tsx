@@ -8,6 +8,7 @@ import {
   usePagination,
 } from "react-table";
 import { Link } from "react-router-dom";
+import ToggleSwitch from "./ToogleSwitch";
 
 interface Data {
   serialNo: number;
@@ -100,17 +101,18 @@ const columns: Column<Data>[] = [
   {
     Header: "Actions",
     Cell: () => (
-      <div className="flex space-x-2 items-center ">
+      <div className="flex space-x-4 items-center ">
         <Link to="/createtest">
           <button className="bg-blue-500 text-white px-3 py-1 rounded">
             View Tests
           </button>
         </Link>
-        <label className="inline-flex items-center">
+        <ToggleSwitch/>
+        {/* <label className="inline-flex items-center">
           <input type="checkbox" className="toggle-checkbox hidden" />
           <span className="toggle-label block w-10 h-6 bg-gray-300 rounded-full"></span>
           <span className="toggle-dot absolute w-4 h-4 bg-white rounded-full transform"></span>
-        </label>
+        </label> */}
       </div>
     ),
   },

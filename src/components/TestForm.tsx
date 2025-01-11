@@ -12,9 +12,9 @@ const TestForm = () => {
               <p className="text-[#7896E4] font-semibold lg:text-[14px] text-[12px]">
                 Basic
               </p>
-              <p className="text-[#7896E4] font-semibold lg:text-[14px] text-[12px]">
+              {/* <p className="text-[#7896E4] font-semibold lg:text-[14px] text-[12px]">
                 Advanced
-              </p>
+              </p> */}
             </div>
           </div>
 
@@ -56,9 +56,15 @@ const TestForm = () => {
               <p className="text-[#757678] font-semibold text-[13px] mt-2">
                 Test Instructions *
               </p>
-              <button className="text-[#C2E5FF] bg-[#17AAFF] font-semibold text-[12px] p-[10px] rounded-[5px] mt-2">
-                Add Terms
-              </button>
+              <label className="text-[#757678]  font-semibold text-[12px]  mt-2">
+                Add Description
+                <textarea
+              name="desc"
+              placeholder="Write the test description here..."
+              className="w-full p-2 border rounded-md"
+              rows={3}
+            ></textarea>
+              </label>
               <p className="text-[#757678] font-semibold text-[13px] mt-2">
                 Test Series *
               </p>

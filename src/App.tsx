@@ -16,6 +16,10 @@ import TestSeries from './pages/TestSeries';
 import Form from './components/Form';
 import AddTest from './pages/AddTest';
 import TestForm from './components/TestForm';
+import ToogleSwitch from './components/ToogleSwitch';
+import { DndProvider } from 'react-dnd';
+import { HTML5Backend } from 'react-dnd-html5-backend';
+import Courses from './pages/Courses';
 
 function App() {
 
@@ -73,8 +77,11 @@ function App() {
         {
           path:"/createTest",
           element:<AddTest/>
+        },
+        {
+          path:"/course",
+          element:<Courses/>
         }
-        
       ]
     },
     {
@@ -83,12 +90,14 @@ function App() {
     },
     {
       path:"/form",
-      element:<Form/>
+      element:<ToogleSwitch/>
     }
   ])
 
   return (
-    <RouterProvider router={appRouter}/>
+    <DndProvider backend={HTML5Backend}>
+      <RouterProvider router={appRouter}/>
+    </DndProvider>
   )
 }
 
