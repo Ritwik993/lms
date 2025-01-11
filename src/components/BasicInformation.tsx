@@ -1,4 +1,59 @@
+import { useState } from "react";
+
+type FormState = {
+  title: string;
+  subtitle: string;
+  category: string;
+  subcategory: string;
+  topic: string;
+  language: string;
+  subtitleLanguage?: string;
+  level: string;
+  duration: string;
+  instructor1: string;
+  instructor2: string;
+  instructor3?: string;
+  instructor4?: string;
+};
+
 const BasicInformation = () => {
+  const uniqueKeys = new Set();
+  const [count,setCount]=useState<Number>(0);
+  const [formState, setFormState] = useState<FormState>({
+    title: "",
+    subtitle: "",
+    category: "",
+    subcategory: "",
+    topic: "",
+    language: "",
+    subtitleLanguage: "",
+    level: "",
+    duration: "",
+    instructor1: "",
+    instructor2: "",
+    instructor3: "",
+    instructor4: "",
+  });
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    if(!uniqueKeys.has(name)){
+      uniqueKeys.add(name);
+      setCount(uniqueKeys.size);
+    }
+    if (value.length <= 80) {
+      setFormState((prev) => {
+        return { ...prev, [name]: value };
+      });
+    }
+  };
+
+  const handleSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const { name, value } = e.target;
+    setFormState((prev) => {
+      return { ...prev, [name]: value };
+    });
+  };
   return (
     <div className="mb-[37px]">
       <div className="heading lg:px-[40px] px-[10px] py-[24px] bg-white flex gap-x-[20px] justify-between items-center border-b-[2px] border-opacity-10 border-b-[#6E7485]">
@@ -22,9 +77,13 @@ const BasicInformation = () => {
           <input
             placeholder="Your course title"
             className=" placeholder:text-[#8C94A3] border-[#E9EAF0] w-full h-full border-[2px] py-[10px] px-[10px]  outline-none"
+            onChange={handleInputChange}
+            value={formState.title}
+            name="title"
+            type="text"
           />
           <span className="text-[#8C94A3] md:text-[14px] text-[12px] absolute right-[20px] bottom-[10px]">
-            0/80
+            {Number(formState.title.length)}/80
           </span>
         </div>
 
@@ -35,9 +94,13 @@ const BasicInformation = () => {
           <input
             placeholder="Your course subtitle"
             className=" placeholder:text-[#8C94A3] border-[#E9EAF0] w-full h-full border-[2px] py-[10px] px-[10px]  outline-none"
+            type="text"
+            name="subtitle"
+            value={formState.subtitle}
+            onChange={handleInputChange}
           />
           <span className="text-[#8C94A3] md:text-[14px] text-[12px] absolute right-[20px] bottom-[10px]">
-            0/80
+          {Number(formState.title.length)}/80
           </span>
         </div>
 
@@ -46,12 +109,17 @@ const BasicInformation = () => {
             <p className="text-[#1D2026] lg:text-[14px] text-[12px] md:leading-[22px] leading-[20px]">
               Course Category
             </p>
-            <select className="border-[#E9EAF0] text-[#8C94A3] w-full  border-[2px] py-[10px] px-[10px]  outline-none">
-              <option>Select</option>
-              <option>Course 1</option>
-              <option>Course 2</option>
-              <option>Course 3</option>
-              <option>Course 4</option>
+            <select
+              className="border-[#E9EAF0] text-[#8C94A3] w-full  border-[2px] py-[10px] px-[10px]  outline-none"
+              onChange={handleSelectChange}
+              name="category"
+              value={formState.category}
+            >
+              <option value="">Select</option>
+              <option value="course1">Course 1</option>
+              <option value="course2">Course 2</option>
+              <option value="course3">Course 3</option>
+              <option value="course4">Course 4</option>
             </select>
           </div>
 
@@ -59,12 +127,17 @@ const BasicInformation = () => {
             <p className="text-[#1D2026] lg:text-[14px] text-[12px] md:leading-[22px] leading-[20px]">
               Course Sub-category
             </p>
-            <select className="border-[#E9EAF0] text-[#8C94A3] w-full  border-[2px] py-[10px] px-[10px]  outline-none">
-              <option>Select</option>
-              <option>subCourse 1</option>
-              <option>subCourse 2</option>
-              <option>subCourse 3</option>
-              <option>subCourse 4</option>
+            <select
+              className="border-[#E9EAF0] text-[#8C94A3] w-full  border-[2px] py-[10px] px-[10px]  outline-none"
+              name="subcategory"
+              value={formState.subcategory}
+              onChange={handleSelectChange}
+            >
+              <option value="">Select</option>
+              <option value="subcourse1">subCourse 1</option>
+              <option value="subcourse2">subCourse 2</option>
+              <option value="subcourse3">subCourse 3</option>
+              <option value="subcourse4">subCourse 4</option>
             </select>
           </div>
         </div>
@@ -76,6 +149,10 @@ const BasicInformation = () => {
           <input
             placeholder="What is primarily taught in your course?"
             className=" placeholder:text-[#8C94A3] border-[#E9EAF0] w-full h-full border-[2px] py-[10px] px-[10px]  outline-none"
+            type="text"
+            name="topic"
+            value={formState.topic}
+            onChange={handleInputChange}
           />
         </div>
 
@@ -84,12 +161,17 @@ const BasicInformation = () => {
             <p className="text-[#1D2026] lg:text-[14px] text-[12px] md:leading-[22px] leading-[20px]">
               Course Language
             </p>
-            <select className="border-[#E9EAF0] text-[#8C94A3] w-full  border-[2px] py-[10px] px-[10px]  outline-none">
+            <select
+              className="border-[#E9EAF0] text-[#8C94A3] w-full  border-[2px] py-[10px] px-[10px]  outline-none"
+              value={formState.language}
+              name="language"
+              onChange={handleSelectChange}
+            >
               <option>Select</option>
-              <option>Language 1</option>
-              <option>Language 2</option>
-              <option>Language 3</option>
-              <option>Language 4</option>
+              <option value="language1">Language 1</option>
+              <option value="language2">Language 2</option>
+              <option value="language3">Language 3</option>
+              <option value="language4">Language 4</option>
             </select>
           </div>
 
@@ -97,12 +179,17 @@ const BasicInformation = () => {
             <p className="text-[#1D2026] lg:text-[14px] text-[12px] md:leading-[22px] leading-[20px]">
               Subtitle Language (Optional)
             </p>
-            <select className="border-[#E9EAF0] text-[#8C94A3] w-full  border-[2px] py-[10px] px-[10px]  outline-none">
-              <option>Select</option>
-              <option>Subtitle Language 1</option>
-              <option>Subtitle Language 2</option>
-              <option>Subtitle Language 3</option>
-              <option>Subtitle Language 4</option>
+            <select
+              className="border-[#E9EAF0] text-[#8C94A3] w-full  border-[2px] py-[10px] px-[10px]  outline-none"
+              name="subtitleLanguage"
+              value={formState.subtitleLanguage}
+              onChange={handleSelectChange}
+            >
+              <option value="">Select</option>
+              <option value="subtitleLanguage1">Subtitle Language 1</option>
+              <option value="subtitleLanguage2">Subtitle Language 2</option>
+              <option value="subtitleLanguage3">Subtitle Language 3</option>
+              <option value="subtitleLanguage4">Subtitle Language 4</option>
             </select>
           </div>
 
@@ -110,12 +197,17 @@ const BasicInformation = () => {
             <p className="text-[#1D2026] lg:text-[14px] text-[12px] md:leading-[22px] leading-[20px]">
               Course Level
             </p>
-            <select className="border-[#E9EAF0] text-[#8C94A3] w-full  border-[2px] py-[10px] px-[10px]  outline-none">
-              <option>Select</option>
-              <option>Course Level 1</option>
-              <option>Course Level 2</option>
-              <option>Course Level 3</option>
-              <option>Course Level 4</option>
+            <select
+              className="border-[#E9EAF0] text-[#8C94A3] w-full  border-[2px] py-[10px] px-[10px]  outline-none"
+              name="level"
+              value={formState.level}
+              onChange={handleSelectChange}
+            >
+              <option value="">Select</option>
+              <option value="level1">Course Level 1</option>
+              <option value="level2">Course Level 2</option>
+              <option value="level3">Course Level 3</option>
+              <option value="level4">Course Level 4</option>
             </select>
           </div>
 
@@ -123,12 +215,17 @@ const BasicInformation = () => {
             <p className="text-[#1D2026] lg:text-[14px] text-[12px] md:leading-[22px] leading-[20px]">
               Durations
             </p>
-            <select className="border-[#E9EAF0] text-[#8C94A3] w-full  border-[2px] py-[10px] px-[10px]  outline-none">
-              <option>Select </option>
-              <option>Durations 1 </option>
-              <option>Durations 2 </option>
-              <option>Durations 3</option>
-              <option>Durations 4 </option>
+            <select
+              className="border-[#E9EAF0] text-[#8C94A3] w-full  border-[2px] py-[10px] px-[10px]  outline-none"
+              name="duration"
+              value={formState.duration}
+              onChange={handleSelectChange}
+            >
+              <option value="">Select </option>
+              <option value="duration1">Durations 1 </option>
+              <option value="duration2">Durations 2 </option>
+              <option value="duration3">Durations 3</option>
+              <option value="duration4">Durations 4 </option>
             </select>
             <span className="text-[#8C94A3] md:text-[14px] text-[12px] absolute right-[20px] bottom-[10px]">
               Day
@@ -141,12 +238,17 @@ const BasicInformation = () => {
             <p className="text-[#1D2026] lg:text-[14px] text-[12px] md:leading-[22px] leading-[20px]">
               Allot Instructor
             </p>
-            <select className="border-[#E9EAF0] text-[#8C94A3] w-full  border-[2px] py-[10px] px-[10px]  outline-none">
-              <option>Select</option>
-              <option>Allot Instructor 1</option>
-              <option>Allot Instructor 2</option>
-              <option>Allot Instructor 3</option>
-              <option>Allot Instructor 4</option>
+            <select
+              className="border-[#E9EAF0] text-[#8C94A3] w-full  border-[2px] py-[10px] px-[10px]  outline-none"
+              name="instructor1"
+              value={formState.instructor1}
+              onChange={handleSelectChange}
+            >
+              <option value="">Select</option>
+              <option value="instructor1">Allot Instructor 1</option>
+              <option value="instructor2">Allot Instructor 2</option>
+              <option value="instructor3">Allot Instructor 3</option>
+              <option value="instructor4">Allot Instructor 4</option>
             </select>
           </div>
 
@@ -154,12 +256,17 @@ const BasicInformation = () => {
             <p className="text-[#1D2026] lg:text-[14px] text-[12px] md:leading-[22px] leading-[20px]">
               Allot Instructor
             </p>
-            <select className="border-[#E9EAF0] text-[#8C94A3] w-full  border-[2px] py-[10px] px-[10px]  outline-none">
-              <option>Select</option>
-              <option>Allot Instructor 1</option>
-              <option>Allot Instructor 2</option>
-              <option>Allot Instructor 3</option>
-              <option>Allot Instructor 4</option>
+            <select
+              className="border-[#E9EAF0] text-[#8C94A3] w-full  border-[2px] py-[10px] px-[10px]  outline-none"
+              name="instructor2"
+              value={formState.instructor2}
+              onChange={handleSelectChange}
+            >
+              <option value="">Select</option>
+              <option value="instructor1">Allot Instructor 1</option>
+              <option value="instructor2">Allot Instructor 2</option>
+              <option value="instructor3">Allot Instructor 3</option>
+              <option value="instructor4">Allot Instructor 4</option>
             </select>
           </div>
 
@@ -167,12 +274,17 @@ const BasicInformation = () => {
             <p className="text-[#1D2026] lg:text-[14px] text-[12px] md:leading-[22px] leading-[20px]">
               Allot Instructor (Optional)
             </p>
-            <select className="border-[#E9EAF0] text-[#8C94A3] w-full  border-[2px] py-[10px] px-[10px]  outline-none">
-              <option>Select</option>
-              <option>Allot Instructor 1</option>
-              <option>Allot Instructor 2</option>
-              <option>Allot Instructor 3</option>
-              <option>Allot Instructor 4</option>
+            <select
+              className="border-[#E9EAF0] text-[#8C94A3] w-full  border-[2px] py-[10px] px-[10px]  outline-none"
+              name="instructor3"
+              value={formState.instructor3}
+              onChange={handleSelectChange}
+            >
+              <option value="">Select</option>
+              <option value="instructor1">Allot Instructor 1</option>
+              <option value="instructor2">Allot Instructor 2</option>
+              <option value="instructor3">Allot Instructor 3</option>
+              <option value="instructor4">Allot Instructor 4</option>
             </select>
           </div>
 
@@ -180,12 +292,17 @@ const BasicInformation = () => {
             <p className="text-[#1D2026] lg:text-[14px] text-[12px] md:leading-[22px] leading-[20px]">
               Allot Instructor (Optional)
             </p>
-            <select className="border-[#E9EAF0] text-[#8C94A3] w-full  border-[2px] py-[10px] px-[10px]  outline-none">
-              <option>Select</option>
-              <option>Allot Instructor 1</option>
-              <option>Allot Instructor 2</option>
-              <option>Allot Instructor 3</option>
-              <option>Allot Instructor 4</option>
+            <select
+              className="border-[#E9EAF0] text-[#8C94A3] w-full  border-[2px] py-[10px] px-[10px]  outline-none"
+              name="instructor4"
+              value={formState.instructor4}
+              onChange={handleSelectChange}
+            >
+              <option value="">Select</option>
+              <option value="instructor1">Allot Instructor 1</option>
+              <option value="instructor2">Allot Instructor 2</option>
+              <option value="instructor3">Allot Instructor 3</option>
+              <option value="instructor4">Allot Instructor 4</option>
             </select>
           </div>
         </div>
