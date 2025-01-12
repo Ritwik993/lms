@@ -18,6 +18,7 @@ type FormState = {
   requirementDesc: string[];
 };
 
+const uniqueKeys=new Set();
 const AdvanceInformation: FC<AdvanceInformationProps> = ({ setCount1 }) => {
   const [formState, setFormState] = useState<FormState>({
     thumbnail: null,
@@ -40,6 +41,11 @@ const AdvanceInformation: FC<AdvanceInformationProps> = ({ setCount1 }) => {
     e: React.ChangeEvent<HTMLInputElement>,
     field: "thumbnail" | "trailer"
   ) => {
+
+    if(!uniqueKeys.has(field)){
+      uniqueKeys.add(field);
+      setCount1(uniqueKeys.size);
+    }
     if (e.target.files && e.target.files.length > 0) {
       const file = e.target.files[0];
       setFormState((prev) => ({ ...prev, [field]: file }));
@@ -47,10 +53,18 @@ const AdvanceInformation: FC<AdvanceInformationProps> = ({ setCount1 }) => {
   };
 
   const handleDescriptionChange = (value: string) => {
+    if(!uniqueKeys.has("description")){
+      uniqueKeys.add("description");
+      setCount1(uniqueKeys.size);
+    }
     setFormState((prev) => ({ ...prev, description: value }));
   };
 
   const handleTeachChange = (index: number, value: string) => {
+    if(!uniqueKeys.has("teachdescription")){
+      uniqueKeys.add("teachdescription");
+      setCount1(uniqueKeys.size);
+    }
     const updatedTeachDesc = [...formState.teachDesc];
     updatedTeachDesc[index] = value;
     if (value.length <= 120)
@@ -58,6 +72,10 @@ const AdvanceInformation: FC<AdvanceInformationProps> = ({ setCount1 }) => {
   };
 
   const handleAudienceChange = (index: number, value: string) => {
+    if(!uniqueKeys.has("audiencedescription")){
+      uniqueKeys.add("audiencedescription");
+      setCount1(uniqueKeys.size);
+    }
     const updatedAudienceDesc = [...formState.audienceDesc];
     updatedAudienceDesc[index] = value;
     if (value.length <= 120)
@@ -65,6 +83,10 @@ const AdvanceInformation: FC<AdvanceInformationProps> = ({ setCount1 }) => {
   };
 
   const handleRequirementChange=(index:number,value:string)=>{
+    if(!uniqueKeys.has("requirementdescription")){
+      uniqueKeys.add("requirementdescription");
+      setCount1(uniqueKeys.size);
+    }
     const updatedRequirementDesc=[...formState.requirementDesc];
     updatedRequirementDesc[index]=value;
     if(value.length <= 120){

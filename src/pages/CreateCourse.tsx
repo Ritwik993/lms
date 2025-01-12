@@ -65,7 +65,7 @@ const CreateCourse: React.FC = () => {
                 Advance Information
               </p>
               {activeTab === "advance" && <span className="text-[#23BD33] text-[12px] font-medium mr-1">
-                {count1}/13
+                {count1}/6
               </span>}
             </div>
 
