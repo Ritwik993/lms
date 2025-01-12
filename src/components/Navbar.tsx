@@ -18,6 +18,7 @@ const Navbar = () => {
     "/testform": "Add a New Test Series",
     "/createtest": "Add a New Test Series",
     "/course": "My Courses",
+    "/referal":"Configure Referal"
   };
 
   const currentPage = routeNames[location.pathname] || "Unkown Page";

@@ -13,17 +13,21 @@ type Tab = "basic" | "advance" | "curriculum" | "publish";
 
 const CreateCourse: React.FC = () => {
   const [activeTab, setActiveTab] = useState<Tab>("basic");
+  const [count, setCount] = useState(0);
+  const [count1, setCount1] = useState(0);
+  const [count2, setCount2] = useState(0);
+  const [count3, setCount3] = useState(0);
 
   const renderTabContent = () => {
     switch (activeTab) {
       case "basic":
-        return <BasicInformation />;
+        return <BasicInformation setCount={setCount} />;
       case "advance":
-        return <AdvanceInformation />;
+        return <AdvanceInformation setCount1={setCount1} />;
       case "curriculum":
-        return <Curriculm />;
+        return <Curriculm setCount2={setCount2} />;
       case "publish":
-        return <PublishCourse />;
+        return <PublishCourse setCount3={setCount3} />;
       default:
         return null;
     }
@@ -45,6 +49,9 @@ const CreateCourse: React.FC = () => {
               <p className="text-[#1D2026] font-medium lg:text-[16px] text-[14px] md:leading-[22px] leading-[20px]">
                 Basic Information
               </p>
+              {activeTab === "basic" && <span className="text-[#23BD33] text-[12px] font-medium mr-1">
+                {count}/13
+              </span>}
             </div>
 
             <div
@@ -57,6 +64,9 @@ const CreateCourse: React.FC = () => {
               <p className="text-[#1D2026] font-medium lg:text-[16px] text-[14px] md:leading-[22px] leading-[20px]">
                 Advance Information
               </p>
+              {activeTab === "advance" && <span className="text-[#23BD33] text-[12px] font-medium mr-1">
+                {count1}/13
+              </span>}
             </div>
 
             <div
@@ -69,6 +79,9 @@ const CreateCourse: React.FC = () => {
               <p className="text-[#1D2026] font-medium lg:text-[16px] text-[14px] md:leading-[22px] leading-[20px]">
                 Curriculum
               </p>
+              {activeTab === "curriculum" && <span className="text-[#23BD33] text-[12px] font-medium mr-1">
+                {count2}/13
+              </span>}
             </div>
 
             <div
@@ -81,6 +94,9 @@ const CreateCourse: React.FC = () => {
               <p className="text-[#1D2026] font-medium lg:text-[16px] text-[14px] md:leading-[22px] leading-[20px]">
                 Publish a Course
               </p>
+              {activeTab === "publish" && <span className="text-[#23BD33] text-[12px] font-medium mr-1">
+                {count3}/13
+              </span>}
             </div>
           </div>
         </div>

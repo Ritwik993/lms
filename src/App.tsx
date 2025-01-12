@@ -20,6 +20,7 @@ import ToogleSwitch from './components/ToogleSwitch';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import Courses from './pages/Courses';
+import Referal from './pages/Referal';
 
 function App() {
 
@@ -81,6 +82,10 @@ function App() {
         {
           path:"/course",
           element:<Courses/>
+        },
+        {
+          path:"/referal",
+          element:<Referal/>
         }
       ]
     },

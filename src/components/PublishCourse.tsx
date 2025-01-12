@@ -1,7 +1,12 @@
+import { FC } from "react";
 import MagnifyingGlass from "../assets/MagnifyingGlass.svg";
 import Instructor from "./Instructor";
 
-const PublishCourse = () => {
+type PublishCourseProps={
+  setCount3:React.Dispatch<React.SetStateAction<number>>
+}
+
+const PublishCourse:FC<PublishCourseProps> = ({setCount3}) => {
   return (
     <div className="mb-[37px]">
       <div className="heading lg:px-[40px] px-[10px] py-[24px] bg-white flex gap-x-[20px] justify-between items-center border-b-[2px] border-opacity-10 border-b-[#6E7485]">

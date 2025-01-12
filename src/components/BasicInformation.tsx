@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { FC, useState } from "react";
 
 type FormState = {
   title: string;
@@ -16,9 +16,12 @@ type FormState = {
   instructor4?: string;
 };
 
-const BasicInformation = () => {
-  const uniqueKeys = new Set();
-  const [count,setCount]=useState<Number>(0);
+type BasicInformationProps = {
+  setCount: React.Dispatch<React.SetStateAction<number>>; // Use lowercase `number` for TypeScript type
+};
+
+const uniqueKeys = new Set();
+const BasicInformation: FC<BasicInformationProps> = ({ setCount }) => {
   const [formState, setFormState] = useState<FormState>({
     title: "",
     subtitle: "",
@@ -37,7 +40,7 @@ const BasicInformation = () => {
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    if(!uniqueKeys.has(name)){
+    if (!uniqueKeys.has(name)) {
       uniqueKeys.add(name);
       setCount(uniqueKeys.size);
     }
@@ -50,6 +53,10 @@ const BasicInformation = () => {
 
   const handleSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const { name, value } = e.target;
+    if (!uniqueKeys.has(name)) {
+      uniqueKeys.add(name);
+      setCount(uniqueKeys.size);
+    }
     setFormState((prev) => {
       return { ...prev, [name]: value };
     });
@@ -100,7 +107,7 @@ const BasicInformation = () => {
             onChange={handleInputChange}
           />
           <span className="text-[#8C94A3] md:text-[14px] text-[12px] absolute right-[20px] bottom-[10px]">
-          {Number(formState.title.length)}/80
+            {Number(formState.title.length)}/80
           </span>
         </div>
 

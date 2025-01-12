@@ -3,8 +3,75 @@ import left_icon from "../assets/left.svg";
 import video from "../assets/Video.svg";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
+import { FC, useState } from "react";
 
-const AdvanceInformation = () => {
+type AdvanceInformationProps = {
+  setCount1: React.Dispatch<React.SetStateAction<number>>;
+};
+
+type FormState = {
+  thumbnail: File | null;
+  trailer: File | null;
+  description: string;
+  teachDesc: string[];
+  audienceDesc: string[];
+  requirementDesc: string[];
+};
+
+const AdvanceInformation: FC<AdvanceInformationProps> = ({ setCount1 }) => {
+  const [formState, setFormState] = useState<FormState>({
+    thumbnail: null,
+    trailer: null,
+    description: "",
+    teachDesc: [""],
+    audienceDesc: [""],
+    requirementDesc: [""],
+  });
+  // const [add1,setAdd1]=useState(0);
+  // const [add2,setAdd2]=useState(0);
+
+  // const handleFileChange=(e:React.ChangeEvent<HTMLInputElement>)=>{
+  //   if(e.target.files && e.target.files?.length>0){
+
+  //   }
+  // }
+
+  const handleFileChange = (
+    e: React.ChangeEvent<HTMLInputElement>,
+    field: "thumbnail" | "trailer"
+  ) => {
+    if (e.target.files && e.target.files.length > 0) {
+      const file = e.target.files[0];
+      setFormState((prev) => ({ ...prev, [field]: file }));
+    }
+  };
+
+  const handleDescriptionChange = (value: string) => {
+    setFormState((prev) => ({ ...prev, description: value }));
+  };
+
+  const handleTeachChange = (index: number, value: string) => {
+    const updatedTeachDesc = [...formState.teachDesc];
+    updatedTeachDesc[index] = value;
+    if (value.length <= 120)
+      setFormState((prev) => ({ ...prev, teachDesc: updatedTeachDesc }));
+  };
+
+  const handleAudienceChange = (index: number, value: string) => {
+    const updatedAudienceDesc = [...formState.audienceDesc];
+    updatedAudienceDesc[index] = value;
+    if (value.length <= 120)
+      setFormState((prev) => ({ ...prev, audienceDesc: updatedAudienceDesc }));
+  };
+
+  const handleRequirementChange=(index:number,value:string)=>{
+    const updatedRequirementDesc=[...formState.requirementDesc];
+    updatedRequirementDesc[index]=value;
+    if(value.length <= 120){
+      setFormState((prev)=>({...prev,requirementDesc:updatedRequirementDesc}))
+    }
+  }
+
   return (
     <div className="mb-[37px] min-h-[100vh]">
       <div className="heading lg:px-[40px] px-[10px] py-[24px] bg-white flex gap-x-[20px] justify-between items-center border-b-[2px] border-opacity-10 border-b-[#6E7485]">
@@ -30,7 +97,11 @@ const AdvanceInformation = () => {
             <div className="content flex flex-col lg:flex-row gap-4">
               <div className="image-container flex-1">
                 <img
-                  src={left_icon}
+                  src={
+                    formState.thumbnail
+                      ? URL.createObjectURL(formState.thumbnail)
+                      : left_icon
+                  }
                   alt="Course Thumbnail Placeholder"
                   className="object-cover w-full lg:h-48 h-40 "
                 />
@@ -47,14 +118,24 @@ const AdvanceInformation = () => {
                     .jpg, .jpeg, or .png
                   </span>
                 </p>
-                <button className="upload-btn bg-blue-100 text-blue-700 px-4 py-2 text-sm font-medium rounded flex items-center gap-2">
+                <input
+                  type="file"
+                  id="imgInput"
+                  onChange={(e) => handleFileChange(e, "thumbnail")}
+                  accept="image/*"
+                  className="hidden"
+                />
+                <label
+                  htmlFor="imgInput"
+                  className="upload-btn bg-blue-100 text-blue-700 px-4 py-2 text-sm font-medium rounded flex items-center gap-2"
+                >
                   <p>Upload Image</p>
                   <img
                     src={upload}
                     alt="Upload Icon"
                     className="w-5 h-5 object-contain"
                   />
-                </button>
+                </label>
               </div>
             </div>
           </div>
@@ -67,7 +148,11 @@ const AdvanceInformation = () => {
             <div className="content flex flex-col lg:flex-row gap-4">
               <div className="image-container flex-1">
                 <img
-                  src={video}
+                  src={
+                    formState.trailer
+                      ? URL.createObjectURL(formState.trailer)
+                      : video
+                  }
                   alt="Course Trailer Placeholder"
                   className="object-cover w-full lg:h-48 h-40"
                 />
@@ -78,14 +163,24 @@ const AdvanceInformation = () => {
                   to enroll in your course. We've seen that statistic go up to
                   10X for exceptionally awesome videos.
                 </p>
-                <button className="upload-btn bg-blue-100 text-blue-700 px-4 py-2 text-sm font-medium rounded flex items-center gap-2">
+                <input
+                  type="file"
+                  id="videoInput"
+                  className="hidden"
+                  accept="video/*"
+                  onChange={(e) => handleFileChange(e, "trailer")}
+                />
+                <label
+                  htmlFor="videoInput"
+                  className="upload-btn bg-blue-100 text-blue-700 px-4 py-2 text-sm font-medium rounded flex items-center gap-2"
+                >
                   <p>Upload Video</p>
                   <img
                     src={upload}
                     alt="Upload Icon"
                     className="w-5 h-5 object-contain"
                   />
-                </button>
+                </label>
               </div>
             </div>
           </div>
@@ -99,236 +194,140 @@ const AdvanceInformation = () => {
             theme="snow"
             className="w-full h-[200px]"
             placeholder="Enter your course descriptions"
+            value={formState.description}
+            onChange={handleDescriptionChange}
           />
         </div>
 
+        {/* Teaching Points Section */}
         <div className="flex justify-between items-center lg:mt-[32px] mt-[40px] md:mb-[10px] mb-[24px] w-[90%] mx-auto">
           <p className="font-medium lg:text-[18px] text-[16px] text-[#1D2026] lg:leading-[24px] leading-[20px]">
-            What you will teach in this course (4/8)
+            What you will teach in this course ({formState.teachDesc.length}/8)
           </p>
-          <p className="text-[#3A6BE4] lg:text-[14px] text-[12px] lg:leading-[20px] leading-[18px]">
+          <button
+            className="text-[#3A6BE4] lg:text-[14px] text-[12px] lg:leading-[20px] leading-[18px]"
+            onClick={(e) => {
+              e.preventDefault();
+              if (formState.teachDesc.length < 8) {
+                setFormState((prev) => ({
+                  ...prev,
+                  teachDesc: [...prev.teachDesc, ""],
+                }));
+              }
+            }}
+          >
             + Add New
-          </p>
+          </button>
         </div>
-
-        <div className="w-[90%] mx-auto mb-[24px]">
-          <p className="text-[#1D2026] md:text-[14px] text-[12px] mb-[5px]">
-            01
-          </p>
-          <div className="relative">
-            <input
-              type="text"
-              placeholder="What you will teach in this course..."
-              className="placeholder-text-[#8C94A3] border-[#E9EAF0] border w-full outline-none py-[5px] px-[5px]"
-            />
-            <p className="text-[#4E5566] md:text-[14px] text-[12px] md:leading-[22px] leading-[20px] absolute top-[5px] right-[10px]">
-              0/120
+        {formState.teachDesc.map((item, index) => (
+          <div key={index} className="w-[90%] mx-auto mb-[24px]">
+            <p className="text-[#1D2026] md:text-[14px] text-[12px] mb-[5px]">
+              {index + 1}
             </p>
+            <div className="relative">
+              <input
+                type="text"
+                placeholder="What you will teach in this course..."
+                className="placeholder-text-[#8C94A3] border-[#E9EAF0] border w-full outline-none py-[5px] pl-[5px] pr-[80px]"
+                value={item}
+                onChange={(e) => handleTeachChange(index, e.target.value)}
+              />
+              <p className="text-[#4E5566] md:text-[14px] text-[12px] md:leading-[22px] leading-[20px] absolute top-[5px] right-[10px]">
+                {item.length}/120
+              </p>
+            </div>
           </div>
-        </div>
-
-        <div className="w-[90%] mx-auto mb-[24px]">
-          <p className="text-[#1D2026] md:text-[14px] text-[12px] mb-[5px]">
-            02
-          </p>
-          <div className="relative">
-            <input
-              type="text"
-              placeholder="What you will teach in this course..."
-              className="placeholder-text-[#8C94A3] border-[#E9EAF0] border w-full outline-none py-[5px] px-[5px]"
-            />
-            <p className="text-[#4E5566] md:text-[14px] text-[12px] md:leading-[22px] leading-[20px] absolute top-[5px] right-[10px]">
-              0/120
-            </p>
-          </div>
-        </div>
-
-        <div className="w-[90%] mx-auto mb-[24px]">
-          <p className="text-[#1D2026] md:text-[14px] text-[12px] mb-[5px]">
-            03
-          </p>
-          <div className="relative">
-            <input
-              type="text"
-              placeholder="What you will teach in this course..."
-              className="placeholder-text-[#8C94A3] border-[#E9EAF0] border w-full outline-none py-[5px] px-[5px]"
-            />
-            <p className="text-[#4E5566] md:text-[14px] text-[12px] md:leading-[22px] leading-[20px] absolute top-[5px] right-[10px]">
-              0/120
-            </p>
-          </div>
-        </div>
-
-        <div className="w-[90%] mx-auto mb-[24px]">
-          <p className="text-[#1D2026] md:text-[14px] text-[12px] mb-[5px]">
-            04
-          </p>
-          <div className="relative">
-            <input
-              type="text"
-              placeholder="What you will teach in this course..."
-              className="placeholder-text-[#8C94A3] border-[#E9EAF0] border w-full outline-none py-[5px] px-[5px]"
-            />
-            <p className="text-[#4E5566] md:text-[14px] text-[12px] md:leading-[22px] leading-[20px] absolute top-[5px] right-[10px]">
-              0/120
-            </p>
-          </div>
-        </div>
+        ))}
 
         <div className="flex justify-between items-center lg:mt-[32px] mt-[40px] md:mb-[10px] mb-[24px] w-[90%] mx-auto">
           <p className="font-medium lg:text-[18px] text-[16px] text-[#1D2026] lg:leading-[24px] leading-[20px]">
-            Target Audience (4/8)
+            Target Audience ({formState.audienceDesc.length}/8)
           </p>
-          <p className="text-[#3A6BE4] lg:text-[14px] text-[12px] lg:leading-[20px] leading-[18px]">
+          <button
+            className="text-[#3A6BE4] lg:text-[14px] text-[12px] lg:leading-[20px] leading-[18px]"
+            onClick={(e) => {
+              e.preventDefault();
+              if (formState.audienceDesc.length < 8) {
+                setFormState((prev) => ({
+                  ...prev,
+                  audienceDesc: [...prev.audienceDesc, ""],
+                }));
+              }
+            }}
+          >
             + Add New
-          </p>
+          </button>
         </div>
 
-        <div className="w-[90%] mx-auto mb-[24px]">
-          <p className="text-[#1D2026] md:text-[14px] text-[12px] mb-[5px]">
-            01
-          </p>
-          <div className="relative">
-            <input
-              type="text"
-              placeholder="Who this course is for..."
-              className="placeholder-text-[#8C94A3] border-[#E9EAF0] border w-full outline-none py-[5px] px-[10px]"
-            />
-            <p className="text-[#4E5566] md:text-[14px] text-[12px] md:leading-[22px] leading-[20px] absolute top-[5px] right-[10px]">
-              0/120
+        {formState.audienceDesc.map((item, index) => (
+          <div key={index} className="w-[90%] mx-auto mb-[24px]">
+            <p className="text-[#1D2026] md:text-[14px] text-[12px] mb-[5px]">
+              {index + 1}
             </p>
+            <div className="relative">
+              <input
+                type="text"
+                placeholder="Who this course is for..."
+                className="placeholder-text-[#8C94A3] border-[#E9EAF0] border w-full outline-none py-[5px] pl-[10px] pr-[80px]"
+                value={item}
+                onChange={(e) => handleAudienceChange(index, e.target.value)}
+              />
+              <p className="text-[#4E5566] md:text-[14px] text-[12px] md:leading-[22px] leading-[20px] absolute top-[5px] right-[10px]">
+                {item.length}/120
+              </p>
+            </div>
           </div>
-        </div>
-
-        <div className="w-[90%] mx-auto mb-[24px]">
-          <p className="text-[#1D2026] md:text-[14px] text-[12px] mb-[5px]">
-            02
-          </p>
-          <div className="relative">
-            <input
-              type="text"
-              placeholder="Who this course is for..."
-              className="placeholder-text-[#8C94A3] border-[#E9EAF0] border w-full outline-none py-[5px] px-[10px]"
-            />
-            <p className="text-[#4E5566] md:text-[14px] text-[12px] md:leading-[22px] leading-[20px] absolute top-[5px] right-[10px]">
-              0/120
-            </p>
-          </div>
-        </div>
-
-        <div className="w-[90%] mx-auto mb-[24px]">
-          <p className="text-[#1D2026] md:text-[14px] text-[12px] mb-[5px]">
-            03
-          </p>
-          <div className="relative">
-            <input
-              type="text"
-              placeholder="Who this course is for..."
-              className="placeholder-text-[#8C94A3] border-[#E9EAF0] border w-full outline-none py-[5px] px-[10px]"
-            />
-            <p className="text-[#4E5566] md:text-[14px] text-[12px] md:leading-[22px] leading-[20px] absolute top-[5px] right-[10px]">
-              0/120
-            </p>
-          </div>
-        </div>
-
-        <div className="w-[90%] mx-auto mb-[24px]">
-          <p className="text-[#1D2026] md:text-[14px] text-[12px] mb-[5px]">
-            04
-          </p>
-          <div className="relative">
-            <input
-              type="text"
-              placeholder="Who this course is for..."
-              className="placeholder-text-[#8C94A3] border-[#E9EAF0] border w-full outline-none py-[5px] px-[10px]"
-            />
-            <p className="text-[#4E5566] md:text-[14px] text-[12px] md:leading-[22px] leading-[20px] absolute top-[5px] right-[10px]">
-              0/120
-            </p>
-          </div>
-        </div>
+        ))}
 
         <div className="flex justify-between items-center lg:mt-[32px] mt-[40px] md:mb-[10px] mb-[24px] w-[90%] mx-auto">
           <p className="font-medium lg:text-[18px] text-[16px] text-[#1D2026] lg:leading-[24px] leading-[20px]">
-            Course requirements (4/8)
+            Course requirements ({formState.requirementDesc.length}/8)
           </p>
-          <p className="text-[#3A6BE4] lg:text-[14px] text-[12px] lg:leading-[20px] leading-[18px]">
+          <button
+            className="text-[#3A6BE4] lg:text-[14px] text-[12px] lg:leading-[20px] leading-[18px]"
+            onClick={(e) => {
+              e.preventDefault();
+              if (formState.requirementDesc.length < 8) {
+                setFormState((prev) => ({
+                  ...prev,
+                  requirementDesc: [...prev.requirementDesc, ""],
+                }));
+              }
+            }}
+          >
             + Add New
-          </p>
+          </button>
         </div>
 
-        <div className="w-[90%] mx-auto mb-[24px]">
-          <p className="text-[#1D2026] md:text-[14px] text-[12px] mb-[5px]">
-            01
-          </p>
-          <div className="relative">
-            <input
-              type="text"
-              placeholder="What is you course requirements..."
-              className="placeholder-text-[#8C94A3] border-[#E9EAF0] border w-full outline-none py-[5px] px-[10px]"
-            />
-            <p className="text-[#4E5566] md:text-[14px] text-[12px] md:leading-[22px] leading-[20px] absolute top-[5px] right-[10px]">
-              0/120
+        {formState.requirementDesc.map((desc, index) => (
+          <div className="w-[90%] mx-auto mb-[24px]">
+            <p className="text-[#1D2026] md:text-[14px] text-[12px] mb-[5px]">
+              {index+1}
             </p>
+            <div className="relative">
+              <input
+                type="text"
+                placeholder="What is you course requirements..."
+                value={desc}
+                className="placeholder-text-[#8C94A3] border-[#E9EAF0] border w-full outline-none py-[5px] pl-[10px] pr-[80px]"
+                onChange={(e)=>handleRequirementChange(index,e.target.value)}
+              />
+              <p className="text-[#4E5566] md:text-[14px] text-[12px] md:leading-[22px] leading-[20px] absolute top-[5px] right-[10px]">
+                {desc.length}/120
+              </p>
+            </div>
           </div>
-        </div>
+        ))}
 
-        <div className="w-[90%] mx-auto mb-[24px]">
-          <p className="text-[#1D2026] md:text-[14px] text-[12px] mb-[5px]">
-            02
-          </p>
-          <div className="relative">
-            <input
-              type="text"
-              placeholder="What is you course requirements..."
-              className="placeholder-text-[#8C94A3] border-[#E9EAF0] border w-full outline-none py-[5px] px-[10px]"
-            />
-            <p className="text-[#4E5566] md:text-[14px] text-[12px] md:leading-[22px] leading-[20px] absolute top-[5px] right-[10px]">
-              0/120
-            </p>
-          </div>
-        </div>
-
-        <div className="w-[90%] mx-auto mb-[24px]">
-          <p className="text-[#1D2026] md:text-[14px] text-[12px] mb-[5px]">
-            03
-          </p>
-          <div className="relative">
-            <input
-              type="text"
-              placeholder="What is you course requirements..."
-              className="placeholder-text-[#8C94A3] border-[#E9EAF0] border w-full outline-none py-[5px] px-[10px]"
-            />
-            <p className="text-[#4E5566] md:text-[14px] text-[12px] md:leading-[22px] leading-[20px] absolute top-[5px] right-[10px]">
-              0/120
-            </p>
-          </div>
-        </div>
-
-        <div className="w-[90%] mx-auto mb-[24px]">
-          <p className="text-[#1D2026] md:text-[14px] text-[12px] mb-[5px]">
-            04
-          </p>
-          <div className="relative">
-            <input
-              type="text"
-              placeholder="What is you course requirements..."
-              className="placeholder-text-[#8C94A3] border-[#E9EAF0] border w-full outline-none py-[5px] px-[10px]"
-            />
-            <p className="text-[#4E5566] md:text-[14px] text-[12px] md:leading-[22px] leading-[20px] absolute top-[5px] right-[10px]">
-              0/120
-            </p>
-          </div>
-        </div>
 
         <div className="flex justify-between items-center mt-[32px] pb-[40px] pt-[60px] w-[90%] m-auto">
-        <button className="text-[#6E7485] lg:text-[18px] text-[14px] font-semibold lg:leading-[56px] leading-[40px] px-[32px] border-[#E9EAF0] border-[1px]">
-          Previous
-        </button>
-        <button className="lg:text-[18px] text-[14px] font-semibold lg:leading-[56px] leading-[40px] text-white px-[32px] bg-[#3A6BE4]">
-          Save & next
-        </button>
-      </div>
+          <button className="text-[#6E7485] lg:text-[18px] text-[14px] font-semibold lg:leading-[56px] leading-[40px] px-[32px] border-[#E9EAF0] border-[1px]">
+            Previous
+          </button>
+          <button className="lg:text-[18px] text-[14px] font-semibold lg:leading-[56px] leading-[40px] text-white px-[32px] bg-[#3A6BE4]">
+            Save & next
+          </button>
+        </div>
       </form>
     </div>
   );

@@ -4,8 +4,13 @@ import pencil from "../assets/PencilLine.svg";
 import trash from "../assets/Trash.svg";
 import { Link } from "react-router-dom";
 import DownArrow from "../assets/CaretDown.svg";
+import { FC } from "react";
 
-const Curriculm = () => {
+type CurriculumProps={
+  setCount2:React.Dispatch<React.SetStateAction<number>>
+}
+
+const Curriculm:FC<CurriculumProps> = ({setCount2}) => {
   return (
     <div className="mb-[37px]">
       <div className="heading lg:px-[40px] px-[10px] py-[24px] bg-white flex gap-x-[20px] justify-between items-center border-b-[2px] border-opacity-10 border-b-[#6E7485]">
