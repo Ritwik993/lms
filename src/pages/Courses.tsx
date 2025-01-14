@@ -4,7 +4,7 @@ import VideoCard from "../components/VideoCard";
 
 const Courses = () => {
   return (
-    <div className="flex-6 bg-[#F5F7FA] overflow-x-hidden pb-[100px]">
+    <div className="flex-1 lg:ml-[250px] bg-[#F5F7FA] overflow-x-hidden pb-[100px]">
       <Navbar />
 
       <div className=" w-[96%] mx-auto  mt-[80px] pt-[20px]">

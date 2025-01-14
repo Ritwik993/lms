@@ -16,7 +16,7 @@ import { Link } from "react-router-dom";
 const Sidebar = () => {
   const [active, setActive] = useState(false);
   return (
-    <div className="hidden xl:block flex-1  bg-[#1D2026] min-h-[100vh]">
+    <div className="hidden lg:block  bg-[#1D2026] fixed top-0 bottom-0 w-[250px]  ">
       <div className="header flex gap-[10px] px-[24px] py-[20px] border-b-[2px] border-opacity-30 border-b-[#6E7485] mb-[10px]">
         <img src={icon} alt="icon" className="object-contain" />
         <p className="text-white font-semibold lg:text-[24px] text-[20px]">

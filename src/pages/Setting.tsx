@@ -100,7 +100,7 @@ const Setting = () => {
   };
 
   return (
-    <div className="flex-6 bg-[#F5F7FA]">
+    <div className="flex-1 lg:ml-[250px] bg-[#F5F7FA]">
       <Navbar />
       <div className="flex justify-center pt-[40px] items-center w-[90%] mx-auto bg-gray-100">
         <form

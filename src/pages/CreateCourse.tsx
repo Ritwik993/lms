@@ -21,20 +21,20 @@ const CreateCourse: React.FC = () => {
   const renderTabContent = () => {
     switch (activeTab) {
       case "basic":
-        return <BasicInformation setCount={setCount} />;
+        return <BasicInformation setCount={setCount} setActiveTab={setActiveTab}/>;
       case "advance":
-        return <AdvanceInformation setCount1={setCount1} />;
+        return <AdvanceInformation setCount1={setCount1} setActiveTab={setActiveTab}/>;
       case "curriculum":
-        return <Curriculm setCount2={setCount2} />;
+        return <Curriculm setCount2={setCount2} setActiveTab={setActiveTab}/>;
       case "publish":
-        return <PublishCourse setCount3={setCount3} />;
+        return <PublishCourse setCount3={setCount3} setActiveTab={setActiveTab} />;
       default:
         return null;
     }
   };
 
   return (
-    <div className="flex-6 bg-[#F5F7FA] overflow-x-hidden">
+    <div className=" bg-[#F5F7FA] flex-1 lg:ml-[250px] overflow-x-hidden">
       <Navbar />
       <div className="heading mx-auto lg:w-[80%] w-[90%] mt-[40px] bg-white">
         <div className="overflow-x-auto overflow-y-hidden scrollbar-hidden px-[10px]">

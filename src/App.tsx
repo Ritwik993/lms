@@ -26,8 +26,8 @@ function App() {
 
   const AppLayout=()=>{
     return(<>
-      {/* <Navbar/> */}
       <div className='max-w-[1600px] mx-auto flex '>
+      {/* <Navbar/> */}
         <Sidebar/>
         <Outlet/>
     </div>

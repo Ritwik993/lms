@@ -2,12 +2,15 @@ import menu from "../assets/Menu.svg";
 import plus from "../assets/Plus.svg";
 import pencil from "../assets/PencilLine.svg";
 import trash from "../assets/Trash.svg";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import DownArrow from "../assets/CaretDown.svg";
-import { FC, useState } from "react";
+import { FC, useEffect, useState } from "react";
+
+type Tab = "basic" | "advance" | "curriculum" | "publish";
 
 type CurriculumProps = {
   setCount2: React.Dispatch<React.SetStateAction<number>>;
+  setActiveTab:React.Dispatch<React.SetStateAction<Tab>>;
 };
 
 // const sectionData = [
@@ -93,9 +96,15 @@ type CurriculumProps = {
 
 
     
-const Curriculm: FC<CurriculumProps> = ({ setCount2 }) => {
+const Curriculm: FC<CurriculumProps> = ({ setCount2,setActiveTab }) => {
   const [lectureCount, setLectureCount] = useState<number[]>([]);
   const [addSection, setAddSection] = useState(1);
+
+  const { pathname } = useLocation();
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [pathname]);
 
   return (
     <div className="mb-[37px]">
@@ -136,7 +145,7 @@ const Curriculm: FC<CurriculumProps> = ({ setCount2 }) => {
           <div className="flex justify-between items-center">
             <div className="flex gap-x-2 lg:p-[24px] p-[12px]">
               <img src={menu} />
-              <p className="text-[#1D2026] font-medium text-[16px]">Physics</p>
+              <p className="text-[#1D2026] font-medium text-[16px]">Section name</p>
             </div>
 
             <div className="flex gap-2 lg:p-[24px] p-[12px]">
@@ -175,7 +184,7 @@ const Curriculm: FC<CurriculumProps> = ({ setCount2 }) => {
                   <div className="flex gap-x-2 lg:p-[24px] p-[12px]">
                     <img src={menu} />
                     <p className="text-[#1D2026] font-medium lg:text-[16px] text-[14px]">
-                      Electromagnetism
+                      Lecture name
                     </p>
                   </div>
 
@@ -227,10 +236,10 @@ const Curriculm: FC<CurriculumProps> = ({ setCount2 }) => {
       </div>
 
       <div className="flex justify-between items-center mt-[32px] pb-[40px] pt-[60px] w-[90%] m-auto">
-        <button className="text-[#6E7485] lg:text-[18px] text-[14px] font-semibold lg:leading-[56px] leading-[40px] px-[32px] border-[#E9EAF0] border-[1px]">
+        <button className="text-[#6E7485] lg:text-[18px] text-[14px] font-semibold lg:leading-[56px] leading-[40px] px-[32px] border-[#E9EAF0] border-[1px]" onClick={()=>setActiveTab("advance")}>
           Previous
         </button>
-        <button className="lg:text-[18px] text-[14px] font-semibold lg:leading-[56px] leading-[40px] text-white px-[32px] bg-[#3A6BE4]">
+        <button className="lg:text-[18px] text-[14px] font-semibold lg:leading-[56px] leading-[40px] text-white px-[32px] bg-[#3A6BE4]" onClick={()=>setActiveTab("publish")}>
           Save & next
         </button>
       </div>

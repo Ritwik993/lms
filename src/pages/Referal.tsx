@@ -31,7 +31,7 @@ const Referal = () => {
     },
   ];
   return (
-    <div className="flex-6 bg-[#F5F7FA] overflow-x-hidden">
+    <div className="flex-1 lg:ml-[250px] bg-[#F5F7FA] overflow-x-hidden">
       <Navbar />
       <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 mt-[60px] gap-10">
         <CreateCouponForm />

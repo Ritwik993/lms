@@ -1,4 +1,6 @@
-import { FC, useState } from "react";
+import axios from "axios";
+import { FC, useEffect, useState } from "react";
+import { Link, useLocation } from "react-router-dom";
 
 type FormState = {
   title: string;
@@ -16,12 +18,18 @@ type FormState = {
   instructor4?: string;
 };
 
+type Tab = "basic" | "advance" | "curriculum" | "publish";
+
 type BasicInformationProps = {
   setCount: React.Dispatch<React.SetStateAction<number>>; // Use lowercase `number` for TypeScript type
+  setActiveTab: React.Dispatch<React.SetStateAction<Tab>>;
 };
 
 const uniqueKeys = new Set();
-const BasicInformation: FC<BasicInformationProps> = ({ setCount }) => {
+const BasicInformation: FC<BasicInformationProps> = ({
+  setCount,
+  setActiveTab,
+}) => {
   const [formState, setFormState] = useState<FormState>({
     title: "",
     subtitle: "",
@@ -37,6 +45,12 @@ const BasicInformation: FC<BasicInformationProps> = ({ setCount }) => {
     instructor3: "",
     instructor4: "",
   });
+
+  const { pathname } = useLocation();
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [pathname]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -61,6 +75,21 @@ const BasicInformation: FC<BasicInformationProps> = ({ setCount }) => {
       return { ...prev, [name]: value };
     });
   };
+
+
+
+  const handleSubmit=async(e:React.MouseEvent<HTMLButtonElement> )=>{
+    e.preventDefault();
+    try{
+      const res=await axios.post("http://localhost:8080/api/v1/course/addCourse",formState);
+      console.log(res.data);
+      setActiveTab("advance");
+    }catch(err){
+      console.error(err);
+    }
+  }
+
+  
   return (
     <div className="mb-[37px]">
       <div className="heading lg:px-[40px] px-[10px] py-[24px] bg-white flex gap-x-[20px] justify-between items-center border-b-[2px] border-opacity-10 border-b-[#6E7485]">
@@ -315,10 +344,13 @@ const BasicInformation: FC<BasicInformationProps> = ({ setCount }) => {
         </div>
 
         <div className="flex justify-between items-center mt-[32px] pb-[40px] pt-[60px] w-[90%] m-auto">
-          <button className="text-[#6E7485] lg:text-[18px] text-[14px] font-semibold lg:leading-[56px] leading-[40px] px-[32px] border-[#E9EAF0] border-[1px]">
-            Cancel
-          </button>
-          <button className="lg:text-[18px] text-[14px] font-semibold lg:leading-[56px] leading-[40px] text-white px-[32px] bg-[#3A6BE4]">
+          <Link to="/dashboard">
+            {" "}
+            <button className="text-[#6E7485] lg:text-[18px] text-[14px] font-semibold lg:leading-[56px] leading-[40px] px-[32px] border-[#E9EAF0] border-[1px]">
+              Cancel
+            </button>
+          </Link>
+          <button className="lg:text-[18px] text-[14px] font-semibold lg:leading-[56px] leading-[40px] text-white px-[32px] bg-[#3A6BE4]" onClick={(e)=>handleSubmit(e)}>
             Save & next
           </button>
         </div>

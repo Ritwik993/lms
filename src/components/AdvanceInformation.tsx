@@ -3,10 +3,15 @@ import left_icon from "../assets/left.svg";
 import video from "../assets/Video.svg";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
-import { FC, useState } from "react";
+import { FC, useEffect, useState } from "react";
+import { useLocation } from "react-router-dom";
+
+type Tab = "basic" | "advance" | "curriculum" | "publish";
+
 
 type AdvanceInformationProps = {
   setCount1: React.Dispatch<React.SetStateAction<number>>;
+  setActiveTab:React.Dispatch<React.SetStateAction<Tab>>;
 };
 
 type FormState = {
@@ -19,7 +24,7 @@ type FormState = {
 };
 
 const uniqueKeys = new Set();
-const AdvanceInformation: FC<AdvanceInformationProps> = ({ setCount1 }) => {
+const AdvanceInformation: FC<AdvanceInformationProps> = ({ setCount1,setActiveTab }) => {
   const [formState, setFormState] = useState<FormState>({
     thumbnail: null,
     trailer: null,
@@ -28,6 +33,13 @@ const AdvanceInformation: FC<AdvanceInformationProps> = ({ setCount1 }) => {
     audienceDesc: [""],
     requirementDesc: [""],
   });
+
+
+  const { pathname } = useLocation();
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [pathname]);
   // const [add1,setAdd1]=useState(0);
   // const [add2,setAdd2]=useState(0);
 
@@ -36,6 +48,9 @@ const AdvanceInformation: FC<AdvanceInformationProps> = ({ setCount1 }) => {
 
   //   }
   // }
+
+
+  
 
   const handleFileChange = (
     e: React.ChangeEvent<HTMLInputElement>,
@@ -357,10 +372,10 @@ const AdvanceInformation: FC<AdvanceInformationProps> = ({ setCount1 }) => {
         ))}
 
         <div className="flex justify-between items-center mt-[32px] pb-[40px] pt-[60px] w-[90%] m-auto">
-          <button className="text-[#6E7485] lg:text-[18px] text-[14px] font-semibold lg:leading-[56px] leading-[40px] px-[32px] border-[#E9EAF0] border-[1px]">
+          <button className="text-[#6E7485] lg:text-[18px] text-[14px] font-semibold lg:leading-[56px] leading-[40px] px-[32px] border-[#E9EAF0] border-[1px]" onClick={()=>setActiveTab("basic")}>
             Previous
           </button>
-          <button className="lg:text-[18px] text-[14px] font-semibold lg:leading-[56px] leading-[40px] text-white px-[32px] bg-[#3A6BE4]">
+          <button className="lg:text-[18px] text-[14px] font-semibold lg:leading-[56px] leading-[40px] text-white px-[32px] bg-[#3A6BE4]" onClick={()=>setActiveTab("curriculum")}>
             Save & next
           </button>
         </div>

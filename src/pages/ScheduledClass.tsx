@@ -3,7 +3,7 @@ import ScheduleClassTable from "../components/ScheduleClassTable"
 
 const ScheduledClass = () => {
   return (
-    <div className="flex-6 bg-[#F5F7FA] ">
+    <div className="flex-1 lg:ml-[250px] bg-[#F5F7FA] ">
         <Navbar/>
         <div className="mt-[58px] mb-[44px] w-[90%] mx-auto">
             <button className="text-white md:text-[14px] text-[12px] leading-[40px] bg-[#3A6BE4] px-[16px] rounded-[4px]">Create New Live Class</button>

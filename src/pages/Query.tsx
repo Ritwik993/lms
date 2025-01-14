@@ -3,7 +3,7 @@ import Navbar from "../components/Navbar"
 
 const Query = () => {
   return (
-    <div className="flex-6 bg-[#F5F7FA]">
+    <div className="flex-1 lg:ml-[250px] bg-[#F5F7FA]">
         <Navbar/>
         <div className="w-[90%] mx-auto mt-[62px]">
           <DataTable/>

@@ -3,7 +3,7 @@ import SectionForm from "./SectionForm";
 
 const TestForm = () => {
   return (
-    <div className="flex-6 bg-[#F5F7FA] overflow-x-hidden ">
+    <div className="flex-1 lg:ml-[250px] bg-[#F5F7FA] overflow-x-hidden ">
       <Navbar />
       <div className="w-[90%] mx-auto mt-[60px] p-[40px]  bg-white">
         <div className="w-[98%] mx-auto pt-[40px] h-full shadow-md pb-[40px]">

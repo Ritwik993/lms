@@ -80,7 +80,7 @@ const ContentCourse = () => {
   }, [assignmentData]);
 
   return (
-    <div className="flex-6 bg-[#F5F7FA] overflow-x-hidden">
+    <div className="flex-1 lg:ml-[250px] bg-[#F5F7FA] overflow-x-hidden">
       <Navbar />
       <div className="pt-[41px] bg-white lg:w-[90%] w-[95%] mx-auto mt-[56px]">
         <div className="flex  justify-between items-center w-[90%] mx-auto gap-x-[20px]">
