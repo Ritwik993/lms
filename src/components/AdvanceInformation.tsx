@@ -18,7 +18,7 @@ type FormState = {
   requirementDesc: string[];
 };
 
-const uniqueKeys=new Set();
+const uniqueKeys = new Set();
 const AdvanceInformation: FC<AdvanceInformationProps> = ({ setCount1 }) => {
   const [formState, setFormState] = useState<FormState>({
     thumbnail: null,
@@ -41,19 +41,18 @@ const AdvanceInformation: FC<AdvanceInformationProps> = ({ setCount1 }) => {
     e: React.ChangeEvent<HTMLInputElement>,
     field: "thumbnail" | "trailer"
   ) => {
-
-    if(!uniqueKeys.has(field)){
+    if (!uniqueKeys.has(field)) {
       uniqueKeys.add(field);
       setCount1(uniqueKeys.size);
     }
-    if (e.target.files && e.target.files.length > 0) {
+    if (e.target.files && e.target?.files.length > 0) {
       const file = e.target.files[0];
       setFormState((prev) => ({ ...prev, [field]: file }));
     }
   };
 
   const handleDescriptionChange = (value: string) => {
-    if(!uniqueKeys.has("description")){
+    if (!uniqueKeys.has("description")) {
       uniqueKeys.add("description");
       setCount1(uniqueKeys.size);
     }
@@ -61,7 +60,7 @@ const AdvanceInformation: FC<AdvanceInformationProps> = ({ setCount1 }) => {
   };
 
   const handleTeachChange = (index: number, value: string) => {
-    if(!uniqueKeys.has("teachdescription")){
+    if (!uniqueKeys.has("teachdescription")) {
       uniqueKeys.add("teachdescription");
       setCount1(uniqueKeys.size);
     }
@@ -72,7 +71,7 @@ const AdvanceInformation: FC<AdvanceInformationProps> = ({ setCount1 }) => {
   };
 
   const handleAudienceChange = (index: number, value: string) => {
-    if(!uniqueKeys.has("audiencedescription")){
+    if (!uniqueKeys.has("audiencedescription")) {
       uniqueKeys.add("audiencedescription");
       setCount1(uniqueKeys.size);
     }
@@ -82,17 +81,20 @@ const AdvanceInformation: FC<AdvanceInformationProps> = ({ setCount1 }) => {
       setFormState((prev) => ({ ...prev, audienceDesc: updatedAudienceDesc }));
   };
 
-  const handleRequirementChange=(index:number,value:string)=>{
-    if(!uniqueKeys.has("requirementdescription")){
+  const handleRequirementChange = (index: number, value: string) => {
+    if (!uniqueKeys.has("requirementdescription")) {
       uniqueKeys.add("requirementdescription");
       setCount1(uniqueKeys.size);
     }
-    const updatedRequirementDesc=[...formState.requirementDesc];
-    updatedRequirementDesc[index]=value;
-    if(value.length <= 120){
-      setFormState((prev)=>({...prev,requirementDesc:updatedRequirementDesc}))
+    const updatedRequirementDesc = [...formState.requirementDesc];
+    updatedRequirementDesc[index] = value;
+    if (value.length <= 120) {
+      setFormState((prev) => ({
+        ...prev,
+        requirementDesc: updatedRequirementDesc,
+      }));
     }
-  }
+  };
 
   return (
     <div className="mb-[37px] min-h-[100vh]">
@@ -125,7 +127,7 @@ const AdvanceInformation: FC<AdvanceInformationProps> = ({ setCount1 }) => {
                       : left_icon
                   }
                   alt="Course Thumbnail Placeholder"
-                  className="object-cover w-full lg:h-48 h-40 "
+                  className="object-cover w-full aspect-square "
                 />
               </div>
               <div className="details flex-1">
@@ -169,7 +171,7 @@ const AdvanceInformation: FC<AdvanceInformationProps> = ({ setCount1 }) => {
             </p>
             <div className="content flex flex-col lg:flex-row gap-4">
               <div className="image-container flex-1">
-                <img
+                {/* <img
                   src={
                     formState.trailer
                       ? URL.createObjectURL(formState.trailer)
@@ -177,7 +179,20 @@ const AdvanceInformation: FC<AdvanceInformationProps> = ({ setCount1 }) => {
                   }
                   alt="Course Trailer Placeholder"
                   className="object-cover w-full lg:h-48 h-40"
-                />
+                /> */}
+                {formState.trailer ? (
+                  <video
+                    src={URL.createObjectURL(formState.trailer)}
+                    controls
+                    className="object-cover w-full aspect-square"
+                  />
+                ) : (
+                  <img
+                    src={video}
+                    alt="Course Trailer Placeholder"
+                    className="object-cover w-full aspect-square"
+                  />
+                )}
               </div>
               <div className="details flex-1">
                 <p className="text-gray-600 text-sm leading-6 mb-4">
@@ -324,7 +339,7 @@ const AdvanceInformation: FC<AdvanceInformationProps> = ({ setCount1 }) => {
         {formState.requirementDesc.map((desc, index) => (
           <div className="w-[90%] mx-auto mb-[24px]">
             <p className="text-[#1D2026] md:text-[14px] text-[12px] mb-[5px]">
-              {index+1}
+              {index + 1}
             </p>
             <div className="relative">
               <input
@@ -332,7 +347,7 @@ const AdvanceInformation: FC<AdvanceInformationProps> = ({ setCount1 }) => {
                 placeholder="What is you course requirements..."
                 value={desc}
                 className="placeholder-text-[#8C94A3] border-[#E9EAF0] border w-full outline-none py-[5px] pl-[10px] pr-[80px]"
-                onChange={(e)=>handleRequirementChange(index,e.target.value)}
+                onChange={(e) => handleRequirementChange(index, e.target.value)}
               />
               <p className="text-[#4E5566] md:text-[14px] text-[12px] md:leading-[22px] leading-[20px] absolute top-[5px] right-[10px]">
                 {desc.length}/120
@@ -340,7 +355,6 @@ const AdvanceInformation: FC<AdvanceInformationProps> = ({ setCount1 }) => {
             </div>
           </div>
         ))}
-
 
         <div className="flex justify-between items-center mt-[32px] pb-[40px] pt-[60px] w-[90%] m-auto">
           <button className="text-[#6E7485] lg:text-[18px] text-[14px] font-semibold lg:leading-[56px] leading-[40px] px-[32px] border-[#E9EAF0] border-[1px]">

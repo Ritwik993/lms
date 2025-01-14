@@ -4,8 +4,81 @@ import Notepad from "../assets/Notepad.svg";
 import Content from "../components/Content";
 import Camera from "../assets/Camera.svg";
 import Notepad2 from "../assets/Notepad2.svg";
+import { useEffect, useState } from "react";
+import UploadVideoModal from "../components/UploadVideoModal";
+import UploadDocumentModal from "../components/UploadDocumentModal";
+import UploadTestModal from "../components/UploadTestModal";
+import UploadDppModal from "../components/UploadDppModal";
+import UploadAssignmentModal from "../components/UploadAssignmentModal";
+
+type FormState = {
+  video: File[] | null;
+  notes: File[] | null;
+  test: File[] | null;
+  dpp: File[] | null;
+  assignment: File[] | null;
+};
 
 const ContentCourse = () => {
+  const [formState, setFormState] = useState({
+    video: null,
+    notes: null,
+    test: null,
+    dpp: null,
+    assignment: null,
+  });
+
+  const [isVideo, setIsVideo] = useState(false);
+  const [videoData, setVideoData] = useState<File[] | null>(null);
+
+  const [isNotes, setIsNotes] = useState(false);
+  const [notesData, setNotesData] = useState<File[] | null>(null);
+
+  const [isTest, setIsTest] = useState(false);
+  const [testData, setTestData] = useState<File[] | null>(null);
+
+  const [isDpp, setIsDpp] = useState(false);
+  const [dppData, setDppData] = useState<File[] | null>(null);
+
+  const [isAssignment, setIsAssignment] = useState(false);
+  const [assignmentData, setAssignmentData] = useState<File[] | null>(null);
+
+  const [videoCount, setVideoCount] = useState(0);
+  const [notesCount, setNotesCount] = useState(0);
+  const [testCount, setTestCount] = useState(0);
+  const [dppCount, setDppCount] = useState(0);
+  const [assignmentCount, setAssignmentCount] = useState(0);
+
+  useEffect(() => {
+    if (videoData) {
+      setVideoCount((prev) => prev + 1);
+    }
+  }, [videoData]);
+
+  useEffect(() => {
+    if (notesData) {
+      setNotesCount((prev) => prev + 1);
+    }
+  }, [notesData]);
+
+  useEffect(() => {
+    if (testData) {
+      setTestCount((prev) => prev + 1);
+    }
+  }, [testData]);
+
+  useEffect(() => {
+    if (dppData) {
+      setDppCount((prev) => prev + 1);
+    }
+  }, [dppData]);
+
+  useEffect(() => {
+    if (assignmentData) {
+      setAssignmentCount((prev) => prev + 1);
+    }
+  }, [assignmentData]);
+
   return (
     <div className="flex-6 bg-[#F5F7FA] overflow-x-hidden">
       <Navbar />
@@ -42,50 +115,107 @@ const ContentCourse = () => {
           <div className="min-h-[312px] bg-[#F5F7FA] ">
             <div className="pt-[40px]  pb-[100px] w-[90%] mx-auto">
               <div className="flex lg:gap-x-[40px] gap-x-[20px]">
-                <Content />
+                <Content
+                  videoData={videoData}
+                  notesData={notesData}
+                  testData={testData}
+                  dppData={dppData}
+                  videoCount={videoCount}
+                  notesCount={notesCount}
+                  testCount={testCount}
+                  dppCount={dppCount}
+                  setVideoData={setVideoData}
+                  setNotesData={setNotesData}
+                  setTestData={setTestData}
+                  setDppData={setDppData}
+                  setVideoCount={setVideoCount}
+                  setNotesCount={setNotesCount}
+                  setTestCount={setTestCount}
+                  setDppCount={setDppCount}
+                  assignmentData={assignmentData}
+                  assignmentCount={assignmentCount}
+                  setAssignmentData={setAssignmentData}
+                  setAssignmentCount={setAssignmentCount}
+                />
                 <div className="flex flex-col gap-[5px]">
                   <p className="text-[14px] text-[#000000] font-medium lg:leading-[22px] leading-[18px]">
                     ADD CONTENT
                   </p>
 
-                  <div className="bg-white lg:min-w-[170px] min-w-[100px] p-[10px] rounded-[10px] flex gap-x-[4px]">
-                    <img src={Camera} className="object-contain"/>
+                  <div
+                    className="bg-white lg:min-w-[170px] min-w-[100px] p-[10px] rounded-[10px] flex gap-x-[4px]"
+                    onClick={() => setIsVideo((prev) => !prev)}
+                  >
+                    <img src={Camera} className="object-contain" />
                     <p>Video</p>
                   </div>
 
-                  <div className="bg-white lg:min-w-[170px] min-w-[100px] p-[10px] rounded-[10px] flex gap-x-[4px]">
-                    <img src={Notepad2} className="object-contain"/>
+                  {isVideo && (
+                    <UploadVideoModal
+                      setIsVideo={setIsVideo}
+                      setVideoData={setVideoData}
+                    />
+                  )}
+
+                  <div
+                    className="bg-white lg:min-w-[170px] min-w-[100px] p-[10px] rounded-[10px] flex gap-x-[4px]"
+                    onClick={() => setIsNotes((prev) => !prev)}
+                  >
+                    <img src={Notepad2} className="object-contain" />
                     <p>Notes</p>
                   </div>
 
+                  {isNotes && (
+                    <UploadDocumentModal
+                      setIsNotes={setIsNotes}
+                      setNotesData={setNotesData}
+                    />
+                  )}
 
-                  <div className="bg-white lg:min-w-[170px] min-w-[100px] p-[10px] rounded-[10px] flex gap-x-[4px]">
-                    <img src={Camera} className="object-contain"/>
+                  <div
+                    className="bg-white lg:min-w-[170px] min-w-[100px] p-[10px] rounded-[10px] flex gap-x-[4px]"
+                    onClick={() => setIsTest((prev) => !prev)}
+                  >
+                    <img src={Camera} className="object-contain" />
                     <p>Test</p>
                   </div>
 
+                  {isTest && (
+                    <UploadTestModal
+                      setIsTest={setIsTest}
+                      setTestData={setTestData}
+                    />
+                  )}
 
-
-                  <div className="bg-white lg:min-w-[170px] min-w-[100px] p-[10px] rounded-[10px] flex gap-x-[4px]">
-                    <img src={Camera} className="object-contain"/>
+                  <div
+                    className="bg-white lg:min-w-[170px] min-w-[100px] p-[10px] rounded-[10px] flex gap-x-[4px]"
+                    onClick={() => setIsDpp((prev) => !prev)}
+                  >
+                    <img src={Camera} className="object-contain" />
                     <p>DPP</p>
                   </div>
 
+                  {isDpp && (
+                    <UploadDppModal
+                      setIsDpp={setIsDpp}
+                      setDppData={setDppData}
+                    />
+                  )}
 
-
-                  <div className="bg-white lg:min-w-[170px] min-w-[100px] p-[10px] rounded-[10px] flex gap-x-[4px]">
-                    <img src={Camera} className="object-contain"/>
+                  <div
+                    className="bg-white lg:min-w-[170px] min-w-[100px] p-[10px] rounded-[10px] flex gap-x-[4px]"
+                    onClick={() => setIsAssignment((prev) => !prev)}
+                  >
+                    <img src={Camera} className="object-contain" />
                     <p>Assignment</p>
                   </div>
 
-
-
-                  <div className="bg-white lg:min-w-[170px] min-w-[100px] p-[10px] rounded-[10px] flex gap-x-[4px]">
-                    <img src={Camera} className="object-contain"/>
-                    <p>Video</p>
-                  </div>
-
-
+                  {isAssignment && (
+                    <UploadAssignmentModal
+                      setIsAssignment={setIsAssignment}
+                      setAssignmentData={setAssignmentData}
+                    />
+                  )}
                 </div>
               </div>
             </div>

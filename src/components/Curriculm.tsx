@@ -4,13 +4,99 @@ import pencil from "../assets/PencilLine.svg";
 import trash from "../assets/Trash.svg";
 import { Link } from "react-router-dom";
 import DownArrow from "../assets/CaretDown.svg";
-import { FC } from "react";
+import { FC, useState } from "react";
 
-type CurriculumProps={
-  setCount2:React.Dispatch<React.SetStateAction<number>>
-}
+type CurriculumProps = {
+  setCount2: React.Dispatch<React.SetStateAction<number>>;
+};
 
-const Curriculm:FC<CurriculumProps> = ({setCount2}) => {
+// const sectionData = [
+//   {
+//     id: "section1",
+//     name: "Section name",
+//     lectures: [
+//       { id: "lecture1", name: "Lecture name", content: "" },
+//       { id: "lecture2", name: "Lecture name", content: "" },
+//     ],
+//   },
+//   {
+//     id: "section2",
+//     name: "Section name",
+//     lectures: [
+//       { id: "lecture1", name: "Lecture name", content: "" },
+//       { id: "lecture2", name: "Lecture name", content: "" },
+//     ],
+//   },
+//   {
+//     id: "section3",
+//     name: "Section name",
+//     lectures: [
+//       { id: "lecture1", name: "Lecture name", content: "" },
+//       { id: "lecture2", name: "Lecture name", content: "" },
+//     ],
+//   },
+//   {
+//     id: "section4",
+//     name: "Section name",
+//     lectures: [
+//       { id: "lecture1", name: "Lecture name", content: "" },
+//       { id: "lecture2", name: "Lecture name", content: "" },
+//     ],
+//   },
+// ];
+
+
+ const   data= [
+      {
+        subjectTitle: "Physics",
+        lectures: [
+          {
+            lectureTitle: "Electro",
+            notes: "a",
+            dpp: "x",
+            video: "y",
+            assignment: "z",
+            test: "b",
+          },
+          {
+            lectureTitle: "Magnetic",
+            notes: "y",
+            assignment: "t",
+            video: "u",
+            dpp: "i",
+            test: "o",
+          },
+        ],
+      },
+      {
+        subjectTitle: "Chemistry",
+        lectures: [
+          {
+            lectureTitle: "Moles",
+            notes: "abc",
+            assignment: "poi",
+            video: "uyt",
+            test: "rew",
+            dpp: "qas",
+          },
+          {
+            lectureTitle: "Organic",
+            notes: "zxc",
+            assignment: "vbn",
+            video: "mlk",
+            test: "jhg",
+            dpp: "fds",
+          },
+        ],
+      },
+    ]
+
+
+    
+const Curriculm: FC<CurriculumProps> = ({ setCount2 }) => {
+  const [lectureCount, setLectureCount] = useState<number[]>([]);
+  const [addSection, setAddSection] = useState(1);
+
   return (
     <div className="mb-[37px]">
       <div className="heading lg:px-[40px] px-[10px] py-[24px] bg-white flex gap-x-[20px] justify-between items-center border-b-[2px] border-opacity-10 border-b-[#6E7485]">
@@ -42,48 +128,100 @@ const Curriculm:FC<CurriculumProps> = ({setCount2}) => {
         </div>
       </div>
 
-      <div className="contentBox  mt-[16px] w-[90%] mx-auto min-h-[312px] bg-[#F5F7FA]">
-        <div className="flex justify-between items-center">
-          <div className="flex gap-x-2 lg:p-[24px] p-[12px]">
-            <img src={menu} />
-            <p className="text-[#1D2026] font-medium text-[16px]">Physics</p>
-          </div>
-
-          <div className="flex gap-2 lg:p-[24px] p-[12px]">
-            <img src={plus} alt="" className="object-contain" />
-            {/* <img src={pencil} alt="" className="object-contain" /> */}
-            <img src={trash} alt="" className="object-contain" />
-          </div>
-        </div>
-
-        <div className="innerContent bg-white w-[95%] mx-auto">
+      {Array.from({ length: addSection }, (_, i) => (
+        <div
+          className="contentBox  mt-[16px] w-[90%] mx-auto min-h-[312px] pb-8 bg-[#F5F7FA]"
+          key={i}
+        >
           <div className="flex justify-between items-center">
             <div className="flex gap-x-2 lg:p-[24px] p-[12px]">
               <img src={menu} />
-              <p className="text-[#1D2026] font-medium lg:text-[16px] text-[14px]">
-                Electromagnetism
-              </p>
+              <p className="text-[#1D2026] font-medium text-[16px]">Physics</p>
             </div>
 
             <div className="flex gap-2 lg:p-[24px] p-[12px]">
-              <Link to="/contentcourse">
-                <div className="flex bg-[#3D70F5] bg-opacity-25 lg:px-[16px] px-[10px]  gap-x-[4px]">
-                <p className=" text-[#3A6BE4] font-semibold lg:text-[14px] text-[12px] lg:leading-[40px] leading-[35px]  ">
-                  Contents
-                </p>
-                  <img src={DownArrow} className="object-contain "/>
-                </div>
-              </Link>
-              {/* <img src={plus} alt="" className="object-contain" /> */}
+              <img
+                src={plus}
+                alt=""
+                className="object-contain pointer"
+                onClick={() => {
+                  const updatedLectureCount = [...lectureCount];
+                  updatedLectureCount[i] = (lectureCount[i] || 0) + 1;
+                  setLectureCount(updatedLectureCount);
+                }}
+              />
               <img src={pencil} alt="" className="object-contain" />
-              <img src={trash} alt="" className="object-contain" />
+              <img
+                src={trash}
+                alt=""
+                className="object-contain"
+                onClick={() => {
+                  const updatedLectureCount = [...lectureCount];
+                  if (lectureCount[i] > 0)
+                    updatedLectureCount[i] = lectureCount[i] - 1;
+                  setLectureCount(updatedLectureCount);
+                }}
+              />
             </div>
           </div>
+
+          {Array.from({ length: lectureCount[i] }, (_, idx) => {
+            return (
+              <div
+                className="innerContent bg-white w-[95%] mx-auto mb-4"
+                key={idx}
+              >
+                <div className="flex justify-between items-center">
+                  <div className="flex gap-x-2 lg:p-[24px] p-[12px]">
+                    <img src={menu} />
+                    <p className="text-[#1D2026] font-medium lg:text-[16px] text-[14px]">
+                      Electromagnetism
+                    </p>
+                  </div>
+
+                  <div className="flex gap-2 lg:p-[24px] p-[12px]">
+                    <Link to="/contentcourse">
+                      <div className="flex bg-[#3D70F5] bg-opacity-25 lg:px-[16px] px-[10px]  gap-x-[4px]">
+                        <p className=" text-[#3A6BE4] font-semibold lg:text-[14px] text-[12px] lg:leading-[40px] leading-[35px]  ">
+                          Contents
+                        </p>
+                        <img src={DownArrow} className="object-contain " />
+                      </div>
+                    </Link>
+                    {/* <img src={plus} alt="" className="object-contain" /> */}
+                    <img
+                      src={pencil}
+                      alt=""
+                      className="object-contain pointer"
+                    />
+                    <img
+                      src={trash}
+                      alt=""
+                      className="object-contain pointer"
+                      // onClick={() => setLectureCount(lectureCount[i] - 1)}
+                      onClick={() => {
+                        const updatedLectureCount = [...lectureCount];
+                        updatedLectureCount[i] = lectureCount[i] - 1;
+                        setLectureCount(updatedLectureCount);
+                      }}
+                    />
+                  </div>
+                </div>
+              </div>
+            );
+          })}
+
+          {/* 
+         
+          */}
         </div>
-      </div>
+      ))}
 
       <div className="w-[90%] mx-auto">
-        <button className="mt-[30px] bg-[#3D70F5] bg-opacity-25 text-[#3A6BE4] font-semibold text-[16px] leading-[48px] w-full text-center">
+        <button
+          className="mt-[30px] bg-[#3D70F5] bg-opacity-25 text-[#3A6BE4] font-semibold text-[16px] leading-[48px] w-full text-center"
+          onClick={() => setAddSection(addSection + 1)}
+        >
           Add Sections
         </button>
       </div>
