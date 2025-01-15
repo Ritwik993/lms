@@ -16,6 +16,9 @@ type FormState = {
   instructor2: string;
   instructor3?: string;
   instructor4?: string;
+  courseId?: string;
+  instructor?: string[];
+  featured: boolean;
 };
 
 type User = {
@@ -57,6 +60,8 @@ const BasicInformation: FC<BasicInformationProps> = ({
     instructor2: "",
     instructor3: "",
     instructor4: "",
+    instructor: ["6751f31ea2712db85bd07dde"],
+    featured: false,
   });
 
   const { pathname } = useLocation();
@@ -69,16 +74,29 @@ const BasicInformation: FC<BasicInformationProps> = ({
 
   useEffect(() => {
     fetchUsers();
+    getCourseId();
   }, []);
+
+  const getCourseId = async () => {
+    try {
+      const res = await axios.get(
+        "http://localhost:8080/api/v1/course/getCourseId"
+      );
+      formState.courseId = res.data.data;
+      console.log(res.data);
+    } catch (err) {
+      console.error(err);
+    }
+  };
 
   const fetchUsers = async () => {
     try {
       const res = await axios.get("http://localhost:8080/api/v1/auth/getUsers");
       console.log(res.data);
-      if(res.status){
+      if (res.status) {
         setUsers(res.data);
       }
-      console.log("users : " +JSON.stringify( users));
+      console.log("users : " + JSON.stringify(users));
     } catch (err) {
       console.error(err);
     }
@@ -108,17 +126,55 @@ const BasicInformation: FC<BasicInformationProps> = ({
     });
   };
 
+  // const handleSubmit = async (e: React.MouseEvent<HTMLButtonElement>) => {
+  //   e.preventDefault();
+  //   try {
+  //     const { instructor1, instructor2, instructor3, instructor4, ...restFormState } = formState;
+  //     console.log("RestForm = "+JSON.stringify(restFormState));
+  //     const res = await axios.post(
+  //       "http://localhost:8080/api/v1/course/addCourse",
+  //       restFormState
+  //     );
+  //     console.log(res.data);
+  //     setActiveTab("advance");
+  //   } catch (err) {
+  //     console.error(err);
+  //   }
+  // };
+
   const handleSubmit = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
+
     try {
+      const {
+        instructor1,
+        instructor2,
+        instructor3,
+        instructor4,
+        ...restFormState
+      } = formState;
+      // Prepare the form data
+      // restFormState.instructor = [instructor1, instructor2, instructor3, instructor4].filter(Boolean);
+
+      // Retrieve the token from localStorage
+      const token = localStorage.getItem("token");
+
+      // Make the request with the token in the headers
       const res = await axios.post(
         "http://localhost:8080/api/v1/course/addCourse",
-        formState
+        restFormState,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`, // Include the token in the Authorization header
+          },
+        }
       );
+
       console.log(res.data);
       setActiveTab("advance");
     } catch (err) {
       console.error(err);
+      alert("An error occurred while submitting the form.");
     }
   };
 
@@ -168,7 +224,7 @@ const BasicInformation: FC<BasicInformationProps> = ({
             onChange={handleInputChange}
           />
           <span className="text-[#8C94A3] md:text-[14px] text-[12px] absolute right-[20px] bottom-[10px]">
-            {Number(formState.title.length)}/80
+            {Number(formState.subTitle.length)}/80
           </span>
         </div>
 
@@ -312,13 +368,13 @@ const BasicInformation: FC<BasicInformationProps> = ({
               value={formState.instructor1}
               onChange={handleSelectChange}
             >
-              {/* <option value="">Select</option>
+              <option value="">Select</option>
               <option value="instructor1">Allot Instructor 1</option>
               <option value="instructor2">Allot Instructor 2</option>
               <option value="instructor3">Allot Instructor 3</option>
-              <option value="instructor4">Allot Instructor 4</option> */}
+              <option value="instructor4">Allot Instructor 4</option>
 
-              {users.length > 0  && users[0].firstName}
+              {/* {users.length > 0  && users[0].firstName}
 
               {
               users.length > 0 &&
@@ -326,7 +382,7 @@ const BasicInformation: FC<BasicInformationProps> = ({
                   <option key={user._id} value={user._id}>
                     {user.firstName} {user.lastName}
                   </option>
-                ))}
+                ))} */}
 
               {/* <option value="">Select</option>
               <option value="instructor1">Allot Instructor 1</option>

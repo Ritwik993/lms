@@ -20,16 +20,28 @@ const SignInPage: React.FC = () => {
     setFormState((prev)=>({...prev,[e.target.name]:e.target.value}));
   }
 
-  const handleSubmit=async(e:React.MouseEvent<HTMLButtonElement>)=>{
+  const handleSubmit = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
-    try{
-      const res=await axios.post("http://localhost:8080/api/v1/auth/login",formState);
-      console.log(res.data);
-      navigate("/dashboard");
-    }catch(err){
+    try {
+      const res = await axios.post(
+        "http://localhost:8080/api/v1/auth/login",
+        formState, // Request body
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+  
+      const { token } = res.data; // Assuming the backend returns a token
+      localStorage.setItem("token", token); // Store token securely
+      console.log("Login successful", res.data);
+      navigate("/dashboard"); // Redirect after login
+    } catch (err) {
       console.error(err);
     }
-  }
+  };
+  
   
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 mx-auto">
