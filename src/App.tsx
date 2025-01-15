@@ -21,6 +21,9 @@ import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import Courses from './pages/Courses';
 import Referal from './pages/Referal';
+import SignInPage from './pages/SignInPage';
+import SignUpPage from './pages/SignUpPage';
+import Reviews from './pages/Reviews';
 
 function App() {
 
@@ -35,6 +38,14 @@ function App() {
   }
 
   const appRouter=createBrowserRouter([
+    {
+      path:"/",
+      element:<SignInPage/>
+    },
+    {
+      path:"/signUp",
+      element:<SignUpPage/>
+    },
     {
       path:"/",
       element:<AppLayout/>,
@@ -86,6 +97,10 @@ function App() {
         {
           path:"/referal",
           element:<Referal/>
+        },
+        {
+          path:"/review",
+          element:<Reviews/>
         }
       ]
     },
@@ -96,7 +111,8 @@ function App() {
     {
       path:"/form",
       element:<ToogleSwitch/>
-    }
+    },
+   
   ])
 
   return (
