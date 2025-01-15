@@ -9,6 +9,7 @@ import {
 } from "react-table";
 import { Link } from "react-router-dom";
 import ToggleSwitch from "./ToogleSwitch";
+import { JSX } from "react/jsx-runtime";
 
 interface Data {
   serialNo: number;
@@ -107,7 +108,7 @@ const columns: Column<Data>[] = [
             View Tests
           </button>
         </Link>
-        <ToggleSwitch/>
+        <ToggleSwitch />
         {/* <label className="inline-flex items-center">
           <input type="checkbox" className="toggle-checkbox hidden" />
           <span className="toggle-label block w-10 h-6 bg-gray-300 rounded-full"></span>
@@ -119,6 +120,9 @@ const columns: Column<Data>[] = [
 ];
 
 const TestTable2: React.FC = () => {
+  // const table=useTable({ columns, data },
+  //   useSortBy,
+  //   usePagination);
   const {
     getTableProps,
     getTableBodyProps,
@@ -131,8 +135,8 @@ const TestTable2: React.FC = () => {
     canNextPage,
     state: { pageIndex },
     pageCount,
-  }: TableInstance<Data> = useTable(
-    { columns, data, initialState: { pageSize: 4 } },
+  }: any = useTable(
+    { columns, data, initialState: { pageSize: 4 } as any },
     useSortBy,
     usePagination
   );
@@ -144,25 +148,35 @@ const TestTable2: React.FC = () => {
         className="table-auto border-collapse border border-gray-200 w-full"
       >
         <thead>
-          {headerGroups.map((headerGroup) => (
-            <tr {...headerGroup.getHeaderGroupProps()} className="bg-gray-100 ">
-              {headerGroup.headers.map((column: any) => (
-                <th
-                  {...column.getHeaderProps(
-                    column.getSortByToggleProps() // Correct function call
-                  )}
-                  className="p-2 border"
-                >
-                  <div className="flex items-center justify-center gap-x-4">
-                    {column.render("Header")}
-                    <span>
-                      <img src={arrow} />
-                    </span>
-                  </div>
-                </th>
-              ))}
-            </tr>
-          ))}
+          {headerGroups.map(
+            (headerGroup: {
+              getHeaderGroupProps: () => JSX.IntrinsicAttributes &
+                React.ClassAttributes<HTMLTableRowElement> &
+                React.HTMLAttributes<HTMLTableRowElement>;
+              headers: any[];
+            }) => (
+              <tr
+                {...headerGroup.getHeaderGroupProps()}
+                className="bg-gray-100 "
+              >
+                {headerGroup.headers.map((column: any) => (
+                  <th
+                    {...column.getHeaderProps(
+                      column.getSortByToggleProps() // Correct function call
+                    )}
+                    className="p-2 border"
+                  >
+                    <div className="flex items-center justify-center gap-x-4">
+                      {column.render("Header")}
+                      <span>
+                        <img src={arrow} />
+                      </span>
+                    </div>
+                  </th>
+                ))}
+              </tr>
+            )
+          )}
         </thead>
         <tbody {...getTableBodyProps()}>
           {page.map((row: any) => {
