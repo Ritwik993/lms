@@ -17,13 +17,14 @@ const CreateCourse: React.FC = () => {
   const [count1, setCount1] = useState(0);
   const [count2, setCount2] = useState(0);
   const [count3, setCount3] = useState(0);
+  const [courseid,setCourseid]=useState("");
 
   const renderTabContent = () => {
     switch (activeTab) {
       case "basic":
-        return <BasicInformation setCount={setCount} setActiveTab={setActiveTab}/>;
+        return <BasicInformation setCount={setCount} setActiveTab={setActiveTab} setCourseid={setCourseid}/>;
       case "advance":
-        return <AdvanceInformation setCount1={setCount1} setActiveTab={setActiveTab}/>;
+        return <AdvanceInformation setCount1={setCount1} setActiveTab={setActiveTab} courseid={courseid}/>;
       case "curriculum":
         return <Curriculm setCount2={setCount2} setActiveTab={setActiveTab}/>;
       case "publish":

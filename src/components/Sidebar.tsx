@@ -98,7 +98,7 @@ const Sidebar = () => {
           )}
         </div>
 
-        <div className="flex gap-[12px] text-[#8C94A3]  hover:bg-[#3A6BE4] hover:text-white px-[24px] py-[12px] items-center cursor-pointer group">
+        {/* <div className="flex gap-[12px] text-[#8C94A3]  hover:bg-[#3A6BE4] hover:text-white px-[24px] py-[12px] items-center cursor-pointer group">
           <img
             src={chartBar}
             className="object-contain group-hover:filter group-hover:brightness-0 group-hover:invert "
@@ -106,7 +106,7 @@ const Sidebar = () => {
           <p className=" font-medium md:text-[14px] text-[12px] leading-[20px]">
             Management
           </p>
-        </div>
+        </div> */}
 
         {/* <div className="flex gap-[12px] text-[#8C94A3]  hover:bg-[#3A6BE4] hover:text-white px-[24px] py-[12px] items-center cursor-pointer group">
           <img src={stack} className="object-contain group-hover:filter group-hover:brightness-0 group-hover:invert " />

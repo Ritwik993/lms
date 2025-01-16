@@ -39,12 +39,14 @@ type Tab = "basic" | "advance" | "curriculum" | "publish";
 type BasicInformationProps = {
   setCount: React.Dispatch<React.SetStateAction<number>>; // Use lowercase `number` for TypeScript type
   setActiveTab: React.Dispatch<React.SetStateAction<Tab>>;
+  setCourseid: React.Dispatch<React.SetStateAction<string>>
 };
 
 const uniqueKeys = new Set();
 const BasicInformation: FC<BasicInformationProps> = ({
   setCount,
   setActiveTab,
+  setCourseid
 }) => {
   const [formState, setFormState] = useState<FormState>({
     title: "",
@@ -62,6 +64,7 @@ const BasicInformation: FC<BasicInformationProps> = ({
     instructor4: "",
     instructor: ["6751f31ea2712db85bd07dde"],
     featured: false,
+    courseId: "",
   });
 
   const { pathname } = useLocation();
@@ -78,24 +81,41 @@ const BasicInformation: FC<BasicInformationProps> = ({
   }, []);
 
   const getCourseId = async () => {
+    const token = localStorage.getItem("token");
+
     try {
       const res = await axios.get(
-        "http://localhost:8080/api/v1/course/getCourseId"
+        "http://localhost:8080/api/v1/course/getCourseId",
+        {
+          headers: {
+            Authorization: `Bearer ${token}`, // Include the token in the Authorization header
+          },
+        }
       );
       formState.courseId = res.data.data;
-      console.log(res.data);
+      setCourseid(res.data.data);
+      // console.log(res.data);
     } catch (err) {
       console.error(err);
     }
   };
 
   const fetchUsers = async () => {
+    // Retrieve the token from localStorage
+    const token = localStorage.getItem("token");
     try {
-      const res = await axios.get("http://localhost:8080/api/v1/auth/getUsers");
+      const res = await axios.get(
+        "http://localhost:8080/api/v1/auth/getUsers",
+        {
+          headers: {
+            Authorization: `Bearer ${token}`, // Include the token in the Authorization header
+          },
+        }
+      );
       console.log(res.data);
-      if (res.status) {
+      
         setUsers(res.data);
-      }
+
       console.log("users : " + JSON.stringify(users));
     } catch (err) {
       console.error(err);
@@ -158,6 +178,7 @@ const BasicInformation: FC<BasicInformationProps> = ({
 
       // Retrieve the token from localStorage
       const token = localStorage.getItem("token");
+      console.log(token);
 
       // Make the request with the token in the headers
       const res = await axios.post(
@@ -368,13 +389,13 @@ const BasicInformation: FC<BasicInformationProps> = ({
               value={formState.instructor1}
               onChange={handleSelectChange}
             >
-              <option value="">Select</option>
+              {/* <option value="">Select</option>
               <option value="instructor1">Allot Instructor 1</option>
               <option value="instructor2">Allot Instructor 2</option>
               <option value="instructor3">Allot Instructor 3</option>
-              <option value="instructor4">Allot Instructor 4</option>
+              <option value="instructor4">Allot Instructor 4</option> */}
 
-              {/* {users.length > 0  && users[0].firstName}
+              {/* {users.length > 0  && users[0].firstName} */}
 
               {
               users.length > 0 &&
@@ -382,7 +403,7 @@ const BasicInformation: FC<BasicInformationProps> = ({
                   <option key={user._id} value={user._id}>
                     {user.firstName} {user.lastName}
                   </option>
-                ))} */}
+                ))}
 
               {/* <option value="">Select</option>
               <option value="instructor1">Allot Instructor 1</option>

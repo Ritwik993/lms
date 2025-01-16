@@ -5,6 +5,7 @@ import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import { FC, useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
+import axios from "axios";
 
 type Tab = "basic" | "advance" | "curriculum" | "publish";
 
@@ -12,26 +13,27 @@ type Tab = "basic" | "advance" | "curriculum" | "publish";
 type AdvanceInformationProps = {
   setCount1: React.Dispatch<React.SetStateAction<number>>;
   setActiveTab:React.Dispatch<React.SetStateAction<Tab>>;
+  courseid: string;
 };
 
 type FormState = {
-  thumbnail: File | null;
-  trailer: File | null;
-  description: string;
-  teachDesc: string[];
-  audienceDesc: string[];
-  requirementDesc: string[];
+  courseThumbnail: File | null;
+  courseTrailer: File | null;
+  courseDescription: string;
+  learnings: string[];
+  targetAudience: string[];
+  requirements: string[];
 };
 
 const uniqueKeys = new Set();
-const AdvanceInformation: FC<AdvanceInformationProps> = ({ setCount1,setActiveTab }) => {
+const AdvanceInformation: FC<AdvanceInformationProps> = ({ setCount1,setActiveTab,courseid }) => {
   const [formState, setFormState] = useState<FormState>({
-    thumbnail: null,
-    trailer: null,
-    description: "",
-    teachDesc: [""],
-    audienceDesc: [""],
-    requirementDesc: [""],
+    courseThumbnail: null,
+    courseTrailer: null,
+    courseDescription: "",
+    learnings: [""],
+    targetAudience: [""],
+    requirements: [""],
   });
 
 
@@ -54,7 +56,7 @@ const AdvanceInformation: FC<AdvanceInformationProps> = ({ setCount1,setActiveTa
 
   const handleFileChange = (
     e: React.ChangeEvent<HTMLInputElement>,
-    field: "thumbnail" | "trailer"
+    field: "courseThumbnail" | "courseTrailer"
   ) => {
     if (!uniqueKeys.has(field)) {
       uniqueKeys.add(field);
@@ -67,49 +69,80 @@ const AdvanceInformation: FC<AdvanceInformationProps> = ({ setCount1,setActiveTa
   };
 
   const handleDescriptionChange = (value: string) => {
-    if (!uniqueKeys.has("description")) {
-      uniqueKeys.add("description");
+    if (!uniqueKeys.has("courseDescription")) {
+      uniqueKeys.add("courseDescription");
       setCount1(uniqueKeys.size);
     }
-    setFormState((prev) => ({ ...prev, description: value }));
+    setFormState((prev) => ({ ...prev, courseDescription: value }));
   };
 
   const handleTeachChange = (index: number, value: string) => {
-    if (!uniqueKeys.has("teachdescription")) {
-      uniqueKeys.add("teachdescription");
+    if (!uniqueKeys.has("learnings")) {
+      uniqueKeys.add("learnings");
       setCount1(uniqueKeys.size);
     }
-    const updatedTeachDesc = [...formState.teachDesc];
-    updatedTeachDesc[index] = value;
+    const updatedlearnings = [...formState.learnings];
+    updatedlearnings[index] = value;
     if (value.length <= 120)
-      setFormState((prev) => ({ ...prev, teachDesc: updatedTeachDesc }));
+      setFormState((prev) => ({ ...prev, learnings: updatedlearnings }));
   };
 
   const handleAudienceChange = (index: number, value: string) => {
-    if (!uniqueKeys.has("audiencedescription")) {
-      uniqueKeys.add("audiencedescription");
+    if (!uniqueKeys.has("targetAudience")) {
+      uniqueKeys.add("targetAudience");
       setCount1(uniqueKeys.size);
     }
-    const updatedAudienceDesc = [...formState.audienceDesc];
-    updatedAudienceDesc[index] = value;
+    const updatedtargetAudience = [...formState.targetAudience];
+    updatedtargetAudience[index] = value;
     if (value.length <= 120)
-      setFormState((prev) => ({ ...prev, audienceDesc: updatedAudienceDesc }));
+      setFormState((prev) => ({ ...prev, targetAudience: updatedtargetAudience}));
   };
 
   const handleRequirementChange = (index: number, value: string) => {
-    if (!uniqueKeys.has("requirementdescription")) {
-      uniqueKeys.add("requirementdescription");
+    if (!uniqueKeys.has("requirements")) {
+      uniqueKeys.add("requirements");
       setCount1(uniqueKeys.size);
     }
-    const updatedRequirementDesc = [...formState.requirementDesc];
-    updatedRequirementDesc[index] = value;
+    const updatedrequirements = [...formState.requirements];
+    updatedrequirements[index] = value;
     if (value.length <= 120) {
       setFormState((prev) => ({
         ...prev,
-        requirementDesc: updatedRequirementDesc,
+        requirements: updatedrequirements,
       }));
     }
   };
+
+
+
+  const handleSubmit = async (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+
+    try {
+     
+      const token = localStorage.getItem("token");
+      console.log(token);
+
+      // Make the request with the token in the headers
+      const res = await axios.put(
+        `http://localhost:8080/api/v1/course/updateCourse/${courseid}`,
+        {...formState,welcomeMsg:"",congratulationsMsg:""},
+        {
+          headers: {
+            Authorization: `Bearer ${token}`, // Include the token in the Authorization header
+          },
+        }
+      );
+
+      console.log(res.data);
+      setActiveTab("curriculum");
+    } catch (err) {
+      console.error(err);
+      alert("An error occurred while submitting the form.");
+    }
+  };
+
+
 
   return (
     <div className="mb-[37px] min-h-[100vh]">
@@ -137,8 +170,8 @@ const AdvanceInformation: FC<AdvanceInformationProps> = ({ setCount1,setActiveTa
               <div className="image-container flex-1">
                 <img
                   src={
-                    formState.thumbnail
-                      ? URL.createObjectURL(formState.thumbnail)
+                    formState.courseThumbnail
+                      ? URL.createObjectURL(formState.courseThumbnail)
                       : left_icon
                   }
                   alt="Course Thumbnail Placeholder"
@@ -160,7 +193,7 @@ const AdvanceInformation: FC<AdvanceInformationProps> = ({ setCount1,setActiveTa
                 <input
                   type="file"
                   id="imgInput"
-                  onChange={(e) => handleFileChange(e, "thumbnail")}
+                  onChange={(e) => handleFileChange(e, "courseThumbnail")}
                   accept="image/*"
                   className="hidden"
                 />
@@ -195,9 +228,9 @@ const AdvanceInformation: FC<AdvanceInformationProps> = ({ setCount1,setActiveTa
                   alt="Course Trailer Placeholder"
                   className="object-cover w-full lg:h-48 h-40"
                 /> */}
-                {formState.trailer ? (
+                {formState.courseTrailer ? (
                   <video
-                    src={URL.createObjectURL(formState.trailer)}
+                    src={URL.createObjectURL(formState.courseTrailer)}
                     controls
                     className="object-cover w-full aspect-square"
                   />
@@ -220,7 +253,7 @@ const AdvanceInformation: FC<AdvanceInformationProps> = ({ setCount1,setActiveTa
                   id="videoInput"
                   className="hidden"
                   accept="video/*"
-                  onChange={(e) => handleFileChange(e, "trailer")}
+                  onChange={(e) => handleFileChange(e, "courseTrailer")}
                 />
                 <label
                   htmlFor="videoInput"
@@ -246,7 +279,7 @@ const AdvanceInformation: FC<AdvanceInformationProps> = ({ setCount1,setActiveTa
             theme="snow"
             className="w-full h-[200px]"
             placeholder="Enter your course descriptions"
-            value={formState.description}
+            value={formState.courseDescription}
             onChange={handleDescriptionChange}
           />
         </div>
@@ -254,16 +287,16 @@ const AdvanceInformation: FC<AdvanceInformationProps> = ({ setCount1,setActiveTa
         {/* Teaching Points Section */}
         <div className="flex justify-between items-center lg:mt-[32px] mt-[40px] md:mb-[10px] mb-[24px] w-[90%] mx-auto">
           <p className="font-medium lg:text-[18px] text-[16px] text-[#1D2026] lg:leading-[24px] leading-[20px]">
-            What you will teach in this course ({formState.teachDesc.length}/8)
+            What you will teach in this course ({formState.learnings.length}/8)
           </p>
           <button
             className="text-[#3A6BE4] lg:text-[14px] text-[12px] lg:leading-[20px] leading-[18px]"
             onClick={(e) => {
               e.preventDefault();
-              if (formState.teachDesc.length < 8) {
+              if (formState.learnings.length < 8) {
                 setFormState((prev) => ({
                   ...prev,
-                  teachDesc: [...prev.teachDesc, ""],
+                  learnings: [...prev.learnings, ""],
                 }));
               }
             }}
@@ -271,7 +304,7 @@ const AdvanceInformation: FC<AdvanceInformationProps> = ({ setCount1,setActiveTa
             + Add New
           </button>
         </div>
-        {formState.teachDesc.map((item, index) => (
+        {formState.learnings.map((item, index) => (
           <div key={index} className="w-[90%] mx-auto mb-[24px]">
             <p className="text-[#1D2026] md:text-[14px] text-[12px] mb-[5px]">
               {index + 1}
@@ -293,16 +326,16 @@ const AdvanceInformation: FC<AdvanceInformationProps> = ({ setCount1,setActiveTa
 
         <div className="flex justify-between items-center lg:mt-[32px] mt-[40px] md:mb-[10px] mb-[24px] w-[90%] mx-auto">
           <p className="font-medium lg:text-[18px] text-[16px] text-[#1D2026] lg:leading-[24px] leading-[20px]">
-            Target Audience ({formState.audienceDesc.length}/8)
+            Target Audience ({formState.targetAudience.length}/8)
           </p>
           <button
             className="text-[#3A6BE4] lg:text-[14px] text-[12px] lg:leading-[20px] leading-[18px]"
             onClick={(e) => {
               e.preventDefault();
-              if (formState.audienceDesc.length < 8) {
+              if (formState.targetAudience.length < 8) {
                 setFormState((prev) => ({
                   ...prev,
-                  audienceDesc: [...prev.audienceDesc, ""],
+                  targetAudience: [...prev.targetAudience, ""],
                 }));
               }
             }}
@@ -311,7 +344,7 @@ const AdvanceInformation: FC<AdvanceInformationProps> = ({ setCount1,setActiveTa
           </button>
         </div>
 
-        {formState.audienceDesc.map((item, index) => (
+        {formState.targetAudience.map((item, index) => (
           <div key={index} className="w-[90%] mx-auto mb-[24px]">
             <p className="text-[#1D2026] md:text-[14px] text-[12px] mb-[5px]">
               {index + 1}
@@ -333,16 +366,16 @@ const AdvanceInformation: FC<AdvanceInformationProps> = ({ setCount1,setActiveTa
 
         <div className="flex justify-between items-center lg:mt-[32px] mt-[40px] md:mb-[10px] mb-[24px] w-[90%] mx-auto">
           <p className="font-medium lg:text-[18px] text-[16px] text-[#1D2026] lg:leading-[24px] leading-[20px]">
-            Course requirements ({formState.requirementDesc.length}/8)
+            Course requirements ({formState.requirements.length}/8)
           </p>
           <button
             className="text-[#3A6BE4] lg:text-[14px] text-[12px] lg:leading-[20px] leading-[18px]"
             onClick={(e) => {
               e.preventDefault();
-              if (formState.requirementDesc.length < 8) {
+              if (formState.requirements.length < 8) {
                 setFormState((prev) => ({
                   ...prev,
-                  requirementDesc: [...prev.requirementDesc, ""],
+                  requirements: [...prev.requirements, ""],
                 }));
               }
             }}
@@ -351,7 +384,7 @@ const AdvanceInformation: FC<AdvanceInformationProps> = ({ setCount1,setActiveTa
           </button>
         </div>
 
-        {formState.requirementDesc.map((desc, index) => (
+        {formState.requirements.map((desc, index) => (
           <div className="w-[90%] mx-auto mb-[24px]">
             <p className="text-[#1D2026] md:text-[14px] text-[12px] mb-[5px]">
               {index + 1}
@@ -375,7 +408,7 @@ const AdvanceInformation: FC<AdvanceInformationProps> = ({ setCount1,setActiveTa
           <button className="text-[#6E7485] lg:text-[18px] text-[14px] font-semibold lg:leading-[56px] leading-[40px] px-[32px] border-[#E9EAF0] border-[1px]" onClick={()=>setActiveTab("basic")}>
             Previous
           </button>
-          <button className="lg:text-[18px] text-[14px] font-semibold lg:leading-[56px] leading-[40px] text-white px-[32px] bg-[#3A6BE4]" onClick={()=>setActiveTab("curriculum")}>
+          <button className="lg:text-[18px] text-[14px] font-semibold lg:leading-[56px] leading-[40px] text-white px-[32px] bg-[#3A6BE4]" onClick={handleSubmit}>
             Save & next
           </button>
         </div>

@@ -4,107 +4,58 @@ import pencil from "../assets/PencilLine.svg";
 import trash from "../assets/Trash.svg";
 import { Link, useLocation } from "react-router-dom";
 import DownArrow from "../assets/CaretDown.svg";
-import { FC, useEffect, useState } from "react";
+import { FC, useEffect, useRef, useState } from "react";
 
 type Tab = "basic" | "advance" | "curriculum" | "publish";
 
 type CurriculumProps = {
   setCount2: React.Dispatch<React.SetStateAction<number>>;
-  setActiveTab:React.Dispatch<React.SetStateAction<Tab>>;
+  setActiveTab: React.Dispatch<React.SetStateAction<Tab>>;
 };
 
-// const sectionData = [
-//   {
-//     id: "section1",
-//     name: "Section name",
-//     lectures: [
-//       { id: "lecture1", name: "Lecture name", content: "" },
-//       { id: "lecture2", name: "Lecture name", content: "" },
-//     ],
-//   },
-//   {
-//     id: "section2",
-//     name: "Section name",
-//     lectures: [
-//       { id: "lecture1", name: "Lecture name", content: "" },
-//       { id: "lecture2", name: "Lecture name", content: "" },
-//     ],
-//   },
-//   {
-//     id: "section3",
-//     name: "Section name",
-//     lectures: [
-//       { id: "lecture1", name: "Lecture name", content: "" },
-//       { id: "lecture2", name: "Lecture name", content: "" },
-//     ],
-//   },
-//   {
-//     id: "section4",
-//     name: "Section name",
-//     lectures: [
-//       { id: "lecture1", name: "Lecture name", content: "" },
-//       { id: "lecture2", name: "Lecture name", content: "" },
-//     ],
-//   },
-// ];
+type formData = {
+  subjectTitle: string;
+  lectures: string[];
+};
 
-
- const   data= [
-      {
-        subjectTitle: "Physics",
-        lectures: [
-          {
-            lectureTitle: "Electro",
-            notes: "a",
-            dpp: "x",
-            video: "y",
-            assignment: "z",
-            test: "b",
-          },
-          {
-            lectureTitle: "Magnetic",
-            notes: "y",
-            assignment: "t",
-            video: "u",
-            dpp: "i",
-            test: "o",
-          },
-        ],
-      },
-      {
-        subjectTitle: "Chemistry",
-        lectures: [
-          {
-            lectureTitle: "Moles",
-            notes: "abc",
-            assignment: "poi",
-            video: "uyt",
-            test: "rew",
-            dpp: "qas",
-          },
-          {
-            lectureTitle: "Organic",
-            notes: "zxc",
-            assignment: "vbn",
-            video: "mlk",
-            test: "jhg",
-            dpp: "fds",
-          },
-        ],
-      },
-    ]
-
-
-    
-const Curriculm: FC<CurriculumProps> = ({ setCount2,setActiveTab }) => {
+const Curriculm: FC<CurriculumProps> = ({ setCount2, setActiveTab }) => {
   const [lectureCount, setLectureCount] = useState<number[]>([]);
   const [addSection, setAddSection] = useState(1);
+  // const [lectureTitle, setLectureTitle] = useState("Lecture name");
+  const [sectionName, setSectionName] = useState("Section Name");
+  const [isEditing, setIsEditing] = useState(false);
+  const [isEditingSection, setIsEditingSection] = useState(false);
+  // const [formData,setFormData]=useState<formData>({
+  //   welcomeMsg:"",
+  //   congratulationsMsg:"",
+  // })
 
   const { pathname } = useLocation();
 
   useEffect(() => {
     window.scrollTo(0, 0);
   }, [pathname]);
+
+  // const inputRef = useRef<HTMLInputElement>(null);
+  const [lectureTitles, setLectureTitles] = useState<string[]>(
+    Array(lectureCount.length).fill("Lecture Name")
+  );
+  const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
+  const inputRef2 = useRef<HTMLInputElement>(null);
+
+  // const handleClick = () => {
+  //   setIsEditing(true);
+  //   setTimeout(() => {
+  //     inputRef.current?.focus(); // Focus on the input box after it appears
+  //   }, 0);
+  // };
+
+  const handleSectionClick = () => {
+    setIsEditingSection(true);
+    setTimeout(() => {
+      inputRef2.current?.focus(); // Focus on the input box after it appears
+    }, 0);
+  };
 
   return (
     <div className="mb-[37px]">
@@ -145,7 +96,25 @@ const Curriculm: FC<CurriculumProps> = ({ setCount2,setActiveTab }) => {
           <div className="flex justify-between items-center">
             <div className="flex gap-x-2 lg:p-[24px] p-[12px]">
               <img src={menu} />
-              <p className="text-[#1D2026] font-medium text-[16px]">Section name</p>
+              <label className="text-[#1D2026] font-medium text-[16px]">
+                {!isEditingSection && sectionName}
+                {isEditingSection && (
+                  <input
+                    type="text"
+                    ref={inputRef2}
+                    className="border border-black absolute "
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter") {
+                        setIsEditingSection(false);
+                      }
+                    }}
+                    onBlur={() => setIsEditingSection(false)}
+                    onChange={(e) => {
+                      setSectionName(e.target.value);
+                    }}
+                  />
+                )}
+              </label>
             </div>
 
             <div className="flex gap-2 lg:p-[24px] p-[12px]">
@@ -159,7 +128,12 @@ const Curriculm: FC<CurriculumProps> = ({ setCount2,setActiveTab }) => {
                   setLectureCount(updatedLectureCount);
                 }}
               />
-              <img src={pencil} alt="" className="object-contain" />
+              <img
+                src={pencil}
+                alt=""
+                className="object-contain"
+                onClick={handleSectionClick}
+              />
               <img
                 src={trash}
                 alt=""
@@ -175,17 +149,39 @@ const Curriculm: FC<CurriculumProps> = ({ setCount2,setActiveTab }) => {
           </div>
 
           {Array.from({ length: lectureCount[i] }, (_, idx) => {
+             
             return (
+              
               <div
                 className="innerContent bg-white w-[95%] mx-auto mb-4"
                 key={idx}
               >
+               
                 <div className="flex justify-between items-center">
                   <div className="flex gap-x-2 lg:p-[24px] p-[12px]">
                     <img src={menu} />
-                    <p className="text-[#1D2026] font-medium lg:text-[16px] text-[14px]">
-                      Lecture name
-                    </p>
+                    <label className="text-[#1D2026] font-medium lg:text-[16px] text-[14px] relative">
+                      {!isEditing ? (lectureTitles[idx] || "Lecture Name")
+                      : (
+                        <input
+                          type="text"
+                          value={lectureTitles[idx]}
+                          ref={(el) => (inputRefs.current[idx] = el)}
+                          className="absolute "
+                          onKeyDown={(e) => {
+                            if (e.key === "Enter") {
+                              setIsEditing(false);
+                            }
+                          }}
+                          onBlur={() => setIsEditing(false)}
+                          onChange={(e) => {
+                            const updatedTitles = [...lectureTitles];
+                            updatedTitles[idx] = e.target.value;
+                            setLectureTitles(updatedTitles);
+                          }}
+                        />
+                      )}
+                    </label>
                   </div>
 
                   <div className="flex gap-2 lg:p-[24px] p-[12px]">
@@ -202,6 +198,12 @@ const Curriculm: FC<CurriculumProps> = ({ setCount2,setActiveTab }) => {
                       src={pencil}
                       alt=""
                       className="object-contain pointer"
+                      onClick={(e) => {
+                        setIsEditing(true);
+                        setTimeout(() => {
+                          inputRefs.current[idx]?.focus();// Focus on the input box after it appears
+                        }, 0);
+                      }}
                     />
                     <img
                       src={trash}
@@ -236,10 +238,16 @@ const Curriculm: FC<CurriculumProps> = ({ setCount2,setActiveTab }) => {
       </div>
 
       <div className="flex justify-between items-center mt-[32px] pb-[40px] pt-[60px] w-[90%] m-auto">
-        <button className="text-[#6E7485] lg:text-[18px] text-[14px] font-semibold lg:leading-[56px] leading-[40px] px-[32px] border-[#E9EAF0] border-[1px]" onClick={()=>setActiveTab("advance")}>
+        <button
+          className="text-[#6E7485] lg:text-[18px] text-[14px] font-semibold lg:leading-[56px] leading-[40px] px-[32px] border-[#E9EAF0] border-[1px]"
+          onClick={() => setActiveTab("advance")}
+        >
           Previous
         </button>
-        <button className="lg:text-[18px] text-[14px] font-semibold lg:leading-[56px] leading-[40px] text-white px-[32px] bg-[#3A6BE4]" onClick={()=>setActiveTab("publish")}>
+        <button
+          className="lg:text-[18px] text-[14px] font-semibold lg:leading-[56px] leading-[40px] text-white px-[32px] bg-[#3A6BE4]"
+          onClick={() => setActiveTab("publish")}
+        >
           Save & next
         </button>
       </div>
