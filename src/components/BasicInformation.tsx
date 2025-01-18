@@ -39,14 +39,14 @@ type Tab = "basic" | "advance" | "curriculum" | "publish";
 type BasicInformationProps = {
   setCount: React.Dispatch<React.SetStateAction<number>>; // Use lowercase `number` for TypeScript type
   setActiveTab: React.Dispatch<React.SetStateAction<Tab>>;
-  setCourseid: React.Dispatch<React.SetStateAction<string>>
+  setCourseid: React.Dispatch<React.SetStateAction<string>>;
 };
 
 const uniqueKeys = new Set();
 const BasicInformation: FC<BasicInformationProps> = ({
   setCount,
   setActiveTab,
-  setCourseid
+  setCourseid,
 }) => {
   const [formState, setFormState] = useState<FormState>({
     title: "",
@@ -112,11 +112,12 @@ const BasicInformation: FC<BasicInformationProps> = ({
           },
         }
       );
-      console.log(res.data);
-      
-        setUsers(res.data);
+      console.log(res.data.data);
 
-      console.log("users : " + JSON.stringify(users));
+
+      setUsers(res.data.data);
+
+      // console.log("users : " + JSON.stringify(users));
     } catch (err) {
       console.error(err);
     }
@@ -189,7 +190,11 @@ const BasicInformation: FC<BasicInformationProps> = ({
             Authorization: `Bearer ${token}`, // Include the token in the Authorization header
           },
         }
+        
       );
+
+      localStorage.setItem("courseId",res.data.data._id);
+
 
       console.log(res.data);
       setActiveTab("advance");
@@ -397,8 +402,7 @@ const BasicInformation: FC<BasicInformationProps> = ({
 
               {/* {users.length > 0  && users[0].firstName} */}
 
-              {
-              users.length > 0 &&
+              {users.length > 0 &&
                 users.map((user) => (
                   <option key={user._id} value={user._id}>
                     {user.firstName} {user.lastName}

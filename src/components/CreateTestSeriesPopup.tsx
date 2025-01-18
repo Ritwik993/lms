@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import ToggleSwitch from "./ToogleSwitch";
 import ToggleSwitch2 from "./ToggleSwitch2";
+import axios from "axios";
 
 type CreateTestSeriesPopupProps = {
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
@@ -12,13 +12,32 @@ const CreateTestSeriesPopup = ({ setIsOpen }: CreateTestSeriesPopupProps) => {
   const [sortBy, setSortBy] = useState<number>(0);
   const [enabled, setEnabled] = useState<boolean>(false);
 
-  const handleSubmit = () => {
+  const handleSubmit = async (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+
     const testSeriesData = {
       title,
       price,
       sortBy,
-      enabled,
+      isEnabled: enabled ? 1 : 0, 
     };
+
+    const token = localStorage.getItem("token");
+    try {
+      const res = await axios.post(
+        "http://localhost:8080/api/v1/testSeries/addTestSeries",
+        testSeriesData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      console.log("Test data:", res.data);
+    } catch (err) {
+      console.error(err);
+    }
+
     console.log("Test Series Data:", testSeriesData);
     setIsOpen((prev) => !prev);
   };
@@ -53,7 +72,7 @@ const CreateTestSeriesPopup = ({ setIsOpen }: CreateTestSeriesPopupProps) => {
             Price
           </label>
           <input
-            type="number"
+            type="text"
             id="price"
             value={price}
             onChange={(e) => setPrice(Number(e.target.value))}
@@ -65,7 +84,7 @@ const CreateTestSeriesPopup = ({ setIsOpen }: CreateTestSeriesPopupProps) => {
             Sort By
           </label>
           <input
-            type="number"
+            type="text"
             id="sortBy"
             value={sortBy}
             onChange={(e) => setSortBy(Number(e.target.value))}
@@ -81,8 +100,7 @@ const CreateTestSeriesPopup = ({ setIsOpen }: CreateTestSeriesPopupProps) => {
               onChange={() => setEnabled(!enabled)}
               className="hidden"
             />
-            <ToggleSwitch2/>
-            {/* <span className="absolute inset-0 bg-gray-300 rounded-full cursor-pointer transition-all duration-300 before:absolute before:w-4 before:h-4 before:bg-white before:rounded-full before:top-1 before:left-1 before:transition-transform before:duration-300 checked:bg-blue-500 checked:before:translate-x-4"></span> */}
+            <ToggleSwitch2 />
           </label>
         </div>
         <button

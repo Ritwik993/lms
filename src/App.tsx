@@ -24,6 +24,7 @@ import Referal from './pages/Referal';
 import SignInPage from './pages/SignInPage';
 import SignUpPage from './pages/SignUpPage';
 import Reviews from './pages/Reviews';
+import LiveClassDetails from './components/Demo';
 
 function App() {
 
@@ -112,6 +113,10 @@ function App() {
       path:"/form",
       element:<ToogleSwitch/>
     },
+    {
+      path:"/demo",
+      element:<LiveClassDetails/>
+    }
    
   ])
 

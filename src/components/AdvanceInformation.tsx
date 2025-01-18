@@ -9,16 +9,15 @@ import axios from "axios";
 
 type Tab = "basic" | "advance" | "curriculum" | "publish";
 
-
 type AdvanceInformationProps = {
   setCount1: React.Dispatch<React.SetStateAction<number>>;
-  setActiveTab:React.Dispatch<React.SetStateAction<Tab>>;
+  setActiveTab: React.Dispatch<React.SetStateAction<Tab>>;
   courseid: string;
 };
 
 type FormState = {
-  courseThumbnail: File | null;
-  courseTrailer: File | null;
+  courseThumbnail: string | null;
+  courseTrailer: string | null;
   courseDescription: string;
   learnings: string[];
   targetAudience: string[];
@@ -26,7 +25,11 @@ type FormState = {
 };
 
 const uniqueKeys = new Set();
-const AdvanceInformation: FC<AdvanceInformationProps> = ({ setCount1,setActiveTab,courseid }) => {
+const AdvanceInformation: FC<AdvanceInformationProps> = ({
+  setCount1,
+  setActiveTab,
+  courseid,
+}) => {
   const [formState, setFormState] = useState<FormState>({
     courseThumbnail: null,
     courseTrailer: null,
@@ -35,7 +38,6 @@ const AdvanceInformation: FC<AdvanceInformationProps> = ({ setCount1,setActiveTa
     targetAudience: [""],
     requirements: [""],
   });
-
 
   const { pathname } = useLocation();
 
@@ -51,8 +53,19 @@ const AdvanceInformation: FC<AdvanceInformationProps> = ({ setCount1,setActiveTa
   //   }
   // }
 
-
-  
+  // const handleFileChange = (
+  //   e: React.ChangeEvent<HTMLInputElement>,
+  //   field: "courseThumbnail" | "courseTrailer"
+  // ) => {
+  //   if (!uniqueKeys.has(field)) {
+  //     uniqueKeys.add(field);
+  //     setCount1(uniqueKeys.size);
+  //   }
+  //   if (e.target.files && e.target?.files.length > 0) {
+  //     const file = e.target.files[0];
+  //     setFormState((prev) => ({ ...prev, [field]: file }));
+  //   }
+  // };
 
   const handleFileChange = (
     e: React.ChangeEvent<HTMLInputElement>,
@@ -62,9 +75,21 @@ const AdvanceInformation: FC<AdvanceInformationProps> = ({ setCount1,setActiveTa
       uniqueKeys.add(field);
       setCount1(uniqueKeys.size);
     }
+
     if (e.target.files && e.target?.files.length > 0) {
       const file = e.target.files[0];
-      setFormState((prev) => ({ ...prev, [field]: file }));
+
+      // Convert the file to Base64
+      const reader = new FileReader();
+      reader.onload = () => {
+        if (reader.result) {
+          setFormState((prev) => ({
+            ...prev,
+            [field]: reader.result?.toString(),
+          }));
+        }
+      };
+      reader.readAsDataURL(file);
     }
   };
 
@@ -95,7 +120,10 @@ const AdvanceInformation: FC<AdvanceInformationProps> = ({ setCount1,setActiveTa
     const updatedtargetAudience = [...formState.targetAudience];
     updatedtargetAudience[index] = value;
     if (value.length <= 120)
-      setFormState((prev) => ({ ...prev, targetAudience: updatedtargetAudience}));
+      setFormState((prev) => ({
+        ...prev,
+        targetAudience: updatedtargetAudience,
+      }));
   };
 
   const handleRequirementChange = (index: number, value: string) => {
@@ -113,20 +141,26 @@ const AdvanceInformation: FC<AdvanceInformationProps> = ({ setCount1,setActiveTa
     }
   };
 
-
-
   const handleSubmit = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
+    const cid = localStorage.getItem("courseId");
 
     try {
-     
       const token = localStorage.getItem("token");
       console.log(token);
 
       // Make the request with the token in the headers
+      const { courseThumbnail, courseTrailer, ...restFormState } = formState;
+
+      // If you want to assign new values:
+      const modifiedFormState = {
+        courseThumbnail: "hello",
+        courseTrailer: "hi",
+        ...restFormState,
+      };
       const res = await axios.put(
-        `http://localhost:8080/api/v1/course/updateCourse/${courseid}`,
-        {...formState,welcomeMsg:"",congratulationsMsg:""},
+        `http://localhost:8080/api/v1/course/updateCourse/${cid}`,
+        { ...modifiedFormState, welcomeMsg: "", congratulationsMsg: "" },
         {
           headers: {
             Authorization: `Bearer ${token}`, // Include the token in the Authorization header
@@ -141,8 +175,6 @@ const AdvanceInformation: FC<AdvanceInformationProps> = ({ setCount1,setActiveTa
       alert("An error occurred while submitting the form.");
     }
   };
-
-
 
   return (
     <div className="mb-[37px] min-h-[100vh]">
@@ -169,13 +201,9 @@ const AdvanceInformation: FC<AdvanceInformationProps> = ({ setCount1,setActiveTa
             <div className="content flex flex-col lg:flex-row gap-4">
               <div className="image-container flex-1">
                 <img
-                  src={
-                    formState.courseThumbnail
-                      ? URL.createObjectURL(formState.courseThumbnail)
-                      : left_icon
-                  }
+                  src={formState.courseThumbnail || left_icon}
                   alt="Course Thumbnail Placeholder"
-                  className="object-cover w-full aspect-square "
+                  className="object-cover w-full aspect-square"
                 />
               </div>
               <div className="details flex-1">
@@ -230,7 +258,7 @@ const AdvanceInformation: FC<AdvanceInformationProps> = ({ setCount1,setActiveTa
                 /> */}
                 {formState.courseTrailer ? (
                   <video
-                    src={URL.createObjectURL(formState.courseTrailer)}
+                    src={formState.courseTrailer}
                     controls
                     className="object-cover w-full aspect-square"
                   />
@@ -405,10 +433,16 @@ const AdvanceInformation: FC<AdvanceInformationProps> = ({ setCount1,setActiveTa
         ))}
 
         <div className="flex justify-between items-center mt-[32px] pb-[40px] pt-[60px] w-[90%] m-auto">
-          <button className="text-[#6E7485] lg:text-[18px] text-[14px] font-semibold lg:leading-[56px] leading-[40px] px-[32px] border-[#E9EAF0] border-[1px]" onClick={()=>setActiveTab("basic")}>
+          <button
+            className="text-[#6E7485] lg:text-[18px] text-[14px] font-semibold lg:leading-[56px] leading-[40px] px-[32px] border-[#E9EAF0] border-[1px]"
+            onClick={() => setActiveTab("basic")}
+          >
             Previous
           </button>
-          <button className="lg:text-[18px] text-[14px] font-semibold lg:leading-[56px] leading-[40px] text-white px-[32px] bg-[#3A6BE4]" onClick={handleSubmit}>
+          <button
+            className="lg:text-[18px] text-[14px] font-semibold lg:leading-[56px] leading-[40px] text-white px-[32px] bg-[#3A6BE4]"
+            onClick={handleSubmit}
+          >
             Save & next
           </button>
         </div>

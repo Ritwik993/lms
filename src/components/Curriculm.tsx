@@ -37,10 +37,17 @@ const Curriculm: FC<CurriculumProps> = ({ setCount2, setActiveTab }) => {
   }, [pathname]);
 
   // const inputRef = useRef<HTMLInputElement>(null);
-  const [lectureTitles, setLectureTitles] = useState<string[]>(
-    Array(lectureCount.length).fill("Lecture Name")
+  const [lectureTitles, setLectureTitles] = useState<string[][]>(
+    Array(lectureCount.length)
+      .fill(null)
+      .map(() => [])
   );
-  const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
+
+  const inputRefs = useRef<(HTMLInputElement | null)[][]>(
+    Array(lectureCount.length)
+      .fill(null)
+      .map(() => Array(0).fill(null))
+  );
   const inputRef2 = useRef<HTMLInputElement>(null);
 
   // const handleClick = () => {
@@ -149,34 +156,31 @@ const Curriculm: FC<CurriculumProps> = ({ setCount2, setActiveTab }) => {
           </div>
 
           {Array.from({ length: lectureCount[i] }, (_, idx) => {
-             
             return (
-              
               <div
                 className="innerContent bg-white w-[95%] mx-auto mb-4"
                 key={idx}
               >
-               
                 <div className="flex justify-between items-center">
                   <div className="flex gap-x-2 lg:p-[24px] p-[12px]">
                     <img src={menu} />
                     <label className="text-[#1D2026] font-medium lg:text-[16px] text-[14px] relative">
-                      {!isEditing ? (lectureTitles[idx] || "Lecture Name")
-                      : (
+                      {!isEditing ? (
+                        lectureTitles[i]?.[idx] || "Lecture Name"
+                      ) : (
                         <input
                           type="text"
-                          value={lectureTitles[idx]}
-                          ref={(el) => (inputRefs.current[idx] = el)}
-                          className="absolute "
-                          onKeyDown={(e) => {
-                            if (e.key === "Enter") {
-                              setIsEditing(false);
+                          value={lectureTitles[i]?.[idx] || ""}
+                          ref={(el) => {
+                            if (!inputRefs.current[i]) {
+                              inputRefs.current[i] = [];
                             }
+                            inputRefs.current[i][idx] = el;
                           }}
-                          onBlur={() => setIsEditing(false)}
                           onChange={(e) => {
                             const updatedTitles = [...lectureTitles];
-                            updatedTitles[idx] = e.target.value;
+                            updatedTitles[i] = [...(updatedTitles[idx] || [])];
+                            updatedTitles[i][idx] = e.target.value;
                             setLectureTitles(updatedTitles);
                           }}
                         />
@@ -201,7 +205,7 @@ const Curriculm: FC<CurriculumProps> = ({ setCount2, setActiveTab }) => {
                       onClick={(e) => {
                         setIsEditing(true);
                         setTimeout(() => {
-                          inputRefs.current[idx]?.focus();// Focus on the input box after it appears
+                          inputRefs.current[i]?.[idx]?.focus();
                         }, 0);
                       }}
                     />
