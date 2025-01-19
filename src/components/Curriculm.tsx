@@ -13,56 +13,114 @@ type CurriculumProps = {
   setActiveTab: React.Dispatch<React.SetStateAction<Tab>>;
 };
 
-type formData = {
-  subjectTitle: string;
-  lectures: string[];
-};
+interface Topic {
+  id: number;
+  name: string;
+}
+
+interface Section {
+  id: number;
+  name: string;
+  topics: Topic[];
+}
 
 const Curriculm: FC<CurriculumProps> = ({ setCount2, setActiveTab }) => {
-  const [lectureCount, setLectureCount] = useState<number[]>([]);
-  const [addSection, setAddSection] = useState(1);
-  // const [lectureTitle, setLectureTitle] = useState("Lecture name");
-  const [sectionName, setSectionName] = useState("Section Name");
-  const [isEditing, setIsEditing] = useState(false);
-  const [isEditingSection, setIsEditingSection] = useState(false);
-  // const [formData,setFormData]=useState<formData>({
-  //   welcomeMsg:"",
-  //   congratulationsMsg:"",
-  // })
-
   const { pathname } = useLocation();
+  const inputRef = useRef<HTMLInputElement | null>(null);
+  const inputRef2 = useRef<HTMLInputElement | null>(null);
+
+  const [sections, setSections] = useState<Section[]>([
+    { id: 1, name: "Physics", topics: [{ id: 1, name: "Electromagnetism" }] },
+  ]);
+
+  const [newSectionName, setNewSectionName] = useState("");
+  const [editingSectionId, setEditingSectionId] = useState<number | null>(null);
+  const [editingSectionName, setEditingSectionName] = useState("");
+  const [editingTopicId, setEditingTopicId] = useState<number | null>(null);
+  const [editingTopicName, setEditingTopicName] = useState<string>("");
+
+  const addSection = (newSectionName: string) => {
+    if (newSectionName.trim()) {
+      setSections((prev) => [
+        ...prev,
+        { id: Date.now(), name: newSectionName.trim(), topics: [] },
+      ]);
+      setNewSectionName("");
+    }
+  };
+
+  const deleteSection = (id: number) => {
+    setSections((prev) => prev.filter((section) => section.id !== id));
+  };
+
+  const updateSectionName = () => {
+    if (editingSectionId !== null && editingSectionName.trim()) {
+      setSections((prev) =>
+        prev.map((section) =>
+          section.id === editingSectionId
+            ? { ...section, name: editingSectionName.trim() }
+            : section
+        )
+      );
+    }
+    setEditingSectionId(null);
+    setEditingSectionName("");
+  };
+
+  const addTopic = (sectionId: number, topicName: string) => {
+    setSections((prev) =>
+      prev.map((section) =>
+        section.id === sectionId
+          ? {
+              ...section,
+              topics: [...section.topics, { id: Date.now(), name: topicName }],
+            }
+          : section
+      )
+    );
+  };
+
+  const deleteTopic = (sectionId: number, topicId: number) => {
+    setSections((prev) =>
+      prev.map((section) =>
+        section.id === sectionId
+          ? {
+              ...section,
+              topics: section.topics.filter((topic) => topic.id !== topicId),
+            }
+          : section
+      )
+    );
+  };
+
+  const editTopicName = (sectionId: number) => {
+    if (
+      editingTopicId != null &&
+      sectionId != null &&
+      editingTopicName.trim()
+    ) {
+      setSections((prev) =>
+        prev.map((section) =>
+          section.id === sectionId
+            ? {
+                ...section,
+                topics: section.topics.map((topic) =>
+                  topic.id === editingTopicId
+                    ? { ...topic, name: editingTopicName.trim() }
+                    : topic
+                ),
+              }
+            : section
+        )
+      );
+    }
+    setEditingTopicId(null);
+    setEditingTopicName("");
+  };
 
   useEffect(() => {
     window.scrollTo(0, 0);
   }, [pathname]);
-
-  // const inputRef = useRef<HTMLInputElement>(null);
-  const [lectureTitles, setLectureTitles] = useState<string[][]>(
-    Array(lectureCount.length)
-      .fill(null)
-      .map(() => [])
-  );
-
-  const inputRefs = useRef<(HTMLInputElement | null)[][]>(
-    Array(lectureCount.length)
-      .fill(null)
-      .map(() => Array(0).fill(null))
-  );
-  const inputRef2 = useRef<HTMLInputElement>(null);
-
-  // const handleClick = () => {
-  //   setIsEditing(true);
-  //   setTimeout(() => {
-  //     inputRef.current?.focus(); // Focus on the input box after it appears
-  //   }, 0);
-  // };
-
-  const handleSectionClick = () => {
-    setIsEditingSection(true);
-    setTimeout(() => {
-      inputRef2.current?.focus(); // Focus on the input box after it appears
-    }, 0);
-  };
 
   return (
     <div className="mb-[37px]">
@@ -95,33 +153,36 @@ const Curriculm: FC<CurriculumProps> = ({ setCount2, setActiveTab }) => {
         </div>
       </div>
 
-      {Array.from({ length: addSection }, (_, i) => (
-        <div
-          className="contentBox  mt-[16px] w-[90%] mx-auto min-h-[312px] pb-8 bg-[#F5F7FA]"
-          key={i}
-        >
+      {/*  */}
+      {sections.map((section) => (
+        <div className="contentBox  mt-[16px] w-[90%] mx-auto min-h-[312px] pb-8 bg-[#F5F7FA]">
           <div className="flex justify-between items-center">
             <div className="flex gap-x-2 lg:p-[24px] p-[12px]">
               <img src={menu} />
-              <label className="text-[#1D2026] font-medium text-[16px]">
-                {!isEditingSection && sectionName}
-                {isEditingSection && (
-                  <input
-                    type="text"
-                    ref={inputRef2}
-                    className="border border-black absolute "
-                    onKeyDown={(e) => {
-                      if (e.key === "Enter") {
-                        setIsEditingSection(false);
-                      }
-                    }}
-                    onBlur={() => setIsEditingSection(false)}
-                    onChange={(e) => {
-                      setSectionName(e.target.value);
-                    }}
-                  />
-                )}
-              </label>
+              {editingSectionId === section.id ? (
+                <input
+                  ref={inputRef}
+                  type="text"
+                  value={editingSectionName}
+                  onChange={(e) => setEditingSectionName(e.target.value)}
+                  onBlur={updateSectionName}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") updateSectionName();
+                  }}
+                  className="bg-[#F5F7FA] border-b border-gray-400 focus:outline-none"
+                  autoFocus
+                />
+              ) : (
+                <p
+                  className="text-[#1D2026] font-medium text-[16px] cursor-pointer"
+                  onClick={() => {
+                    setEditingSectionId(section.id);
+                    setEditingSectionName(section.name);
+                  }}
+                >
+                  {section.name}
+                </p>
+              )}
             </div>
 
             <div className="flex gap-2 lg:p-[24px] p-[12px]">
@@ -129,113 +190,96 @@ const Curriculm: FC<CurriculumProps> = ({ setCount2, setActiveTab }) => {
                 src={plus}
                 alt=""
                 className="object-contain pointer"
-                onClick={() => {
-                  const updatedLectureCount = [...lectureCount];
-                  updatedLectureCount[i] = (lectureCount[i] || 0) + 1;
-                  setLectureCount(updatedLectureCount);
-                }}
+                onClick={() => addTopic(section.id, "Chapter1")}
               />
               <img
                 src={pencil}
                 alt=""
                 className="object-contain"
-                onClick={handleSectionClick}
+                onClick={() => {
+                  setEditingSectionId(section.id);
+                  setEditingSectionName(section.name);
+                  inputRef.current?.focus();
+                }}
               />
               <img
                 src={trash}
                 alt=""
-                className="object-contain"
-                onClick={() => {
-                  const updatedLectureCount = [...lectureCount];
-                  if (lectureCount[i] > 0)
-                    updatedLectureCount[i] = lectureCount[i] - 1;
-                  setLectureCount(updatedLectureCount);
-                }}
+                className="object-contain cursor-pointer"
+                onClick={() => deleteSection(section.id)}
               />
             </div>
           </div>
-
-          {Array.from({ length: lectureCount[i] }, (_, idx) => {
-            return (
-              <div
-                className="innerContent bg-white w-[95%] mx-auto mb-4"
-                key={idx}
-              >
-                <div className="flex justify-between items-center">
-                  <div className="flex gap-x-2 lg:p-[24px] p-[12px]">
-                    <img src={menu} />
-                    <label className="text-[#1D2026] font-medium lg:text-[16px] text-[14px] relative">
-                      {!isEditing ? (
-                        lectureTitles[i]?.[idx] || "Lecture Name"
-                      ) : (
-                        <input
-                          type="text"
-                          value={lectureTitles[i]?.[idx] || ""}
-                          ref={(el) => {
-                            if (!inputRefs.current[i]) {
-                              inputRefs.current[i] = [];
-                            }
-                            inputRefs.current[i][idx] = el;
-                          }}
-                          onChange={(e) => {
-                            const updatedTitles = [...lectureTitles];
-                            updatedTitles[i] = [...(updatedTitles[idx] || [])];
-                            updatedTitles[i][idx] = e.target.value;
-                            setLectureTitles(updatedTitles);
-                          }}
-                        />
-                      )}
-                    </label>
-                  </div>
-
-                  <div className="flex gap-2 lg:p-[24px] p-[12px]">
-                    <Link to="/contentcourse">
-                      <div className="flex bg-[#3D70F5] bg-opacity-25 lg:px-[16px] px-[10px]  gap-x-[4px]">
-                        <p className=" text-[#3A6BE4] font-semibold lg:text-[14px] text-[12px] lg:leading-[40px] leading-[35px]  ">
-                          Contents
-                        </p>
-                        <img src={DownArrow} className="object-contain " />
-                      </div>
-                    </Link>
-                    {/* <img src={plus} alt="" className="object-contain" /> */}
-                    <img
-                      src={pencil}
-                      alt=""
-                      className="object-contain pointer"
-                      onClick={(e) => {
-                        setIsEditing(true);
-                        setTimeout(() => {
-                          inputRefs.current[i]?.[idx]?.focus();
-                        }, 0);
+          {section.topics.map((topic) => (
+            <div className="innerContent bg-white w-[95%] mx-auto mb-4">
+              <div className="flex justify-between items-center">
+                <div className="flex gap-x-2 lg:p-[24px] p-[12px]">
+                  <img src={menu} />
+                  {editingTopicId === topic.id ? (
+                    <input
+                      ref={inputRef2}
+                      type="text"
+                      value={editingTopicName}
+                      onChange={(e) => setEditingTopicName(e.target.value)}
+                      onBlur={() => editTopicName(section.id)}
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter") editTopicName(section.id);
                       }}
+                      className="bg-[#F5F7FA] border-b border-gray-400 focus:outline-none"
+                      autoFocus
                     />
-                    <img
-                      src={trash}
-                      alt=""
-                      className="object-contain pointer"
-                      // onClick={() => setLectureCount(lectureCount[i] - 1)}
+                  ) : (
+                    <p
+                      className="text-[#1D2026] font-medium text-[16px] cursor-pointer"
                       onClick={() => {
-                        const updatedLectureCount = [...lectureCount];
-                        updatedLectureCount[i] = lectureCount[i] - 1;
-                        setLectureCount(updatedLectureCount);
+                        setEditingTopicId(topic.id);
+                        setEditingTopicName(topic.name);
                       }}
-                    />
-                  </div>
+                    >
+                      {topic.name}
+                    </p>
+                  )}
+                </div>
+
+                <div className="flex gap-2 lg:p-[24px] p-[12px]">
+                  <Link to="/contentcourse">
+                    <div className="flex bg-[#3D70F5] bg-opacity-25 lg:px-[16px] px-[10px]  gap-x-[4px]">
+                      <p className=" text-[#3A6BE4] font-semibold lg:text-[14px] text-[12px] lg:leading-[40px] leading-[35px]  ">
+                        Contents
+                      </p>
+                      <img src={DownArrow} className="object-contain " />
+                    </div>
+                  </Link>
+                  {/* <img src={plus} alt="" className="object-contain" /> */}
+                  <img
+                    src={pencil}
+                    alt=""
+                    className="object-contain pointer"
+                    onClick={() => {
+                      setEditingTopicId(topic.id);
+                      setEditingTopicName(topic.name);
+                      inputRef2.current?.focus();
+                    }}
+                  />
+                  <img
+                    src={trash}
+                    alt=""
+                    className="object-contain pointer"
+                    onClick={() => deleteTopic(section.id, topic.id)}
+                  />
                 </div>
               </div>
-            );
-          })}
-
-          {/* 
-         
-          */}
+            </div>
+          ))}
         </div>
       ))}
+
+      {/* // */}
 
       <div className="w-[90%] mx-auto">
         <button
           className="mt-[30px] bg-[#3D70F5] bg-opacity-25 text-[#3A6BE4] font-semibold text-[16px] leading-[48px] w-full text-center"
-          onClick={() => setAddSection(addSection + 1)}
+          onClick={() => addSection("Section Name")}
         >
           Add Sections
         </button>

@@ -1,7 +1,6 @@
 import icon from "../assets/icon1.svg";
 import chartBar from "../assets/ChartBar1.svg";
 import plusCircle from "../assets/PlusCircle1.svg";
-import credit from "../assets/CreditCard.svg";
 import stack from "../assets/Stack.svg";
 import { Book } from "lucide-react";
 import chat from "../assets/ChatCircleDots.svg";
