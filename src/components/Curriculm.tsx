@@ -30,7 +30,7 @@ const Curriculm: FC<CurriculumProps> = ({ setCount2, setActiveTab }) => {
   const inputRef2 = useRef<HTMLInputElement | null>(null);
 
   const [sections, setSections] = useState<Section[]>([
-    { id: 1, name: "Physics", topics: [{ id: 1, name: "Electromagnetism" }] },
+    { id: 1, name: "Section Name", topics: [{ id: 1, name: "Chapter Name" }] },
   ]);
 
   const [newSectionName, setNewSectionName] = useState("");
@@ -142,7 +142,7 @@ const Curriculm: FC<CurriculumProps> = ({ setCount2, setActiveTab }) => {
         <div className="flex gap-x-2 lg:p-[24px] p-[12px]">
           <img src={menu} />
           <p className="text-[#1D2026] font-medium text-[16px]">
-            Live Class Details
+             Class Details
           </p>
         </div>
 
@@ -190,7 +190,7 @@ const Curriculm: FC<CurriculumProps> = ({ setCount2, setActiveTab }) => {
                 src={plus}
                 alt=""
                 className="object-contain pointer"
-                onClick={() => addTopic(section.id, "Chapter1")}
+                onClick={() => addTopic(section.id, "Chapter Name")}
               />
               <img
                 src={pencil}

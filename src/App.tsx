@@ -1,130 +1,132 @@
-
-
-import './App.css'
-import Sidebar from './components/Sidebar'
-import CreateCourse from './pages/CreateCourse';
-import Dashboard from './pages/Dashboard'
+import "./App.css";
+import Sidebar from "./components/Sidebar";
+import CreateCourse from "./pages/CreateCourse";
+import Dashboard from "./pages/Dashboard";
 import { createBrowserRouter, Outlet, RouterProvider } from "react-router-dom";
-import Query from './pages/Query';
-import ScheduledClass from './pages/ScheduledClass';
-import Setting from './pages/Setting';
-import ContentCourse from './pages/ContentCourse';
-import NotificationBox from './components/NotificationBox';
-import AttachFileModal from './components/AttachBanner';
-import NotificationBoxModal from './components/NotificationBox';
-import TestSeries from './pages/TestSeries';
-import Form from './components/Form';
-import AddTest from './pages/AddTest';
-import TestForm from './components/TestForm';
-import ToogleSwitch from './components/ToogleSwitch';
-import { DndProvider } from 'react-dnd';
-import { HTML5Backend } from 'react-dnd-html5-backend';
-import Courses from './pages/Courses';
-import Referal from './pages/Referal';
-import SignInPage from './pages/SignInPage';
-import SignUpPage from './pages/SignUpPage';
-import Reviews from './pages/Reviews';
-import LiveClassDetails from './components/Demo';
+import Query from "./pages/Query";
+import ScheduledClass from "./pages/ScheduledClass";
+import Setting from "./pages/Setting";
+import ContentCourse from "./pages/ContentCourse";
+import NotificationBox from "./components/NotificationBox";
+import AttachFileModal from "./components/AttachBanner";
+import NotificationBoxModal from "./components/NotificationBox";
+import TestSeries from "./pages/TestSeries";
+import Form from "./components/Form";
+import AddTest from "./pages/AddTest";
+import TestForm from "./components/TestForm";
+import ToogleSwitch from "./components/ToogleSwitch";
+import { DndProvider } from "react-dnd";
+import { HTML5Backend } from "react-dnd-html5-backend";
+import Courses from "./pages/Courses";
+import Referal from "./pages/Referal";
+import SignInPage from "./pages/SignInPage";
+import SignUpPage from "./pages/SignUpPage";
+import Reviews from "./pages/Reviews";
+import LiveClassDetails from "./components/Demo";
+import { Provider } from "react-redux";
+import store from "./utils/store";
 
 function App() {
+  const AppLayout = () => {
+    return (
+      <>
+        <div className="max-w-[1600px] mx-auto flex ">
+          {/* <Navbar/> */}
+          <Sidebar />
+          <Outlet />
+        </div>
+      </>
+    );
+  };
 
-  const AppLayout=()=>{
-    return(<>
-      <div className='max-w-[1600px] mx-auto flex '>
-      {/* <Navbar/> */}
-        <Sidebar/>
-        <Outlet/>
-    </div>
-    </>)
-  }
-
-  const appRouter=createBrowserRouter([
+  const appRouter = createBrowserRouter([
     {
-      path:"/",
-      element:<SignInPage/>
+      path: "/",
+      element: <SignInPage />,
     },
     {
-      path:"/signUp",
-      element:<SignUpPage/>
+      path: "/signUp",
+      element: <SignUpPage />,
     },
     {
-      path:"/",
-      element:<AppLayout/>,
-      children:[
+      path: "/",
+      element: <AppLayout />,
+      children: [
         {
-          path:"/dashboard",
-          element:<Dashboard/>
+          path: "/dashboard",
+          element: <Dashboard />,
         },
         {
-          path:"/createCourse",
-          element:<CreateCourse/>
+          path: "/createCourse",
+          element: <CreateCourse />,
         },
         {
-          path:"/query",
-          element:<Query/>
+          path: "/query",
+          element: <Query />,
         },
         {
-          path:"/scheduleClass",
-          element:<ScheduledClass/>
+          path: "/scheduleClass",
+          element: <ScheduledClass />,
         },
         {
-          path:"/setting",
-          element:<Setting/>
+          path: "/setting",
+          element: <Setting />,
         },
         {
-          path:"/contentcourse",
-          element:<ContentCourse/>
+          path: "/contentcourse",
+          element: <ContentCourse />,
         },
         {
-          path:"/testseries",
-          element:<TestSeries/>
+          path: "/testseries",
+          element: <TestSeries />,
         },
         {
-          path:"/addTest",
-          element:<AddTest/>
+          path: "/addTest",
+          element: <AddTest />,
         },
         {
-          path:"/testform",
-          element:<TestForm/>
+          path: "/testform",
+          element: <TestForm />,
         },
         {
-          path:"/createTest",
-          element:<AddTest/>
+          path: "/createTest",
+          element: <AddTest />,
         },
         {
-          path:"/course",
-          element:<Courses/>
+          path: "/course",
+          element: <Courses />,
         },
         {
-          path:"/referal",
-          element:<Referal/>
+          path: "/referal",
+          element: <Referal />,
         },
         {
-          path:"/review",
-          element:<Reviews/>
-        }
-      ]
+          path: "/review",
+          element: <Reviews />,
+        },
+      ],
     },
     {
-      path:"/notification",
-      element:<NotificationBoxModal/>
+      path: "/notification",
+      element: <NotificationBoxModal />,
     },
     {
-      path:"/form",
-      element:<ToogleSwitch/>
+      path: "/form",
+      element: <ToogleSwitch />,
     },
     {
-      path:"/demo",
-      element:<LiveClassDetails/>
-    }
-   
-  ])
+      path: "/demo",
+      element: <LiveClassDetails />,
+    },
+  ]);
 
   return (
     <DndProvider backend={HTML5Backend}>
-      <RouterProvider router={appRouter}/>
+      <Provider store={store}>
+        <RouterProvider router={appRouter} />
+      </Provider>
     </DndProvider>
-  )
+  );
 }
 
-export default App
+export default App;
