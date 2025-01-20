@@ -1,7 +1,6 @@
 import Folder from "../assets/FolderNotchOpen.svg";
 import ThreeDots from "../assets/DotsThree.svg";
 import { X } from "lucide-react";
-import { useState } from "react";
 
 type ContentProps = {
   videoData: File[] | null;

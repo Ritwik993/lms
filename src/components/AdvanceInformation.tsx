@@ -16,8 +16,8 @@ type AdvanceInformationProps = {
 };
 
 type FormState = {
-  courseThumbnail: string | null;
-  courseTrailer: string | null;
+  courseThumbnail: File | null;
+  courseTrailer: File | null;
   courseDescription: string;
   learnings: string[];
   targetAudience: string[];
@@ -53,20 +53,6 @@ const AdvanceInformation: FC<AdvanceInformationProps> = ({
   //   }
   // }
 
-  // const handleFileChange = (
-  //   e: React.ChangeEvent<HTMLInputElement>,
-  //   field: "courseThumbnail" | "courseTrailer"
-  // ) => {
-  //   if (!uniqueKeys.has(field)) {
-  //     uniqueKeys.add(field);
-  //     setCount1(uniqueKeys.size);
-  //   }
-  //   if (e.target.files && e.target?.files.length > 0) {
-  //     const file = e.target.files[0];
-  //     setFormState((prev) => ({ ...prev, [field]: file }));
-  //   }
-  // };
-
   const handleFileChange = (
     e: React.ChangeEvent<HTMLInputElement>,
     field: "courseThumbnail" | "courseTrailer"
@@ -75,23 +61,37 @@ const AdvanceInformation: FC<AdvanceInformationProps> = ({
       uniqueKeys.add(field);
       setCount1(uniqueKeys.size);
     }
-
     if (e.target.files && e.target?.files.length > 0) {
       const file = e.target.files[0];
-
-      // Convert the file to Base64
-      const reader = new FileReader();
-      reader.onload = () => {
-        if (reader.result) {
-          setFormState((prev) => ({
-            ...prev,
-            [field]: reader.result?.toString(),
-          }));
-        }
-      };
-      reader.readAsDataURL(file);
+      setFormState((prev) => ({ ...prev, [field]: file }));
     }
   };
+
+  // const handleFileChange = (
+  //   e: React.ChangeEvent<HTMLInputElement>,
+  //   field: "courseThumbnail" | "courseTrailer"
+  // ) => {
+  //   if (!uniqueKeys.has(field)) {
+  //     uniqueKeys.add(field);
+  //     setCount1(uniqueKeys.size);
+  //   }
+
+  //   if (e.target.files && e.target?.files.length > 0) {
+  //     const file = e.target.files[0];
+
+  //     // Convert the file to Base64
+  //     const reader = new FileReader();
+  //     reader.onload = () => {
+  //       if (reader.result) {
+  //         setFormState((prev) => ({
+  //           ...prev,
+  //           [field]: reader.result?.toString(),
+  //         }));
+  //       }
+  //     };
+  //     reader.readAsDataURL(file);
+  //   }
+  // };
 
   const handleDescriptionChange = (value: string) => {
     if (!uniqueKeys.has("courseDescription")) {
@@ -141,14 +141,52 @@ const AdvanceInformation: FC<AdvanceInformationProps> = ({
     }
   };
 
+  const uploadImage = async (file: File | null) => {
+    if (!file) return null;
+    const token = localStorage.getItem("token");
+    const formData = new FormData();
+    formData.append("file", file);
+    const res = await axios.post(
+      "http://localhost:8080/api/v1/assets/upload/image",
+      formData,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "multipart/form-data",
+        },
+      }
+    );
+    return res.data.fileUrl;
+  };
+
+  const uploadVideo = async (file: File | null) => {
+    if (!file) return;
+    const token = localStorage.getItem("token");
+    const formData = new FormData();
+    formData.append("file", file);
+    const res = await axios.post(
+      "http://localhost:8080/api/v1/assets/upload/video",
+      formData,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "multipart/form-data",
+        },
+      }
+    );
+    return res.data.fileUrl;
+  };
+
   const handleSubmit = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     const cid = localStorage.getItem("courseId");
 
     try {
       const token = localStorage.getItem("token");
-      console.log(token);
-
+      const courseUrl = await uploadImage(formState.courseThumbnail);
+      const trailerUrl = await uploadVideo(formState.courseTrailer);
+      formState.courseThumbnail = courseUrl;
+      formState.courseTrailer = trailerUrl;
       // Make the request with the token in the headers
       const { courseThumbnail, courseTrailer, ...restFormState } = formState;
 
@@ -200,8 +238,13 @@ const AdvanceInformation: FC<AdvanceInformationProps> = ({
             </p>
             <div className="content flex flex-col lg:flex-row gap-4">
               <div className="image-container flex-1">
+                
                 <img
-                  src={formState.courseThumbnail || left_icon}
+                   src={
+                    formState.courseThumbnail
+                      ? URL.createObjectURL(formState.courseThumbnail)
+                      : left_icon
+                  }
                   alt="Course Thumbnail Placeholder"
                   className="object-cover w-full aspect-square"
                 />
@@ -258,7 +301,7 @@ const AdvanceInformation: FC<AdvanceInformationProps> = ({
                 /> */}
                 {formState.courseTrailer ? (
                   <video
-                    src={formState.courseTrailer}
+                    src={URL.createObjectURL(formState.courseTrailer)}
                     controls
                     className="object-cover w-full aspect-square"
                   />
