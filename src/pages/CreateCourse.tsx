@@ -17,18 +17,32 @@ const CreateCourse: React.FC = () => {
   const [count1, setCount1] = useState(0);
   const [count2, setCount2] = useState(0);
   const [count3, setCount3] = useState(0);
-  const [courseid,setCourseid]=useState("");
+  const [courseid, setCourseid] = useState("");
 
   const renderTabContent = () => {
     switch (activeTab) {
       case "basic":
-        return <BasicInformation setCount={setCount} setActiveTab={setActiveTab} setCourseid={setCourseid}/>;
+        return (
+          <BasicInformation
+            setCount={setCount}
+            setActiveTab={setActiveTab}
+            setCourseid={setCourseid}
+          />
+        );
       case "advance":
-        return <AdvanceInformation setCount1={setCount1} setActiveTab={setActiveTab} courseid={courseid}/>;
+        return (
+          <AdvanceInformation
+            setCount1={setCount1}
+            setActiveTab={setActiveTab}
+            courseid={courseid}
+          />
+        );
       case "curriculum":
-        return <Curriculm setCount2={setCount2} setActiveTab={setActiveTab}/>;
+        return <Curriculm setCount2={setCount2} setActiveTab={setActiveTab} />;
       case "publish":
-        return <PublishCourse setCount3={setCount3} setActiveTab={setActiveTab} />;
+        return (
+          <PublishCourse setCount3={setCount3} setActiveTab={setActiveTab} />
+        );
       default:
         return null;
     }
@@ -50,9 +64,11 @@ const CreateCourse: React.FC = () => {
               <p className="text-[#1D2026] font-medium lg:text-[16px] text-[14px] md:leading-[22px] leading-[20px]">
                 Basic Information
               </p>
-              {activeTab === "basic" && <span className="text-[#23BD33] text-[12px] font-medium mr-1">
-                {count}/13
-              </span>}
+              {activeTab === "basic" && (
+                <span className="text-[#23BD33] text-[12px] font-medium mr-1">
+                  {count}/13
+                </span>
+              )}
             </div>
 
             <div
@@ -65,9 +81,11 @@ const CreateCourse: React.FC = () => {
               <p className="text-[#1D2026] font-medium lg:text-[16px] text-[14px] md:leading-[22px] leading-[20px]">
                 Advance Information
               </p>
-              {activeTab === "advance" && <span className="text-[#23BD33] text-[12px] font-medium mr-1">
-                {count1}/6
-              </span>}
+              {activeTab === "advance" && (
+                <span className="text-[#23BD33] text-[12px] font-medium mr-1">
+                  {count1}/6
+                </span>
+              )}
             </div>
 
             <div
@@ -80,9 +98,11 @@ const CreateCourse: React.FC = () => {
               <p className="text-[#1D2026] font-medium lg:text-[16px] text-[14px] md:leading-[22px] leading-[20px]">
                 Curriculum
               </p>
-              {activeTab === "curriculum" && <span className="text-[#23BD33] text-[12px] font-medium mr-1">
-                {count2}/13
-              </span>}
+              {activeTab === "curriculum" && (
+                <span className="text-[#23BD33] text-[12px] font-medium mr-1">
+                  {count2}/13
+                </span>
+              )}
             </div>
 
             <div
@@ -95,13 +115,37 @@ const CreateCourse: React.FC = () => {
               <p className="text-[#1D2026] font-medium lg:text-[16px] text-[14px] md:leading-[22px] leading-[20px]">
                 Publish a Course
               </p>
-              {activeTab === "publish" && <span className="text-[#23BD33] text-[12px] font-medium mr-1">
-                {count3}/13
-              </span>}
+              {activeTab === "publish" && (
+                <span className="text-[#23BD33] text-[12px] font-medium mr-1">
+                  {count3}/13
+                </span>
+              )}
             </div>
           </div>
         </div>
-        <div className="p-5">{renderTabContent()}</div>
+        <div className="p-5">
+          {" "}
+          {activeTab === "basic" && (
+            <BasicInformation
+              setCount={setCount}
+              setActiveTab={setActiveTab}
+              setCourseid={setCourseid}
+            />
+          )}
+          {activeTab === "advance" && (
+            <AdvanceInformation
+              setCount1={setCount1}
+              setActiveTab={setActiveTab}
+              courseid={courseid}
+            />
+          )}
+          {activeTab === "curriculum" && (
+            <Curriculm setCount2={setCount2} setActiveTab={setActiveTab} />
+          )}
+          {activeTab === "publish" && (
+            <PublishCourse setCount3={setCount3} setActiveTab={setActiveTab} />
+          )}
+        </div>
       </div>
     </div>
   );

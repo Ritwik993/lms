@@ -73,7 +73,7 @@ function App() {
           element: <Setting />,
         },
         {
-          path: "/contentcourse",
+          path: "/contentcourse/:id",
           element: <ContentCourse />,
         },
         {

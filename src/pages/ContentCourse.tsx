@@ -10,23 +10,21 @@ import UploadDocumentModal from "../components/UploadDocumentModal";
 import UploadTestModal from "../components/UploadTestModal";
 import UploadDppModal from "../components/UploadDppModal";
 import UploadAssignmentModal from "../components/UploadAssignmentModal";
-
-type FormState = {
-  video: File[] | null;
-  notes: File[] | null;
-  test: File[] | null;
-  dpp: File[] | null;
-  assignment: File[] | null;
-};
+import { useDispatch, useSelector } from "react-redux";
+import uploadFiles from "../utils/helper";
+import videouploadFiles from "../utils/videohelper";
+import { useParams } from "react-router-dom";
+import { RootState } from "../utils/store";
+// import { updateLecture } from "../utils/lectureSlice";
+import { updateSubject } from "../utils/subjectSlice";
 
 const ContentCourse = () => {
-  const [formState, setFormState] = useState({
-    video: null,
-    notes: null,
-    test: null,
-    dpp: null,
-    assignment: null,
-  });
+  const { id } = useParams();
+  const numericId = Number(id);
+  const lectures = useSelector((store: RootState) => store.lecture.lectures);
+  const subjects = useSelector((store: RootState) => store.subject.subjects);
+  const dispatch = useDispatch();
+  // const notesUrl: File[] = [];
 
   const [isVideo, setIsVideo] = useState(false);
   const [videoData, setVideoData] = useState<File[] | null>(null);
@@ -79,6 +77,123 @@ const ContentCourse = () => {
     }
   }, [assignmentData]);
 
+  // const handleSave = async () => {
+  //   const token = localStorage.getItem("token");
+  //   if (!token) {
+  //     console.error("No token found");
+  //     return;
+  //   }
+
+  //   try {
+  //     // Upload files and get URLs
+  //     const notesUrls = await uploadFiles(notesData, token);
+  //     const videoUrls = await videouploadFiles(videoData, token);
+  //     const testUrls = await uploadFiles(testData, token);
+  //     const dppUrls = await uploadFiles(dppData, token);
+  //     const assignmentUrls = await uploadFiles(assignmentData, token);
+
+  //     // Prepare the form state
+  //     const formState = {
+  //       notes: notesUrls,
+  //       videos: videoUrls,
+  //       tests: testUrls,
+  //       dpp: dppUrls,
+  //       assignments: assignmentUrls,
+  //     };
+
+  //     console.log("Form State with Uploaded URLs:", formState);
+
+  //     // Update lectures
+  //     // const updatedLectures = lectures.map((lecture) =>
+  //     //   lecture.id === numericId ? { ...lecture, ...formState } : lecture
+  //     // );
+  //     /*
+  //     * Doing this u will not be updating the redux store
+  //     */
+
+  //     dispatch(
+  //       updateLecture({
+  //         id:Number(id), // Match the lecture ID
+  //         formState,
+  //       })
+  //     );
+
+  //     subjects.map((subject)=>subject.id===numericId?dispatch(updateSubject({id:subject.id,lectures[numericId]}):subject))
+
+  //     // dispatch(
+  //     //   updateSubject({
+  //     //     data
+  //     //   })
+  //     // )
+  //   } catch (err) {
+  //     console.error("Error uploading files:", err);
+  //   }
+  // };
+
+  const handleSave = async () => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      console.error("No token found");
+      return;
+    }
+
+    try {
+      // Upload files and get URLs
+      const notesUrls = await uploadFiles(notesData, token);
+      const videoUrls = await videouploadFiles(videoData, token);
+      const testUrls = await uploadFiles(testData, token);
+      const dppUrls = await uploadFiles(dppData, token);
+      const assignmentUrls = await uploadFiles(assignmentData, token);
+
+      // Prepare the form state
+      const formState = {
+        notes: notesUrls,
+        videos: videoUrls,
+        tests: testUrls,
+        dpp: dppUrls,
+        assignments: assignmentUrls,
+      };
+
+      console.log("Form State with Uploaded URLs:", formState);
+
+      // Update the lecture in the Redux store
+      // await dispatch(
+      //   updateLecture({
+      //     id: Number(id), // Match the lecture ID
+      //     formState,
+      //   })
+      // );
+
+      // Find the corresponding subject and update its lectures
+      // const lectureTitle=lectures.
+      subjects.forEach((subject) => {
+        if (subject.id === numericId) {
+          // Assuming numericId corresponds to the subject ID
+          const updatedLecture = {
+            ...subject,
+             lectureTitle:lectures.lectureTitle,
+            id: Number(id),
+            notes: formState.notes,
+            dpp: formState.dpp,
+            video: formState.videos,
+            assignment: formState.assignments,
+            test: formState.tests,
+          };
+
+          // Dispatch updateSubject action with the new lecture data
+          dispatch(
+            updateSubject({
+              id: subject.id,
+              data: updatedLecture,
+            })
+          );
+        }
+      });
+    } catch (err) {
+      console.error("Error uploading files:", err);
+    }
+  };
+
   return (
     <div className="flex-1 lg:ml-[250px] bg-[#F5F7FA] overflow-x-hidden">
       <Navbar />
@@ -98,7 +213,10 @@ const ContentCourse = () => {
             </div>
           </div>
           <div className="flex  justify-between  items-center w-[30%] min-w-max gap-x-[14px] ">
-            <button className="font-semibold lg:text-[16px] text-[14px] text-white lg:leading-[48px] leading-[40px] bg-[#3A6BE4] lg:px-[24px] px-[18px]">
+            <button
+              className="font-semibold lg:text-[16px] text-[14px] text-white lg:leading-[48px] leading-[40px] bg-[#3A6BE4] lg:px-[24px] px-[18px]"
+              onClick={handleSave}
+            >
               Save
             </button>
             <div className="flex lg:gap-[12px] gap-[8px] items-center justify-center font-semibold lg:text-[16px] lg:px-[24px] px-[18px] text-[14px] text-[#000000] lg:leading-[48px] leading-[40px] bg-[#FDFDFD] min-w-max drop-shadow-md">

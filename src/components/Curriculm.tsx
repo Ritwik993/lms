@@ -5,6 +5,9 @@ import trash from "../assets/Trash.svg";
 import { Link, useLocation } from "react-router-dom";
 import DownArrow from "../assets/CaretDown.svg";
 import { FC, useEffect, useRef, useState } from "react";
+import { useDispatch } from "react-redux";
+import { addLecture } from "../utils/lectureSlice";
+import { addSubject } from "../utils/subjectSlice";
 
 type Tab = "basic" | "advance" | "curriculum" | "publish";
 
@@ -24,10 +27,32 @@ interface Section {
   topics: Topic[];
 }
 
+interface Lecture {
+  id: string;
+  lectureTitle: string;
+  notes: string[];
+  dpp: string[];
+  video: string[];
+  assignment: string[];
+  test: string[];
+}
+
+// interface LectureState {
+//   lectures: Lecture[];
+// }
+
+interface Subject{
+  id:number;
+  subjectTitle:string;
+  lectures:Lecture[];
+}
+
 const Curriculm: FC<CurriculumProps> = ({ setCount2, setActiveTab }) => {
   const { pathname } = useLocation();
+  const dispatch=useDispatch();
   const inputRef = useRef<HTMLInputElement | null>(null);
   const inputRef2 = useRef<HTMLInputElement | null>(null);
+  const subjects:Subject[]=[];
 
   const [sections, setSections] = useState<Section[]>([
     { id: 1, name: "Section Name", topics: [{ id: 1, name: "Chapter Name" }] },
@@ -41,10 +66,12 @@ const Curriculm: FC<CurriculumProps> = ({ setCount2, setActiveTab }) => {
 
   const addSection = (newSectionName: string) => {
     if (newSectionName.trim()) {
+      const id=Date.now();
       setSections((prev) => [
         ...prev,
-        { id: Date.now(), name: newSectionName.trim(), topics: [] },
+        { id, name: newSectionName.trim(), topics: [] },
       ]);
+      // dispatch(addSubject({id,subjectTitle:newSectionName,lectures:[]}));
       setNewSectionName("");
     }
   };
@@ -62,6 +89,8 @@ const Curriculm: FC<CurriculumProps> = ({ setCount2, setActiveTab }) => {
             : section
         )
       );
+      dispatch(addSubject({id:editingSectionId,subjectTitle:editingSectionName,lectures:[]}));
+
     }
     setEditingSectionId(null);
     setEditingSectionName("");
@@ -114,6 +143,11 @@ const Curriculm: FC<CurriculumProps> = ({ setCount2, setActiveTab }) => {
         )
       );
     }
+
+
+    dispatch(addLecture({id:editingTopicId,subjectId:sectionId,lectureTitle:editingTopicName}));
+    // subjects.map((subject)=>subject.id===sectionId?subject.lectures.push({id:editingTopicId,lectureTitle:editingTopicName}))
+
     setEditingTopicId(null);
     setEditingTopicName("");
   };
@@ -242,7 +276,7 @@ const Curriculm: FC<CurriculumProps> = ({ setCount2, setActiveTab }) => {
                 </div>
 
                 <div className="flex gap-2 lg:p-[24px] p-[12px]">
-                  <Link to="/contentcourse">
+                  <Link to={`/contentcourse/${section.id}`}>
                     <div className="flex bg-[#3D70F5] bg-opacity-25 lg:px-[16px] px-[10px]  gap-x-[4px]">
                       <p className=" text-[#3A6BE4] font-semibold lg:text-[14px] text-[12px] lg:leading-[40px] leading-[35px]  ">
                         Contents
