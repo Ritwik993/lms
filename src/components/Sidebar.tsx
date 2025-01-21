@@ -8,6 +8,7 @@ import setting from "../assets/Gear.svg";
 import signOut from "../assets/SignOut.svg";
 import { ChevronDown } from "lucide-react";
 import { ChevronUp } from "lucide-react";
+import { TvMinimalPlay } from 'lucide-react';
 
 import { useState } from "react";
 import { Link } from "react-router-dom";
@@ -90,6 +91,20 @@ const Sidebar = () => {
                   />
                   <p className="font-medium md:text-[14px] text-[12px] leading-[20px]">
                     Course
+                  </p>
+                </div>
+              </Link>
+
+              <Link to="/scheduleClass">
+                {" "}
+                <div className="flex gap-[10px] text-[#8C94A3] hover:bg-[#3A6BE4] hover:text-white pl-[50px] py-[12px] items-center cursor-pointer group">
+                  <TvMinimalPlay
+                    size={24}
+                    strokeWidth={2}
+                    className="object-contain group-hover:filter group-hover:brightness-0 group-hover:invert"
+                  />
+                  <p className="font-medium md:text-[14px] text-[12px] leading-[20px]">
+                    Live Class
                   </p>
                 </div>
               </Link>

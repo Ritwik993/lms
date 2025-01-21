@@ -9,11 +9,11 @@ interface LiveClassData {
 }
 
 interface LiveClassModalProps {
-  onClose: () => void;
-  onSave: (data: LiveClassData) => void;
+  isOpen: boolean;
+  setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const LiveClassModal: React.FC<LiveClassModalProps> = ({ onClose, onSave }) => {
+const LiveClassModal: React.FC<LiveClassModalProps> = ({ isOpen, setIsOpen}) => {
   const [formData, setFormData] = useState<LiveClassData>({
     title: "",
     courses: "",
@@ -31,7 +31,7 @@ const LiveClassModal: React.FC<LiveClassModalProps> = ({ onClose, onSave }) => {
   };
 
   const handleSave = () => {
-    onSave(formData);
+    setIsOpen(false);
   };
 
   return (
@@ -39,7 +39,7 @@ const LiveClassModal: React.FC<LiveClassModalProps> = ({ onClose, onSave }) => {
       <div className="bg-white rounded-lg shadow-lg w-96 p-6">
         <h2 className="text-xl font-semibold mb-4">Live Class</h2>
 
-        {/* Live Class Title */}
+   
         <div className="mb-4">
           <label className="block text-sm font-medium mb-1">
             Live Class Title
@@ -54,7 +54,7 @@ const LiveClassModal: React.FC<LiveClassModalProps> = ({ onClose, onSave }) => {
           />
         </div>
 
-        {/* Select Courses */}
+  
         <div className="mb-4">
           <label className="block text-sm font-medium mb-1">
             Select Courses
@@ -69,7 +69,7 @@ const LiveClassModal: React.FC<LiveClassModalProps> = ({ onClose, onSave }) => {
           />
         </div>
 
-        {/* Link for Live Class */}
+        
         <div className="mb-4">
           <label className="block text-sm font-medium mb-1">
             Link for live class
@@ -84,7 +84,7 @@ const LiveClassModal: React.FC<LiveClassModalProps> = ({ onClose, onSave }) => {
           />
         </div>
 
-        {/* Schedule Date */}
+        
         <div className="mb-4">
           <label className="block text-sm font-medium mb-1">
             Schedule For Later (Date)
@@ -115,7 +115,7 @@ const LiveClassModal: React.FC<LiveClassModalProps> = ({ onClose, onSave }) => {
         {/* Actions */}
         <div className="flex justify-between mt-4">
           <button
-            onClick={onClose}
+            onClick={()=>setIsOpen(false)}
             className="px-4 py-2 text-sm text-gray-700 border border-gray-300 rounded-md hover:bg-gray-100"
           >
             Cancel

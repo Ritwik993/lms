@@ -7,8 +7,9 @@ import { Link } from "react-router-dom";
 import DownArrow from "../assets/Arrow - Down 2.svg";
 
 const AddTest = () => {
+  
   return (
-    <div className="flex-1 lg:ml-[250px] bg-[#F5F7FA] overflow-x-hidden">
+    <div className="flex-1 lg:ml-[250px] bg-[#F5F7FA] h-[100vh] overflow-x-hidden">
       <Navbar />
       <div className="contentBox  mt-[100px] w-[90%] mx-auto min-h-[312px] bg-white ">
         <div className="flex justify-between items-center">

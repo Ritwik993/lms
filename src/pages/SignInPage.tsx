@@ -33,10 +33,12 @@ const SignInPage: React.FC = () => {
         }
       );
   
-      const { token } = res.data.data; // Assuming the backend returns a token
-      localStorage.setItem("token", token); // Store token securely
+      const { token } = res.data.data; 
+      const {_id}=res.data.data.userExists;
+      localStorage.setItem("token", token);
+      localStorage.setItem("userId",_id);
       console.log("Login successful", res.data);
-      navigate("/dashboard"); // Redirect after login
+      navigate("/dashboard"); 
     } catch (err) {
       console.error(err);
     }

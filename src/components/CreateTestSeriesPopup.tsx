@@ -14,11 +14,13 @@ const CreateTestSeriesPopup = ({ setIsOpen }: CreateTestSeriesPopupProps) => {
 
   const handleSubmit = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
+    const userId=localStorage.getItem("userId");
 
     const testSeriesData = {
       title,
       price,
       sortBy,
+      createdBy:userId,
       isEnabled: enabled ? 1 : 0, 
     };
 
