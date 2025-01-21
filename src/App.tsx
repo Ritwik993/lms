@@ -120,7 +120,7 @@ function App() {
           element: <TestForm />,
         },
         {
-          path: "/createTest",
+          path: "/createTest/:id",
           element: <AddTest />,
         },
         {

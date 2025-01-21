@@ -10,6 +10,8 @@ import {
 import { Link } from "react-router-dom";
 import ToggleSwitch from "./ToogleSwitch";
 import { JSX } from "react/jsx-runtime";
+import { useDispatch } from "react-redux";
+import { addTestSubject } from "../utils/testSlice";
 
 interface Data {
   serialNo: number;
@@ -101,21 +103,30 @@ const columns: Column<Data>[] = [
   },
   {
     Header: "Actions",
-    Cell: () => (
-      <div className="flex space-x-4 items-center ">
-        <Link to="/createtest">
-          <button className="bg-blue-500 text-white px-3 py-1 rounded">
-            View Tests
-          </button>
-        </Link>
-        <ToggleSwitch />
-        {/* <label className="inline-flex items-center">
+    Cell: ({ row }: { row: { original: Data } }) => {
+      const dispatch=useDispatch();
+      const handleTest=()=>{
+        dispatch(addTestSubject({id:row.original.serialNo,name:row.original.title}))
+      }
+      return (
+        <div className="flex space-x-4 items-center ">
+          <Link to={`/createtest/${row.original.serialNo}`}>
+            <button
+              className="bg-blue-500 text-white px-3 py-1 rounded"
+              onClick={handleTest}
+            >
+              View Tests
+            </button>
+          </Link>
+          <ToggleSwitch />
+          {/* <label className="inline-flex items-center">
           <input type="checkbox" className="toggle-checkbox hidden" />
           <span className="toggle-label block w-10 h-6 bg-gray-300 rounded-full"></span>
           <span className="toggle-dot absolute w-4 h-4 bg-white rounded-full transform"></span>
         </label> */}
-      </div>
-    ),
+        </div>
+      );
+    },
   },
 ];
 

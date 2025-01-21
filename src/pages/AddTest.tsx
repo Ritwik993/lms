@@ -3,54 +3,138 @@ import menu from "../assets/FolderNotchOpen1.svg";
 import plus from "../assets/Plus.svg";
 import pencil from "../assets/PencilLine.svg";
 import trash from "../assets/Trash.svg";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import DownArrow from "../assets/Arrow - Down 2.svg";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "../utils/store";
+import { useRef } from "react";
+import { useState } from "react";
+import { addTest, deleteTest, updateTest } from "../utils/testSlice";
+
+interface TestDetails {
+  id: number;
+  topicName: string;
+}
 
 const AddTest = () => {
-  
+  const { id } = useParams();
+  const numIdx = Number(id);
+  const tests = useSelector((store: RootState) => store.test.tests);
+  const dispatch = useDispatch();
+  const inputRef = useRef<HTMLInputElement | null>(null);
+  const [editingTestName, setEditingTestName] = useState("");
+  const [editingTestId, setEditingTestId] = useState<number | null>(null);
+
+  const updateTestName = () => {
+    dispatch(
+      updateTest({ testId: numIdx, id: editingTestId, data: editingTestName })
+    );
+    setEditingTestId(null);
+    setEditingTestName("");
+  };
+
+  const deleteTestFn = (id: number) => {
+    dispatch(deleteTest({ testId: numIdx, id }));
+  };
+
+  const addTestFn = () => {
+    dispatch(
+      addTest({ testId: numIdx, id: Date.now(), topicName: "New Test" })
+    );
+  };
+  const t=tests.find((t)=>t.testId===numIdx)
   return (
-    <div className="flex-1 lg:ml-[250px] bg-[#F5F7FA] h-[100vh] overflow-x-hidden">
+    <div className="flex-1 lg:ml-[250px] bg-[#F5F7FA] h-[100vh] overflow-x-hidden pb-[40px]">
       <Navbar />
-      <div className="contentBox  mt-[100px] w-[90%] mx-auto min-h-[312px] bg-white ">
+      <div className="contentBox  mt-[100px] w-[90%] mx-auto min-h-[312px] bg-white  pb-[20px]">
         <div className="flex justify-between items-center">
           <div className="flex gap-x-2 lg:p-[24px] p-[12px]">
             <img src={menu} />
-            <p className="text-[#1D2026] font-medium text-[16px]">CTET</p>
+            <p className="text-[#1D2026] font-medium text-[16px]">{t?.testName}</p>
           </div>
 
           <div className="flex gap-2 lg:p-[24px] p-[12px]">
-            <img src={plus} alt="" className="object-contain" />
+            <img
+              src={plus}
+              alt=""
+              className="object-contain"
+              onClick={addTestFn}
+            />
             {/* <img src={pencil} alt="" className="object-contain" /> */}
             <img src={trash} alt="" className="object-contain" />
           </div>
         </div>
 
-        <div className="innerContent bg-white w-[95%] mx-auto border-[#989898] border-[2px] rounded-[13px]">
-          <div className="flex justify-between items-center">
-            <div className="flex gap-x-2 lg:p-[24px] p-[12px]">
-              {/* <img src={menu} /> */}
-              <p className="text-[#1D2026] font-medium lg:text-[16px] text-[14px]">
-                New Test
-              </p>
-            </div>
+        {tests
+          .filter((el) => el.testId === numIdx)
+          .map((el) =>
+            el.test.map((t, i) => (
+              <div
+                className="innerContent bg-white w-[95%] mx-auto border-[#989898] border-[2px] rounded-[13px] m-[20px]"
+                key={t.id}
+              >
+                <div className="flex justify-between items-center">
+                  <div className="flex gap-x-2 lg:p-[24px] p-[12px]">
+                    {editingTestId === t.id ? (
+                      <input
+                        ref={inputRef}
+                        type="text"
+                        value={editingTestName}
+                        onChange={(e) => setEditingTestName(e.target.value)}
+                        onBlur={updateTestName}
+                        onKeyDown={(e) => {
+                          if (e.key === "Enter") updateTestName();
+                        }}
+                        className="bg-[#F5F7FA] border-b border-gray-400 focus:outline-none"
+                        autoFocus
+                      />
+                    ) : (
+                      <p
+                        className="text-[#1D2026] font-medium lg:text-[16px] text-[14px]"
+                        onClick={() => {
+                          setEditingTestId(t.id);
+                          setEditingTestName(t.topicName);
+                        }}
+                      >
+                        {t.topicName}
+                      </p>
+                    )}
+                  </div>
 
-            <div className="flex gap-2 lg:p-[24px] p-[12px]">
-              <Link to="/contentcourse">
-                <div className="flex bg-[#EBEBEB] bg-opacity-25 lg:px-[16px] px-[10px]  gap-x-[4px]">
-                  <Link to="/testform">
-                    <p className=" text-[#000000] font-semibold lg:text-[14px] text-[12px] lg:leading-[40px] leading-[35px]  ">
-                      Add Details
-                    </p>
-                  </Link>
-                  <img src={DownArrow} className="object-contain " />
+                  <div className="flex gap-2 lg:p-[24px] p-[12px]">
+                    <Link to="/contentcourse">
+                      <div className="flex bg-[#EBEBEB] bg-opacity-25 lg:px-[16px] px-[10px] gap-x-[4px]">
+                        <Link to="/testform">
+                          <p className="text-[#000000] font-semibold lg:text-[14px] text-[12px] lg:leading-[40px] leading-[35px]">
+                            Add Details
+                          </p>
+                        </Link>
+                        <img src={DownArrow} className="object-contain" />
+                      </div>
+                    </Link>
+
+                    <img
+                      src={pencil}
+                      alt="Edit"
+                      className="object-contain cursor-pointer"
+                      onClick={() => {
+                        setEditingTestId(t.id);
+                        setEditingTestName(t.topicName);
+                        inputRef.current?.focus();
+                      }}
+                    />
+
+                    <img
+                      src={trash}
+                      alt="Delete"
+                      className="object-contain cursor-pointer"
+                      onClick={() => deleteTestFn(t.id)}
+                    />
+                  </div>
                 </div>
-              </Link>
-              {/* <img src={plus} alt="" className="object-contain" /> */}
-              <img src={pencil} alt="" className="object-contain" />
-              <img src={trash} alt="" className="object-contain" />
-            </div>
-          </div>
-        </div>
+              </div>
+            ))
+          )}
       </div>
     </div>
   );
