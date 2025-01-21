@@ -4,7 +4,7 @@ import Notepad from "../assets/Notepad.svg";
 import Content from "../components/Content";
 import Camera from "../assets/Camera.svg";
 import Notepad2 from "../assets/Notepad2.svg";
-import { useEffect, useState } from "react";
+import { FC, useEffect, useState } from "react";
 import UploadVideoModal from "../components/UploadVideoModal";
 import UploadDocumentModal from "../components/UploadDocumentModal";
 import UploadTestModal from "../components/UploadTestModal";
@@ -18,7 +18,36 @@ import { RootState } from "../utils/store";
 // import { updateLecture } from "../utils/lectureSlice";
 import { updateSubject } from "../utils/subjectSlice";
 
-const ContentCourse = () => {
+
+
+interface Topic {
+  id: number;
+  name: string;
+}
+
+interface Section {
+  id: number;
+  name: string;
+  topics: Topic[];
+}
+
+interface Lecture {
+  id: string;
+  lectureTitle: string;
+  notes: string[];
+  dpp: string[];
+  video: string[];
+  assignment: string[];
+  test: string[];
+}
+
+// type ContentCourseProps={
+//   sections: Section[];
+//   setSections: React.Dispatch<React.SetStateAction<Section[]>>;
+// }
+
+
+const ContentCourse= () => {
   const { id } = useParams();
   const numericId = Number(id);
   const lectures = useSelector((store: RootState) => store.lecture.lectures);

@@ -11,7 +11,100 @@ import PublishCourse from "../components/PublishCourse";
 
 type Tab = "basic" | "advance" | "curriculum" | "publish";
 
-const CreateCourse: React.FC = () => {
+
+type BasicFormState = {
+  title: string;
+  subTitle: string;
+  category: string;
+  subCategory: string;
+  topic: string;
+  language: string;
+  subtitleLanguage?: string;
+  courseLevels: string;
+  courseDurations: string;
+  instructor1: string;
+  instructor2: string;
+  instructor3?: string;
+  instructor4?: string;
+  courseId?: string;
+  instructor?: string[];
+  featured: boolean;
+};
+
+
+type AdvanceFormState = {
+  courseThumbnail: File | null;
+  courseTrailer: File | null;
+  courseDescription: string;
+  learnings: string[];
+  targetAudience: string[];
+  requirements: string[];
+};
+
+
+interface Topic {
+  id: number;
+  name: string;
+}
+
+interface Section {
+  id: number;
+  name: string;
+  topics: Topic[];
+}
+
+interface Lecture {
+  id: string;
+  lectureTitle: string;
+  notes: string[];
+  dpp: string[];
+  video: string[];
+  assignment: string[];
+  test: string[];
+}
+
+// type CreateCourseProps={
+//   sections: Section[];
+//   setSections: React.Dispatch<React.SetStateAction<Section[]>>;
+// }
+
+
+const CreateCourse = () => {
+    const [basicInfo, setBasicInfo] = useState<BasicFormState>({
+    title: "",
+    subTitle: "",
+    category: "",
+    subCategory: "",
+    topic: "",
+    language: "",
+    subtitleLanguage: "",
+    courseLevels: "",
+    courseDurations: "",
+    instructor1: "",
+    instructor2: "",
+    instructor3: "",
+    instructor4: "",
+    instructor: ["6751f31ea2712db85bd07dde"],
+    featured: false,
+    courseId: "",
+  });
+
+
+
+  const [advanceInfo, setAdvanceInfo] = useState<AdvanceFormState>({
+    courseThumbnail: null,
+    courseTrailer: null,
+    courseDescription: "",
+    learnings: [""],
+    targetAudience: [""],
+    requirements: [""],
+  });
+
+
+ 
+
+
+
   const [activeTab, setActiveTab] = useState<Tab>("basic");
   const [count, setCount] = useState(0);
   const [count1, setCount1] = useState(0);
@@ -19,34 +112,34 @@ const CreateCourse: React.FC = () => {
   const [count3, setCount3] = useState(0);
   const [courseid, setCourseid] = useState("");
 
-  const renderTabContent = () => {
-    switch (activeTab) {
-      case "basic":
-        return (
-          <BasicInformation
-            setCount={setCount}
-            setActiveTab={setActiveTab}
-            setCourseid={setCourseid}
-          />
-        );
-      case "advance":
-        return (
-          <AdvanceInformation
-            setCount1={setCount1}
-            setActiveTab={setActiveTab}
-            courseid={courseid}
-          />
-        );
-      case "curriculum":
-        return <Curriculm setCount2={setCount2} setActiveTab={setActiveTab} />;
-      case "publish":
-        return (
-          <PublishCourse setCount3={setCount3} setActiveTab={setActiveTab} />
-        );
-      default:
-        return null;
-    }
-  };
+  // const renderTabContent = () => {
+  //   switch (activeTab) {
+  //     case "basic":
+  //       return (
+  //         <BasicInformation
+  //           setCount={setCount}
+  //           setActiveTab={setActiveTab}
+  //           setCourseid={setCourseid}
+  //         />
+  //       );
+  //     case "advance":
+  //       return (
+  //         <AdvanceInformation
+  //           setCount1={setCount1}
+  //           setActiveTab={setActiveTab}
+  //           courseid={courseid}
+  //         />
+  //       );
+  //     case "curriculum":
+  //       return <Curriculm setCount2={setCount2} setActiveTab={setActiveTab} />;
+  //     case "publish":
+  //       return (
+  //         <PublishCourse setCount3={setCount3} setActiveTab={setActiveTab} />
+  //       );
+  //     default:
+  //       return null;
+  //   }
+  // };
 
   return (
     <div className=" bg-[#F5F7FA] flex-1 lg:ml-[250px] overflow-x-hidden">
@@ -127,6 +220,8 @@ const CreateCourse: React.FC = () => {
           {" "}
           {activeTab === "basic" && (
             <BasicInformation
+              basicInfo={basicInfo}
+              setBasicInfo={setBasicInfo}
               setCount={setCount}
               setActiveTab={setActiveTab}
               setCourseid={setCourseid}
@@ -134,6 +229,8 @@ const CreateCourse: React.FC = () => {
           )}
           {activeTab === "advance" && (
             <AdvanceInformation
+              advanceInfo={advanceInfo}
+              setAdvanceInfo={setAdvanceInfo}
               setCount1={setCount1}
               setActiveTab={setActiveTab}
               courseid={courseid}

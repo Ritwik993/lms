@@ -13,9 +13,11 @@ type AdvanceInformationProps = {
   setCount1: React.Dispatch<React.SetStateAction<number>>;
   setActiveTab: React.Dispatch<React.SetStateAction<Tab>>;
   courseid: string;
+  advanceInfo: AdvanceFormState;
+  setAdvanceInfo: React.Dispatch<React.SetStateAction<AdvanceFormState>>;
 };
 
-type FormState = {
+type AdvanceFormState = {
   courseThumbnail: File | null;
   courseTrailer: File | null;
   courseDescription: string;
@@ -29,15 +31,17 @@ const AdvanceInformation: FC<AdvanceInformationProps> = ({
   setCount1,
   setActiveTab,
   courseid,
+  advanceInfo,
+  setAdvanceInfo
 }) => {
-  const [formState, setFormState] = useState<FormState>({
-    courseThumbnail: null,
-    courseTrailer: null,
-    courseDescription: "",
-    learnings: [""],
-    targetAudience: [""],
-    requirements: [""],
-  });
+  // const [advanceInfo, setAdvanceInfo] = useState<AdvanceFormState>({
+  //   courseThumbnail: null,
+  //   courseTrailer: null,
+  //   courseDescription: "",
+  //   learnings: [""],
+  //   targetAudience: [""],
+  //   requirements: [""],
+  // });
 
   const { pathname } = useLocation();
 
@@ -63,7 +67,7 @@ const AdvanceInformation: FC<AdvanceInformationProps> = ({
     }
     if (e.target.files && e.target?.files.length > 0) {
       const file = e.target.files[0];
-      setFormState((prev) => ({ ...prev, [field]: file }));
+      setAdvanceInfo((prev) => ({ ...prev, [field]: file }));
     }
   };
 
@@ -98,7 +102,7 @@ const AdvanceInformation: FC<AdvanceInformationProps> = ({
       uniqueKeys.add("courseDescription");
       setCount1(uniqueKeys.size);
     }
-    setFormState((prev) => ({ ...prev, courseDescription: value }));
+    setAdvanceInfo((prev) => ({ ...prev, courseDescription: value }));
   };
 
   const handleTeachChange = (index: number, value: string) => {
@@ -106,10 +110,10 @@ const AdvanceInformation: FC<AdvanceInformationProps> = ({
       uniqueKeys.add("learnings");
       setCount1(uniqueKeys.size);
     }
-    const updatedlearnings = [...formState.learnings];
+    const updatedlearnings = [...advanceInfo.learnings];
     updatedlearnings[index] = value;
     if (value.length <= 120)
-      setFormState((prev) => ({ ...prev, learnings: updatedlearnings }));
+      setAdvanceInfo((prev) => ({ ...prev, learnings: updatedlearnings }));
   };
 
   const handleAudienceChange = (index: number, value: string) => {
@@ -117,10 +121,10 @@ const AdvanceInformation: FC<AdvanceInformationProps> = ({
       uniqueKeys.add("targetAudience");
       setCount1(uniqueKeys.size);
     }
-    const updatedtargetAudience = [...formState.targetAudience];
+    const updatedtargetAudience = [...advanceInfo.targetAudience];
     updatedtargetAudience[index] = value;
     if (value.length <= 120)
-      setFormState((prev) => ({
+      setAdvanceInfo((prev) => ({
         ...prev,
         targetAudience: updatedtargetAudience,
       }));
@@ -131,10 +135,10 @@ const AdvanceInformation: FC<AdvanceInformationProps> = ({
       uniqueKeys.add("requirements");
       setCount1(uniqueKeys.size);
     }
-    const updatedrequirements = [...formState.requirements];
+    const updatedrequirements = [...advanceInfo.requirements];
     updatedrequirements[index] = value;
     if (value.length <= 120) {
-      setFormState((prev) => ({
+      setAdvanceInfo((prev) => ({
         ...prev,
         requirements: updatedrequirements,
       }));
@@ -183,22 +187,20 @@ const AdvanceInformation: FC<AdvanceInformationProps> = ({
 
     try {
       const token = localStorage.getItem("token");
-      const courseUrl = await uploadImage(formState.courseThumbnail);
-      const trailerUrl = await uploadVideo(formState.courseTrailer);
-      formState.courseThumbnail = courseUrl;
-      formState.courseTrailer = trailerUrl;
+      const courseUrl = await uploadImage(advanceInfo.courseThumbnail);
+      const trailerUrl = await uploadVideo(advanceInfo.courseTrailer);
+      advanceInfo.courseThumbnail = courseUrl;
+      advanceInfo.courseTrailer = trailerUrl;
       // Make the request with the token in the headers
-      const { courseThumbnail, courseTrailer, ...restFormState } = formState;
+      // const { courseThumbnail, courseTrailer, ...restFormState } = formState;
 
       // If you want to assign new values:
-      const modifiedFormState = {
-        courseThumbnail: "hello",
-        courseTrailer: "hi",
-        ...restFormState,
-      };
+      // const modifiedFormState = {
+      //   ...restFormState,
+      // };
       const res = await axios.put(
         `http://localhost:8080/api/v1/course/updateCourse/${cid}`,
-        { ...modifiedFormState, welcomeMsg: "", congratulationsMsg: "" },
+        { ...advanceInfo, welcomeMsg: "", congratulationsMsg: "" },
         {
           headers: {
             Authorization: `Bearer ${token}`, // Include the token in the Authorization header
@@ -238,11 +240,10 @@ const AdvanceInformation: FC<AdvanceInformationProps> = ({
             </p>
             <div className="content flex flex-col lg:flex-row gap-4">
               <div className="image-container flex-1">
-                
                 <img
-                   src={
-                    formState.courseThumbnail
-                      ? URL.createObjectURL(formState.courseThumbnail)
+                  src={
+                    advanceInfo.courseThumbnail
+                      ? URL.createObjectURL(advanceInfo.courseThumbnail)
                       : left_icon
                   }
                   alt="Course Thumbnail Placeholder"
@@ -299,9 +300,9 @@ const AdvanceInformation: FC<AdvanceInformationProps> = ({
                   alt="Course Trailer Placeholder"
                   className="object-cover w-full lg:h-48 h-40"
                 /> */}
-                {formState.courseTrailer ? (
+                {advanceInfo.courseTrailer ? (
                   <video
-                    src={URL.createObjectURL(formState.courseTrailer)}
+                    src={URL.createObjectURL(advanceInfo.courseTrailer)}
                     controls
                     className="object-cover w-full aspect-square"
                   />
@@ -350,7 +351,7 @@ const AdvanceInformation: FC<AdvanceInformationProps> = ({
             theme="snow"
             className="w-full h-[200px]"
             placeholder="Enter your course descriptions"
-            value={formState.courseDescription}
+            value={advanceInfo.courseDescription}
             onChange={handleDescriptionChange}
           />
         </div>
@@ -358,14 +359,14 @@ const AdvanceInformation: FC<AdvanceInformationProps> = ({
         {/* Teaching Points Section */}
         <div className="flex justify-between items-center lg:mt-[32px] mt-[40px] md:mb-[10px] mb-[24px] w-[90%] mx-auto">
           <p className="font-medium lg:text-[18px] text-[16px] text-[#1D2026] lg:leading-[24px] leading-[20px]">
-            What you will teach in this course ({formState.learnings.length}/8)
+            What you will teach in this course ({advanceInfo.learnings.length}/8)
           </p>
           <button
             className="text-[#3A6BE4] lg:text-[14px] text-[12px] lg:leading-[20px] leading-[18px]"
             onClick={(e) => {
               e.preventDefault();
-              if (formState.learnings.length < 8) {
-                setFormState((prev) => ({
+              if (advanceInfo.learnings.length < 8) {
+                setAdvanceInfo((prev) => ({
                   ...prev,
                   learnings: [...prev.learnings, ""],
                 }));
@@ -375,7 +376,7 @@ const AdvanceInformation: FC<AdvanceInformationProps> = ({
             + Add New
           </button>
         </div>
-        {formState.learnings.map((item, index) => (
+        {advanceInfo.learnings.map((item, index) => (
           <div key={index} className="w-[90%] mx-auto mb-[24px]">
             <p className="text-[#1D2026] md:text-[14px] text-[12px] mb-[5px]">
               {index + 1}
@@ -397,14 +398,14 @@ const AdvanceInformation: FC<AdvanceInformationProps> = ({
 
         <div className="flex justify-between items-center lg:mt-[32px] mt-[40px] md:mb-[10px] mb-[24px] w-[90%] mx-auto">
           <p className="font-medium lg:text-[18px] text-[16px] text-[#1D2026] lg:leading-[24px] leading-[20px]">
-            Target Audience ({formState.targetAudience.length}/8)
+            Target Audience ({advanceInfo.targetAudience.length}/8)
           </p>
           <button
             className="text-[#3A6BE4] lg:text-[14px] text-[12px] lg:leading-[20px] leading-[18px]"
             onClick={(e) => {
               e.preventDefault();
-              if (formState.targetAudience.length < 8) {
-                setFormState((prev) => ({
+              if (advanceInfo.targetAudience.length < 8) {
+                setAdvanceInfo((prev) => ({
                   ...prev,
                   targetAudience: [...prev.targetAudience, ""],
                 }));
@@ -415,7 +416,7 @@ const AdvanceInformation: FC<AdvanceInformationProps> = ({
           </button>
         </div>
 
-        {formState.targetAudience.map((item, index) => (
+        {advanceInfo.targetAudience.map((item, index) => (
           <div key={index} className="w-[90%] mx-auto mb-[24px]">
             <p className="text-[#1D2026] md:text-[14px] text-[12px] mb-[5px]">
               {index + 1}
@@ -437,14 +438,14 @@ const AdvanceInformation: FC<AdvanceInformationProps> = ({
 
         <div className="flex justify-between items-center lg:mt-[32px] mt-[40px] md:mb-[10px] mb-[24px] w-[90%] mx-auto">
           <p className="font-medium lg:text-[18px] text-[16px] text-[#1D2026] lg:leading-[24px] leading-[20px]">
-            Course requirements ({formState.requirements.length}/8)
+            Course requirements ({advanceInfo.requirements.length}/8)
           </p>
           <button
             className="text-[#3A6BE4] lg:text-[14px] text-[12px] lg:leading-[20px] leading-[18px]"
             onClick={(e) => {
               e.preventDefault();
-              if (formState.requirements.length < 8) {
-                setFormState((prev) => ({
+              if (advanceInfo.requirements.length < 8) {
+                setAdvanceInfo((prev) => ({
                   ...prev,
                   requirements: [...prev.requirements, ""],
                 }));
@@ -455,7 +456,7 @@ const AdvanceInformation: FC<AdvanceInformationProps> = ({
           </button>
         </div>
 
-        {formState.requirements.map((desc, index) => (
+        {advanceInfo.requirements.map((desc, index) => (
           <div className="w-[90%] mx-auto mb-[24px]">
             <p className="text-[#1D2026] md:text-[14px] text-[12px] mb-[5px]">
               {index + 1}

@@ -1,7 +1,8 @@
-import { FC, useEffect } from "react";
+import { FC, useEffect, useState } from "react";
 import MagnifyingGlass from "../assets/MagnifyingGlass.svg";
 import Instructor from "./Instructor";
 import { useLocation } from "react-router-dom";
+import axios from "axios";
 
 
 type Tab = "basic" | "advance" | "curriculum" | "publish";
@@ -12,13 +13,45 @@ type PublishCourseProps={
   setActiveTab:React.Dispatch<React.SetStateAction<Tab>>;
 }
 
+type FormState={
+  welcomeMsg:string,
+  congratulationsMsg:string,
+}
+
 const PublishCourse:FC<PublishCourseProps> = ({setCount3,setActiveTab}) => {
 
   const { pathname } = useLocation();
+  const [formState,setFormState]=useState<FormState>({
+    welcomeMsg:"",
+    congratulationsMsg:"",
+  })
 
   useEffect(() => {
     window.scrollTo(0, 0);
   }, [pathname]);
+
+
+  const handleInputChange=(e:React.ChangeEvent<HTMLTextAreaElement>)=>{
+    const {name,value}=e.target;
+    setFormState((prev)=>({...prev,[name]:value}))
+  }
+
+  const handleSubmit=async(e:React.MouseEvent<HTMLButtonElement>)=>{
+    e.preventDefault();
+    const cid = localStorage.getItem("courseId");
+    const token=localStorage.getItem("token");
+    try{
+      const res=await axios.put(`http://localhost:8080/api/v1/course/updateCourse/${cid}`,formState,{
+        headers:{
+          Authorization:`Bearer ${token}`
+        }
+      })
+      console.log(res.data);
+    }catch(err){
+      console.error(err);
+    }
+
+  }
   return (
     <div className="mb-[37px]">
       <div className="heading lg:px-[40px] px-[10px] py-[24px] bg-white flex gap-x-[20px] justify-between items-center border-b-[2px] border-opacity-10 border-b-[#6E7485]">
@@ -48,6 +81,9 @@ const PublishCourse:FC<PublishCourseProps> = ({setCount3,setActiveTab}) => {
               id="welcomeMessage"
               rows={4}
               placeholder="Enter course starting message here..."
+              value={formState.welcomeMsg}
+              name="welcome"
+              onChange={handleInputChange}
               className="w-full border outline-none placeholder:text-[#8C94A3] px-[18px] py-[13px] text-[16px] resize-none"
             ></textarea>
           </div>
@@ -56,9 +92,12 @@ const PublishCourse:FC<PublishCourseProps> = ({setCount3,setActiveTab}) => {
               Congratulation Message
             </p>
             <textarea
-              id="welcomeMessage"
+              id="congratulationMessage"
               rows={4}
               cols={10}
+              name="congratulation"
+              value={formState.congratulationsMsg}
+              onChange={handleInputChange}
               placeholder="Enter course starting message here..."
               className="w-full border outline-none px-[18px] py-[15px] text-[16px] resize-none"
             ></textarea>
@@ -83,7 +122,7 @@ const PublishCourse:FC<PublishCourseProps> = ({setCount3,setActiveTab}) => {
             />
           </div>
         </div>
-        <div className="mt-[24px]   grid gap-[24px] xl:grid-cols-3 sm:grid-cols-2 grid-cols-1">
+        <div className="mt-[24px]   grid gap-[50px] xl:grid-cols-3 sm:grid-cols-2 grid-cols-1">
           <Instructor />
           <Instructor />
           <Instructor />
@@ -93,7 +132,7 @@ const PublishCourse:FC<PublishCourseProps> = ({setCount3,setActiveTab}) => {
           <button className="text-[#6E7485] lg:text-[18px] text-[14px] font-semibold lg:leading-[56px] leading-[40px] px-[32px] border-[#E9EAF0] border-[1px]" onClick={()=>setActiveTab("curriculum")}>
             Previous
           </button>
-          <button className="lg:text-[18px] text-[14px] font-semibold lg:leading-[56px] leading-[40px] text-white px-[32px] bg-[#3A6BE4]">
+          <button className="lg:text-[18px] text-[14px] font-semibold lg:leading-[56px] leading-[40px] text-white px-[32px] bg-[#3A6BE4]" onClick={handleSubmit}>
             Submit For Review
           </button>
         </div>

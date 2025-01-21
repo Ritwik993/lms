@@ -2,7 +2,7 @@ import axios from "axios";
 import { FC, useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 
-type FormState = {
+type BasicFormState = {
   title: string;
   subTitle: string;
   category: string;
@@ -40,6 +40,8 @@ type BasicInformationProps = {
   setCount: React.Dispatch<React.SetStateAction<number>>; // Use lowercase `number` for TypeScript type
   setActiveTab: React.Dispatch<React.SetStateAction<Tab>>;
   setCourseid: React.Dispatch<React.SetStateAction<string>>;
+  basicInfo:BasicFormState,
+  setBasicInfo:  React.Dispatch<React.SetStateAction<BasicFormState>>,
 };
 
 const uniqueKeys = new Set();
@@ -47,25 +49,29 @@ const BasicInformation: FC<BasicInformationProps> = ({
   setCount,
   setActiveTab,
   setCourseid,
+  basicInfo,
+  setBasicInfo,
 }) => {
-  const [formState, setFormState] = useState<FormState>({
-    title: "",
-    subTitle: "",
-    category: "",
-    subCategory: "",
-    topic: "",
-    language: "",
-    subtitleLanguage: "",
-    courseLevels: "",
-    courseDurations: "",
-    instructor1: "",
-    instructor2: "",
-    instructor3: "",
-    instructor4: "",
-    instructor: ["6751f31ea2712db85bd07dde"],
-    featured: false,
-    courseId: "",
-  });
+  // const [basicInfo, setBasicInfo] = useState<FormState>({
+  //   title: "",
+  //   subTitle: "",
+  //   category: "",
+  //   subCategory: "",
+  //   topic: "",
+  //   language: "",
+  //   subtitleLanguage: "",
+  //   courseLevels: "",
+  //   courseDurations: "",
+  //   instructor1: "",
+  //   instructor2: "",
+  //   instructor3: "",
+  //   instructor4: "",
+  //   instructor: ["6751f31ea2712db85bd07dde"],
+  //   featured: false,
+  //   courseId: "",
+  // });
+
+ 
 
   const { pathname } = useLocation();
 
@@ -92,7 +98,7 @@ const BasicInformation: FC<BasicInformationProps> = ({
           },
         }
       );
-      formState.courseId = res.data.data;
+      basicInfo.courseId = res.data.data;
       setCourseid(res.data.data);
       // console.log(res.data);
     } catch (err) {
@@ -130,10 +136,11 @@ const BasicInformation: FC<BasicInformationProps> = ({
       setCount(uniqueKeys.size);
     }
     if (value.length <= 80) {
-      setFormState((prev) => {
+      setBasicInfo((prev) => {
         return { ...prev, [name]: value };
       });
     }
+    
   };
 
   const handleSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -142,7 +149,7 @@ const BasicInformation: FC<BasicInformationProps> = ({
       uniqueKeys.add(name);
       setCount(uniqueKeys.size);
     }
-    setFormState((prev) => {
+    setBasicInfo((prev) => {
       return { ...prev, [name]: value };
     });
   };
@@ -173,7 +180,7 @@ const BasicInformation: FC<BasicInformationProps> = ({
         instructor3,
         instructor4,
         ...restFormState
-      } = formState;
+      } = basicInfo;
       // Prepare the form data
       // restFormState.instructor = [instructor1, instructor2, instructor3, instructor4].filter(Boolean);
 
@@ -228,12 +235,12 @@ const BasicInformation: FC<BasicInformationProps> = ({
             placeholder="Your course title"
             className=" placeholder:text-[#8C94A3] border-[#E9EAF0] w-full h-full border-[2px] py-[10px] px-[10px]  outline-none"
             onChange={handleInputChange}
-            value={formState.title}
+            value={basicInfo.title}
             name="title"
             type="text"
           />
           <span className="text-[#8C94A3] md:text-[14px] text-[12px] absolute right-[20px] bottom-[10px]">
-            {Number(formState.title.length)}/80
+            {Number(basicInfo.title.length)}/80
           </span>
         </div>
 
@@ -246,11 +253,11 @@ const BasicInformation: FC<BasicInformationProps> = ({
             className=" placeholder:text-[#8C94A3] border-[#E9EAF0] w-full h-full border-[2px] py-[10px] px-[10px]  outline-none"
             type="text"
             name="subTitle"
-            value={formState.subTitle}
+            value={basicInfo.subTitle}
             onChange={handleInputChange}
           />
           <span className="text-[#8C94A3] md:text-[14px] text-[12px] absolute right-[20px] bottom-[10px]">
-            {Number(formState.subTitle.length)}/80
+            {Number(basicInfo.subTitle.length)}/80
           </span>
         </div>
 
@@ -263,7 +270,7 @@ const BasicInformation: FC<BasicInformationProps> = ({
               className="border-[#E9EAF0] text-[#8C94A3] w-full  border-[2px] py-[10px] px-[10px]  outline-none"
               onChange={handleSelectChange}
               name="category"
-              value={formState.category}
+              value={basicInfo.category}
             >
               <option value="">Select</option>
               <option value="course1">Course 1</option>
@@ -280,7 +287,7 @@ const BasicInformation: FC<BasicInformationProps> = ({
             <select
               className="border-[#E9EAF0] text-[#8C94A3] w-full  border-[2px] py-[10px] px-[10px]  outline-none"
               name="subCategory"
-              value={formState.subCategory}
+              value={basicInfo.subCategory}
               onChange={handleSelectChange}
             >
               <option value="">Select</option>
@@ -301,7 +308,7 @@ const BasicInformation: FC<BasicInformationProps> = ({
             className=" placeholder:text-[#8C94A3] border-[#E9EAF0] w-full h-full border-[2px] py-[10px] px-[10px]  outline-none"
             type="text"
             name="topic"
-            value={formState.topic}
+            value={basicInfo.topic}
             onChange={handleInputChange}
           />
         </div>
@@ -313,7 +320,7 @@ const BasicInformation: FC<BasicInformationProps> = ({
             </p>
             <select
               className="border-[#E9EAF0] text-[#8C94A3] w-full  border-[2px] py-[10px] px-[10px]  outline-none"
-              value={formState.language}
+              value={basicInfo.language}
               name="language"
               onChange={handleSelectChange}
             >
@@ -332,7 +339,7 @@ const BasicInformation: FC<BasicInformationProps> = ({
             <select
               className="border-[#E9EAF0] text-[#8C94A3] w-full  border-[2px] py-[10px] px-[10px]  outline-none"
               name="subtitleLanguage"
-              value={formState.subtitleLanguage}
+              value={basicInfo.subtitleLanguage}
               onChange={handleSelectChange}
             >
               <option value="">Select</option>
@@ -350,7 +357,7 @@ const BasicInformation: FC<BasicInformationProps> = ({
             <select
               className="border-[#E9EAF0] text-[#8C94A3] w-full  border-[2px] py-[10px] px-[10px]  outline-none"
               name="courseLevels"
-              value={formState.courseLevels}
+              value={basicInfo.courseLevels}
               onChange={handleSelectChange}
             >
               <option value="">Select</option>
@@ -368,7 +375,7 @@ const BasicInformation: FC<BasicInformationProps> = ({
             <select
               className="border-[#E9EAF0] text-[#8C94A3] w-full  border-[2px] py-[10px] px-[10px]  outline-none"
               name="courseDurations"
-              value={formState.courseDurations}
+              value={basicInfo.courseDurations}
               onChange={handleSelectChange}
             >
               <option value="">Select </option>
@@ -391,7 +398,7 @@ const BasicInformation: FC<BasicInformationProps> = ({
             <select
               className="border-[#E9EAF0] text-[#8C94A3] w-full  border-[2px] py-[10px] px-[10px]  outline-none"
               name="instructor1"
-              value={formState.instructor1}
+              value={basicInfo.instructor1}
               onChange={handleSelectChange}
             >
               {/* <option value="">Select</option>
@@ -424,7 +431,7 @@ const BasicInformation: FC<BasicInformationProps> = ({
             <select
               className="border-[#E9EAF0] text-[#8C94A3] w-full  border-[2px] py-[10px] px-[10px]  outline-none"
               name="instructor2"
-              value={formState.instructor2}
+              value={basicInfo.instructor2}
               onChange={handleSelectChange}
             >
               <option value="">Select</option>
@@ -442,7 +449,7 @@ const BasicInformation: FC<BasicInformationProps> = ({
             <select
               className="border-[#E9EAF0] text-[#8C94A3] w-full  border-[2px] py-[10px] px-[10px]  outline-none"
               name="instructor3"
-              value={formState.instructor3}
+              value={basicInfo.instructor3}
               onChange={handleSelectChange}
             >
               <option value="">Select</option>
@@ -460,7 +467,7 @@ const BasicInformation: FC<BasicInformationProps> = ({
             <select
               className="border-[#E9EAF0] text-[#8C94A3] w-full  border-[2px] py-[10px] px-[10px]  outline-none"
               name="instructor4"
-              value={formState.instructor4}
+              value={basicInfo.instructor4}
               onChange={handleSelectChange}
             >
               <option value="">Select</option>

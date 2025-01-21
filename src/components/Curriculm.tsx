@@ -5,9 +5,12 @@ import trash from "../assets/Trash.svg";
 import { Link, useLocation } from "react-router-dom";
 import DownArrow from "../assets/CaretDown.svg";
 import { FC, useEffect, useRef, useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { addLecture } from "../utils/lectureSlice";
 import { addSubject } from "../utils/subjectSlice";
+import { RootState } from "../utils/store";
+import axios from "axios";
+import { addSectionRedux, addTopicRedux, deleteSectionRedux, deleteTopicRedux, updateSectionNameRedux, updateTopicNameRedux } from "../utils/sectionSlice";
 
 type Tab = "basic" | "advance" | "curriculum" | "publish";
 
@@ -37,26 +40,19 @@ interface Lecture {
   test: string[];
 }
 
-// interface LectureState {
-//   lectures: Lecture[];
-// }
-
-interface Subject{
-  id:number;
-  subjectTitle:string;
-  lectures:Lecture[];
-}
-
-const Curriculm: FC<CurriculumProps> = ({ setCount2, setActiveTab }) => {
+const Curriculm: FC<CurriculumProps> = ({ setCount2, setActiveTab}) => {
   const { pathname } = useLocation();
-  const dispatch=useDispatch();
+  const dispatch = useDispatch();
   const inputRef = useRef<HTMLInputElement | null>(null);
   const inputRef2 = useRef<HTMLInputElement | null>(null);
-  const subjects:Subject[]=[];
 
-  const [sections, setSections] = useState<Section[]>([
-    { id: 1, name: "Section Name", topics: [{ id: 1, name: "Chapter Name" }] },
-  ]);
+  const subjects = useSelector((store: RootState) => store.subject.subjects);
+
+  // const [sections, setSections] = useState<Section[]>([
+  //   { id: 1, name: "Section Name", topics: [{ id: 1, name: "Chapter Name" }] },
+  // ]);s
+
+  const sections=useSelector((store:RootState)=>store.section.sections);
 
   const [newSectionName, setNewSectionName] = useState("");
   const [editingSectionId, setEditingSectionId] = useState<number | null>(null);
@@ -66,60 +62,71 @@ const Curriculm: FC<CurriculumProps> = ({ setCount2, setActiveTab }) => {
 
   const addSection = (newSectionName: string) => {
     if (newSectionName.trim()) {
-      const id=Date.now();
-      setSections((prev) => [
-        ...prev,
-        { id, name: newSectionName.trim(), topics: [] },
-      ]);
-      // dispatch(addSubject({id,subjectTitle:newSectionName,lectures:[]}));
+      const id = Date.now();
+      // setSections((prev) => [
+      //   ...prev,
+      //   { id, name: newSectionName.trim(), topics: [] },
+      // ]);
+      dispatch(addSectionRedux({id,name:newSectionName}))
       setNewSectionName("");
     }
   };
 
   const deleteSection = (id: number) => {
-    setSections((prev) => prev.filter((section) => section.id !== id));
+    // setSections((prev) => prev.filter((section) => section.id !== id));
+    dispatch(deleteSectionRedux(id));
   };
 
   const updateSectionName = () => {
     if (editingSectionId !== null && editingSectionName.trim()) {
-      setSections((prev) =>
-        prev.map((section) =>
-          section.id === editingSectionId
-            ? { ...section, name: editingSectionName.trim() }
-            : section
-        )
+      // setSections((prev) =>
+      //   prev.map((section) =>
+      //     section.id === editingSectionId
+      //       ? { ...section, name: editingSectionName.trim() }
+      //       : section
+      //   )
+      // );
+      dispatch(updateSectionNameRedux({id:editingSectionId,name:editingSectionName}))
+      dispatch(
+        addSubject({
+          id: editingSectionId,
+          subjectTitle: editingSectionName,
+          lectures: [],
+        })
       );
-      dispatch(addSubject({id:editingSectionId,subjectTitle:editingSectionName,lectures:[]}));
-
     }
     setEditingSectionId(null);
     setEditingSectionName("");
   };
 
   const addTopic = (sectionId: number, topicName: string) => {
-    setSections((prev) =>
-      prev.map((section) =>
-        section.id === sectionId
-          ? {
-              ...section,
-              topics: [...section.topics, { id: Date.now(), name: topicName }],
-            }
-          : section
-      )
-    );
+    // setSections((prev) =>
+    //   prev.map((section) =>
+    //     section.id === sectionId
+    //       ? {
+    //           ...section,
+    //           topics: [...section.topics, { id: Date.now(), name: topicName }],
+    //         }
+    //       : section
+    //   )
+    // );
+    const topic:Topic={id:Date.now(),name:topicName};
+    dispatch(addTopicRedux({sectionId,topic}));
   };
 
   const deleteTopic = (sectionId: number, topicId: number) => {
-    setSections((prev) =>
-      prev.map((section) =>
-        section.id === sectionId
-          ? {
-              ...section,
-              topics: section.topics.filter((topic) => topic.id !== topicId),
-            }
-          : section
-      )
-    );
+    // setSections((prev) =>
+    //   prev.map((section) =>
+    //     section.id === sectionId
+    //       ? {
+    //           ...section,
+    //           topics: section.topics.filter((topic) => topic.id !== topicId),
+    //         }
+    //       : section
+    //   )
+    // );
+
+    dispatch(deleteTopicRedux({sectionId,topicId}));
   };
 
   const editTopicName = (sectionId: number) => {
@@ -128,24 +135,30 @@ const Curriculm: FC<CurriculumProps> = ({ setCount2, setActiveTab }) => {
       sectionId != null &&
       editingTopicName.trim()
     ) {
-      setSections((prev) =>
-        prev.map((section) =>
-          section.id === sectionId
-            ? {
-                ...section,
-                topics: section.topics.map((topic) =>
-                  topic.id === editingTopicId
-                    ? { ...topic, name: editingTopicName.trim() }
-                    : topic
-                ),
-              }
-            : section
-        )
-      );
+      // setSections((prev) =>
+      //   prev.map((section) =>
+      //     section.id === sectionId
+      //       ? {
+      //           ...section,
+      //           topics: section.topics.map((topic) =>
+      //             topic.id === editingTopicId
+      //               ? { ...topic, name: editingTopicName.trim() }
+      //               : topic
+      //           ),
+      //         }
+      //       : section
+      //   )
+      // );
+      dispatch(updateTopicNameRedux({sectionId,topicId:editingTopicId,name:editingTopicName}))
     }
 
-
-    dispatch(addLecture({id:editingTopicId,subjectId:sectionId,lectureTitle:editingTopicName}));
+    dispatch(
+      addLecture({
+        id: editingTopicId,
+        subjectId: sectionId,
+        lectureTitle: editingTopicName,
+      })
+    );
     // subjects.map((subject)=>subject.id===sectionId?subject.lectures.push({id:editingTopicId,lectureTitle:editingTopicName}))
 
     setEditingTopicId(null);
@@ -155,6 +168,27 @@ const Curriculm: FC<CurriculumProps> = ({ setCount2, setActiveTab }) => {
   useEffect(() => {
     window.scrollTo(0, 0);
   }, [pathname]);
+
+  const handleSubmit = async () => {
+    const token = localStorage.getItem("token");
+    console.log({...subjects});
+    try {
+      // const {id,lectureTitle,...restform}=subjects
+      const res = await axios.post(
+        "http://localhost:8080/api/v1/curriculum/addCurriculum",
+        {...subjects},
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      console.log(res.data);
+      setActiveTab("publish");
+    } catch (err) {
+      console.error(err);
+    }
+  };
 
   return (
     <div className="mb-[37px]">
@@ -176,7 +210,7 @@ const Curriculm: FC<CurriculumProps> = ({ setCount2, setActiveTab }) => {
         <div className="flex gap-x-2 lg:p-[24px] p-[12px]">
           <img src={menu} />
           <p className="text-[#1D2026] font-medium text-[16px]">
-             Class Details
+            Class Details
           </p>
         </div>
 
@@ -188,8 +222,11 @@ const Curriculm: FC<CurriculumProps> = ({ setCount2, setActiveTab }) => {
       </div>
 
       {/*  */}
-      {sections.map((section) => (
-        <div className="contentBox  mt-[16px] w-[90%] mx-auto min-h-[312px] pb-8 bg-[#F5F7FA]">
+      {sections.map((section, i) => (
+        <div
+          className="contentBox  mt-[16px] w-[90%] mx-auto min-h-[312px] pb-8 bg-[#F5F7FA]"
+          key={i}
+        >
           <div className="flex justify-between items-center">
             <div className="flex gap-x-2 lg:p-[24px] p-[12px]">
               <img src={menu} />
@@ -328,7 +365,7 @@ const Curriculm: FC<CurriculumProps> = ({ setCount2, setActiveTab }) => {
         </button>
         <button
           className="lg:text-[18px] text-[14px] font-semibold lg:leading-[56px] leading-[40px] text-white px-[32px] bg-[#3A6BE4]"
-          onClick={() => setActiveTab("publish")}
+          onClick={handleSubmit}
         >
           Save & next
         </button>

@@ -25,8 +25,39 @@ import Reviews from "./pages/Reviews";
 import LiveClassDetails from "./components/Demo";
 import { Provider } from "react-redux";
 import store from "./utils/store";
+import { useState } from "react";
+
+
+
+
+// interface Topic {
+//   id: number;
+//   name: string;
+// }
+
+// interface Section {
+//   id: number;
+//   name: string;
+//   topics: Topic[];
+// }
+
+// interface Lecture {
+//   id: string;
+//   lectureTitle: string;
+//   notes: string[];
+//   dpp: string[];
+//   video: string[];
+//   assignment: string[];
+//   test: string[];
+// }
+
+
 
 function App() {
+  // const [sections, setSections] = useState<Section[]>([
+  //   { id: 1, name: "Section 101", topics: [{ id: 1, name: "Chapter 900" }] },
+  // ]);
+
   const AppLayout = () => {
     return (
       <>
