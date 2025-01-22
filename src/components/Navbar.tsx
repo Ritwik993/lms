@@ -16,7 +16,7 @@ const Navbar = () => {
     "/testseries": "Add a New Test Series",
     "/addTest": "Add a New Test Series",
     "/testform": "Add a New Test Series",
-    "/createtest": "Add a New Test Series",
+    "/createtest/:id": "Add a New Test Series",
     "/course": "My Courses",
     "/referal":"Configure Referal",
     "/review":"Review"
