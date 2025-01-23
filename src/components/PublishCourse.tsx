@@ -4,54 +4,55 @@ import Instructor from "./Instructor";
 import { useLocation } from "react-router-dom";
 import axios from "axios";
 
-
 type Tab = "basic" | "advance" | "curriculum" | "publish";
 
+type PublishFormState = {
+  welcomeMsg: string;
+  congratulationsMsg: string;
+};
 
-type PublishCourseProps={
-  setCount3:React.Dispatch<React.SetStateAction<number>>
-  setActiveTab:React.Dispatch<React.SetStateAction<Tab>>;
-}
+type PublishCourseProps = {
+  setCount3: React.Dispatch<React.SetStateAction<number>>;
+  setActiveTab: React.Dispatch<React.SetStateAction<Tab>>;
+  publishFormState: PublishFormState;
+  setPublishFormState: React.Dispatch<React.SetStateAction<PublishFormState>>;
+};
 
-type FormState={
-  welcomeMsg:string,
-  congratulationsMsg:string,
-}
-
-const PublishCourse:FC<PublishCourseProps> = ({setCount3,setActiveTab}) => {
-
+const PublishCourse: FC<PublishCourseProps> = ({ setCount3, setActiveTab ,publishFormState,setPublishFormState}) => {
   const { pathname } = useLocation();
-  const [formState,setFormState]=useState<FormState>({
-    welcomeMsg:"",
-    congratulationsMsg:"",
-  })
+  // const [curriculumFormState,setCurriculumFormState]=useState<FormState>({
+  //   welcomeMsg:"",
+  //   congratulationsMsg:"",
+  // })
 
   useEffect(() => {
     window.scrollTo(0, 0);
   }, [pathname]);
 
+  const handleInputChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    const { name, value } = e.target;
+    setPublishFormState((prev) => ({ ...prev, [name]: value }));
+  };
 
-  const handleInputChange=(e:React.ChangeEvent<HTMLTextAreaElement>)=>{
-    const {name,value}=e.target;
-    setFormState((prev)=>({...prev,[name]:value}))
-  }
-
-  const handleSubmit=async(e:React.MouseEvent<HTMLButtonElement>)=>{
+  const handleSubmit = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     const cid = localStorage.getItem("courseId");
-    const token=localStorage.getItem("token");
-    try{
-      const res=await axios.put(`http://localhost:8080/api/v1/course/updateCourse/${cid}`,formState,{
-        headers:{
-          Authorization:`Bearer ${token}`
+    const token = localStorage.getItem("token");
+    try {
+      const res = await axios.put(
+        `http://localhost:8080/api/v1/course/updateCourse/${cid}`,
+        publishFormState,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
         }
-      })
+      );
       console.log(res.data);
-    }catch(err){
+    } catch (err) {
       console.error(err);
     }
-
-  }
+  };
   return (
     <div className="mb-[37px]">
       <div className="heading lg:px-[40px] px-[10px] py-[24px] bg-white flex gap-x-[20px] justify-between items-center border-b-[2px] border-opacity-10 border-b-[#6E7485]">
@@ -81,8 +82,8 @@ const PublishCourse:FC<PublishCourseProps> = ({setCount3,setActiveTab}) => {
               id="welcomeMessage"
               rows={4}
               placeholder="Enter course starting message here..."
-              value={formState.welcomeMsg}
-              name="welcome"
+              value={publishFormState.welcomeMsg}
+              name="welcomeMsg"
               onChange={handleInputChange}
               className="w-full border outline-none placeholder:text-[#8C94A3] px-[18px] py-[13px] text-[16px] resize-none"
             ></textarea>
@@ -95,8 +96,8 @@ const PublishCourse:FC<PublishCourseProps> = ({setCount3,setActiveTab}) => {
               id="congratulationMessage"
               rows={4}
               cols={10}
-              name="congratulation"
-              value={formState.congratulationsMsg}
+              name="congratulationsMsg"
+              value={publishFormState.congratulationsMsg}
               onChange={handleInputChange}
               placeholder="Enter course starting message here..."
               className="w-full border outline-none px-[18px] py-[15px] text-[16px] resize-none"
@@ -129,10 +130,16 @@ const PublishCourse:FC<PublishCourseProps> = ({setCount3,setActiveTab}) => {
         </div>
 
         <div className="flex justify-between items-center mt-[32px] pb-[40px] pt-[60px] w-[90%] m-auto">
-          <button className="text-[#6E7485] lg:text-[18px] text-[14px] font-semibold lg:leading-[56px] leading-[40px] px-[32px] border-[#E9EAF0] border-[1px]" onClick={()=>setActiveTab("curriculum")}>
+          <button
+            className="text-[#6E7485] lg:text-[18px] text-[14px] font-semibold lg:leading-[56px] leading-[40px] px-[32px] border-[#E9EAF0] border-[1px]"
+            onClick={() => setActiveTab("curriculum")}
+          >
             Previous
           </button>
-          <button className="lg:text-[18px] text-[14px] font-semibold lg:leading-[56px] leading-[40px] text-white px-[32px] bg-[#3A6BE4]" onClick={handleSubmit}>
+          <button
+            className="lg:text-[18px] text-[14px] font-semibold lg:leading-[56px] leading-[40px] text-white px-[32px] bg-[#3A6BE4]"
+            onClick={handleSubmit}
+          >
             Submit For Review
           </button>
         </div>

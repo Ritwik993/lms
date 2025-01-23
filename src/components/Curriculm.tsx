@@ -10,7 +10,14 @@ import { addLecture } from "../utils/lectureSlice";
 import { addSubject } from "../utils/subjectSlice";
 import { RootState } from "../utils/store";
 import axios from "axios";
-import { addSectionRedux, addTopicRedux, deleteSectionRedux, deleteTopicRedux, updateSectionNameRedux, updateTopicNameRedux } from "../utils/sectionSlice";
+import {
+  addSectionRedux,
+  addTopicRedux,
+  deleteSectionRedux,
+  deleteTopicRedux,
+  updateSectionNameRedux,
+  updateTopicNameRedux,
+} from "../utils/sectionSlice";
 
 type Tab = "basic" | "advance" | "curriculum" | "publish";
 
@@ -30,8 +37,7 @@ interface Section {
   topics: Topic[];
 }
 
-interface Lecture {
-  id: string;
+interface LectureData {
   lectureTitle: string;
   notes: string[];
   dpp: string[];
@@ -40,7 +46,12 @@ interface Lecture {
   test: string[];
 }
 
-const Curriculm: FC<CurriculumProps> = ({ setCount2, setActiveTab}) => {
+type ResponseData = {
+  subjectTitle: string;
+  lectures: LectureData[];
+};
+
+const Curriculm: FC<CurriculumProps> = ({ setCount2, setActiveTab }) => {
   const { pathname } = useLocation();
   const dispatch = useDispatch();
   const inputRef = useRef<HTMLInputElement | null>(null);
@@ -52,7 +63,7 @@ const Curriculm: FC<CurriculumProps> = ({ setCount2, setActiveTab}) => {
   //   { id: 1, name: "Section Name", topics: [{ id: 1, name: "Chapter Name" }] },
   // ]);s
 
-  const sections=useSelector((store:RootState)=>store.section.sections);
+  const sections = useSelector((store: RootState) => store.section.sections);
 
   const [newSectionName, setNewSectionName] = useState("");
   const [editingSectionId, setEditingSectionId] = useState<number | null>(null);
@@ -67,7 +78,7 @@ const Curriculm: FC<CurriculumProps> = ({ setCount2, setActiveTab}) => {
       //   ...prev,
       //   { id, name: newSectionName.trim(), topics: [] },
       // ]);
-      dispatch(addSectionRedux({id,name:newSectionName}))
+      dispatch(addSectionRedux({ id, name: newSectionName }));
       setNewSectionName("");
     }
   };
@@ -86,7 +97,12 @@ const Curriculm: FC<CurriculumProps> = ({ setCount2, setActiveTab}) => {
       //       : section
       //   )
       // );
-      dispatch(updateSectionNameRedux({id:editingSectionId,name:editingSectionName}))
+      dispatch(
+        updateSectionNameRedux({
+          id: editingSectionId,
+          name: editingSectionName,
+        })
+      );
       dispatch(
         addSubject({
           id: editingSectionId,
@@ -110,8 +126,8 @@ const Curriculm: FC<CurriculumProps> = ({ setCount2, setActiveTab}) => {
     //       : section
     //   )
     // );
-    const topic:Topic={id:Date.now(),name:topicName};
-    dispatch(addTopicRedux({sectionId,topic}));
+    const topic: Topic = { id: Date.now(), name: topicName };
+    dispatch(addTopicRedux({ sectionId, topic }));
   };
 
   const deleteTopic = (sectionId: number, topicId: number) => {
@@ -126,7 +142,7 @@ const Curriculm: FC<CurriculumProps> = ({ setCount2, setActiveTab}) => {
     //   )
     // );
 
-    dispatch(deleteTopicRedux({sectionId,topicId}));
+    dispatch(deleteTopicRedux({ sectionId, topicId }));
   };
 
   const editTopicName = (sectionId: number) => {
@@ -149,7 +165,13 @@ const Curriculm: FC<CurriculumProps> = ({ setCount2, setActiveTab}) => {
       //       : section
       //   )
       // );
-      dispatch(updateTopicNameRedux({sectionId,topicId:editingTopicId,name:editingTopicName}))
+      dispatch(
+        updateTopicNameRedux({
+          sectionId,
+          topicId: editingTopicId,
+          name: editingTopicName,
+        })
+      );
     }
 
     dispatch(
@@ -171,12 +193,19 @@ const Curriculm: FC<CurriculumProps> = ({ setCount2, setActiveTab}) => {
 
   const handleSubmit = async () => {
     const token = localStorage.getItem("token");
-    console.log({...subjects});
+    console.log({ ...subjects });
+    // const {id,...rest}=subjects;
+    const filteredSubjects = subjects.map((s) => {
+      const { id, ...rest } = s;
+      return rest;
+    });
+    const courseId=localStorage.getItem("courseId");
+    const data:ResponseData[]=filteredSubjects;
     try {
       // const {id,lectureTitle,...restform}=subjects
       const res = await axios.post(
         "http://localhost:8080/api/v1/curriculum/addCurriculum",
-        {...subjects},
+        { courseId,data },
         {
           headers: {
             Authorization: `Bearer ${token}`,

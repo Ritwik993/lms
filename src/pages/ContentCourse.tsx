@@ -199,7 +199,7 @@ const ContentCourse= () => {
         if (subject.id === numericId) {
           // Assuming numericId corresponds to the subject ID
           const updatedLecture = {
-            ...subject,
+            // ...subject,
              lectureTitle:lectures.lectureTitle,
             id: Number(id),
             notes: formState.notes,

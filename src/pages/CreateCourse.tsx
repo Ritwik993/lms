@@ -41,6 +41,11 @@ type AdvanceFormState = {
   requirements: string[];
 };
 
+type PublishFormState={
+  welcomeMsg:string,
+  congratulationsMsg:string,
+}
+
 
 interface Topic {
   id: number;
@@ -88,6 +93,12 @@ const CreateCourse = () => {
     featured: false,
     courseId: "",
   });
+
+   const [publishFormState,setPublishFormState]=useState<PublishFormState>({
+      welcomeMsg:"",
+      congratulationsMsg:"",
+    })
+  
 
 
 
@@ -240,7 +251,7 @@ const CreateCourse = () => {
             <Curriculm setCount2={setCount2} setActiveTab={setActiveTab} />
           )}
           {activeTab === "publish" && (
-            <PublishCourse setCount3={setCount3} setActiveTab={setActiveTab} />
+            <PublishCourse setCount3={setCount3} setActiveTab={setActiveTab} publishFormState={publishFormState} setPublishFormState={setPublishFormState}/>
           )}
         </div>
       </div>
