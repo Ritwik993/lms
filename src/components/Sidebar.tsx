@@ -8,7 +8,8 @@ import setting from "../assets/Gear.svg";
 import signOut from "../assets/SignOut.svg";
 import { ChevronDown } from "lucide-react";
 import { ChevronUp } from "lucide-react";
-import { TvMinimalPlay } from 'lucide-react';
+import { TvMinimalPlay } from "lucide-react";
+import { BadgeIndianRupee } from "lucide-react";
 
 import { useState } from "react";
 import { Link } from "react-router-dom";
@@ -175,6 +176,19 @@ const Sidebar = () => {
             />
             <p className=" font-medium md:text-[14px] text-[12px] leading-[20px]">
               Reviews
+            </p>
+          </div>
+        </Link>
+
+        <Link to="/referal">
+          <div className="flex gap-[12px] text-[#8C94A3]  hover:bg-[#3A6BE4] hover:text-white px-[24px] py-[12px] items-center  cursor-pointer group">
+            <BadgeIndianRupee
+              size={24}
+              strokeWidth={2}
+              className="object-contain group-hover:filter group-hover:brightness-0 group-hover:invert"
+            />
+            <p className=" font-medium md:text-[14px] text-[12px] leading-[20px]">
+              Referral
             </p>
           </div>
         </Link>
