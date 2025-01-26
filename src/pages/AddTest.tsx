@@ -11,10 +11,10 @@ import { useRef } from "react";
 import { useState } from "react";
 import { addTest, deleteTest, updateTest } from "../utils/testSlice";
 
-interface TestDetails {
-  id: number;
-  topicName: string;
-}
+// interface TestDetails {
+//   id: number;
+//   topicName: string;
+// }
 
 const AddTest = () => {
   const { id } = useParams();
@@ -68,7 +68,7 @@ const AddTest = () => {
         {tests
           .filter((el) => el.testId === numIdx)
           .map((el) =>
-            el.test.map((t, i) => (
+            el.test.map((t) => (
               <div
                 className="innerContent bg-white w-[95%] mx-auto border-[#989898] border-[2px] rounded-[13px] m-[20px]"
                 key={t.id}

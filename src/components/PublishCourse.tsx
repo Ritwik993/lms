@@ -1,4 +1,4 @@
-import { FC, useEffect, useState } from "react";
+import { FC, useEffect } from "react";
 import MagnifyingGlass from "../assets/MagnifyingGlass.svg";
 import Instructor from "./Instructor";
 import { useLocation } from "react-router-dom";

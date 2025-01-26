@@ -9,11 +9,10 @@ interface LiveClassData {
 }
 
 interface LiveClassModalProps {
-  isOpen: boolean;
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const LiveClassModal: React.FC<LiveClassModalProps> = ({ isOpen, setIsOpen}) => {
+const LiveClassModal: React.FC<LiveClassModalProps> = ({  setIsOpen}) => {
   const [formData, setFormData] = useState<LiveClassData>({
     title: "",
     courses: "",

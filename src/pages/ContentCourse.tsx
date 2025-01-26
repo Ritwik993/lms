@@ -4,7 +4,7 @@ import Notepad from "../assets/Notepad.svg";
 import Content from "../components/Content";
 import Camera from "../assets/Camera.svg";
 import Notepad2 from "../assets/Notepad2.svg";
-import { FC, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import UploadVideoModal from "../components/UploadVideoModal";
 import UploadDocumentModal from "../components/UploadDocumentModal";
 import UploadTestModal from "../components/UploadTestModal";
@@ -25,21 +25,21 @@ interface Topic {
   name: string;
 }
 
-interface Section {
-  id: number;
-  name: string;
-  topics: Topic[];
-}
+// interface Section {
+//   id: number;
+//   name: string;
+//   topics: Topic[];
+// }
 
-interface Lecture {
-  id: string;
-  lectureTitle: string;
-  notes: string[];
-  dpp: string[];
-  video: string[];
-  assignment: string[];
-  test: string[];
-}
+// interface Lecture {
+//   id: string;
+//   lectureTitle: string;
+//   notes: string[];
+//   dpp: string[];
+//   video: string[];
+//   assignment: string[];
+//   test: string[];
+// }
 
 // type ContentCourseProps={
 //   sections: Section[];

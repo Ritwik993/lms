@@ -4,7 +4,7 @@ import {
   useTable,
   useSortBy,
   Column,
-  TableInstance,
+  // TableInstance,
   usePagination,
 } from "react-table";
 import { Link } from "react-router-dom";

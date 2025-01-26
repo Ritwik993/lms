@@ -13,7 +13,7 @@ const ScheduledClass = () => {
             <button className="text-white md:text-[14px] text-[12px] leading-[40px] bg-[#3A6BE4] px-[16px] rounded-[4px]" onClick={()=>setIsOpen(true)}>Create New Youtube Live Class</button>
         </div>
 
-        {isOpen && <LiveClassModal isOpen={isOpen} setIsOpen={setIsOpen}/>}
+        {isOpen && <LiveClassModal  setIsOpen={setIsOpen}/>}
 
         <div className="w-[90%] mx-auto ">
             <p className="text-[#1D2026] font-semibold md:text-[24px] text-[20px] md:leading-[32px] leading-[28px] mb-[24px]">Scheduled Live Classes</p>

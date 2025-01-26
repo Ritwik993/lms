@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import  { useState } from "react";
 import Navbar from "../components/Navbar";
 import stack1 from "../assets/Stack1.svg";
 import playCircle from "../assets/PlayCircle.svg";
@@ -52,21 +52,21 @@ interface Topic {
   name: string;
 }
 
-interface Section {
-  id: number;
-  name: string;
-  topics: Topic[];
-}
+// interface Section {
+//   id: number;
+//   name: string;
+//   topics: Topic[];
+// }
 
-interface Lecture {
-  id: string;
-  lectureTitle: string;
-  notes: string[];
-  dpp: string[];
-  video: string[];
-  assignment: string[];
-  test: string[];
-}
+// interface Lecture {
+//   id: string;
+//   lectureTitle: string;
+//   notes: string[];
+//   dpp: string[];
+//   video: string[];
+//   assignment: string[];
+//   test: string[];
+// }
 
 // type CreateCourseProps={
 //   sections: Section[];
@@ -119,8 +119,8 @@ const CreateCourse = () => {
   const [activeTab, setActiveTab] = useState<Tab>("basic");
   const [count, setCount] = useState(0);
   const [count1, setCount1] = useState(0);
-  const [count2, setCount2] = useState(0);
-  const [count3, setCount3] = useState(0);
+  // const [count2, setCount2] = useState(0);
+  // const [count3, setCount3] = useState(0);
   const [courseid, setCourseid] = useState("");
 
   // const renderTabContent = () => {
@@ -202,11 +202,11 @@ const CreateCourse = () => {
               <p className="text-[#1D2026] font-medium lg:text-[16px] text-[14px] md:leading-[22px] leading-[20px]">
                 Curriculum
               </p>
-              {activeTab === "curriculum" && (
+              {/* {activeTab === "curriculum" && (
                 <span className="text-[#23BD33] text-[12px] font-medium mr-1">
                   {count2}/13
                 </span>
-              )}
+              )} */}
             </div>
 
             <div
@@ -219,11 +219,11 @@ const CreateCourse = () => {
               <p className="text-[#1D2026] font-medium lg:text-[16px] text-[14px] md:leading-[22px] leading-[20px]">
                 Publish a Course
               </p>
-              {activeTab === "publish" && (
+              {/* {activeTab === "publish" && (
                 <span className="text-[#23BD33] text-[12px] font-medium mr-1">
                   {count3}/13
                 </span>
-              )}
+              )} */}
             </div>
           </div>
         </div>
