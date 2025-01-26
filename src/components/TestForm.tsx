@@ -1,6 +1,7 @@
 import { useState } from "react";
 import Navbar from "./Navbar";
 import SectionForm from "./SectionForm";
+import axios from "axios";
 
 type FormState = {
   title: string;
@@ -11,11 +12,32 @@ type FormState = {
   noOfQuestions: number;
   totalMarks: number;
   totalDuration: number;
-  sortingOrder: number;
+  sortingOrder: 0 | 1;
   allowPdfMaterialDownload: number;
   startDate: string;
   endDate: string;
   testMaterial: string;
+};
+
+interface Section {
+  title: string;
+  marksPerQuestion: number;
+  pdf: string;
+  negativeMarking: number;
+  isOptional: number;
+  isFixedTiming: number;
+}
+
+type Option = {
+  name?: string;
+  image?: string;
+};
+
+type QuestionsForm = {
+  question: string;
+  options: Option[];
+  image: string;
+  correctAns: string;
 };
 
 const TestForm = () => {
@@ -35,14 +57,84 @@ const TestForm = () => {
     testMaterial: "",
   });
 
+  const [sections, setSections] = useState<Section[]>([
+    {
+      title: "",
+      marksPerQuestion: -1,
+      pdf: "",
+      negativeMarking: 0,
+      isOptional: 1,
+      isFixedTiming: 0,
+    },
+    {
+      title: "",
+      marksPerQuestion: 10,
+      pdf: "",
+      negativeMarking: 50,
+      isOptional: 1,
+      isFixedTiming: 0,
+    },
+    {
+      title: "",
+      marksPerQuestion: 20,
+      pdf: "",
+      negativeMarking: 100,
+      isOptional: 1,
+      isFixedTiming: 0,
+    },
+  ]);
+
+  const [questions, Setquestions] = useState<QuestionsForm[]>([
+    {
+      question: "Testing Boss",
+      options: [
+        {
+          name: "A",
+          image: "ABCD",
+        },
+        {
+          name: "B",
+        },
+      ],
+      image: "xyz",
+      correctAns: "A",
+    },
+  ]);
+
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
-    const { name, value } = e.target;
+    const { name, type } = e.target;
+    const value = type === "number" ? e.target.valueAsNumber : e.target.value;
     setFormState((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleDescription = (value: string) => {
     setFormState((prev) => ({ ...prev, testDescription: value }));
+  };
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const token = localStorage.getItem("token");
+    try {
+      const res = await axios.post(
+        "http://localhost:8080/api/v1/testSeries/addTests",
+        {
+          ...formState,
+          testSeriesId: "678f644466fee6d59947250d",
+          status: "ACTIVE",
+          sections,
+          questions,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      console.log(res.data);
+    } catch (err) {
+      console.error(err);
+    }
   };
   return (
     <div className="flex-1 lg:ml-[250px] bg-[#F5F7FA] overflow-x-hidden ">
@@ -61,7 +153,7 @@ const TestForm = () => {
           </div>
 
           <div>
-            <form className="w-[95%] mx-auto">
+            <form className="w-[95%] mx-auto" onSubmit={handleSubmit}>
               <div className="flex w-full items-center">
                 <div className="w-[60%]">
                   {" "}
@@ -203,8 +295,9 @@ const TestForm = () => {
                   </label>
                   <input
                     id="sorting"
-                    value={0.0}
+                    value={formState.sortingOrder}
                     name="sortingOrder"
+                    type="number"
                     className="text-[#979DA2] font-semibold text-[12px] w-full p-2 outline-none border-[#CED4DA] border-2 border-opacity-50 "
                     onChange={handleInputChange}
                   />
@@ -261,7 +354,7 @@ const TestForm = () => {
                 </div>
               </div>
 
-              <SectionForm />
+              <SectionForm sections={sections} setSections={setSections} />
 
               <div className="border-b-[2px] border-opacity-10 border-b-[#6E7485] pb-[4px]">
                 <p className="font-semibold lg:text-[18px] text-[15px] text-[#636567] mt-4">

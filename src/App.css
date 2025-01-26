@@ -22,3 +22,22 @@ body {
 }
 
 
+.imgBanner{
+  animation: leftRight 6s linear 10s infinite ;
+}
+
+.imgBanner:hover{
+  animation-play-state: paused;
+}
+
+
+
+@keyframes leftRight {
+  0%{
+    transform: translateX(300%);
+  }
+  100%{
+    transform: translateX(-300%);
+  }
+}
+

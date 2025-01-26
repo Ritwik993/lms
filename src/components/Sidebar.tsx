@@ -205,7 +205,7 @@ const Sidebar = () => {
           </div>
         </Link>
 
-        <div className="flex gap-[12px] text-[#8C94A3]  hover:bg-[#3A6BE4] hover:text-white px-[24px] py-[12px] items-center  cursor-pointer mt-[100px] group">
+        <div className="flex gap-[12px] text-[#8C94A3]  hover:bg-[#3A6BE4] hover:text-white px-[24px] py-[12px] items-center  cursor-pointer mt-auto group">
           <img
             src={signOut}
             className="object-contain group-hover:filter group-hover:brightness-0 group-hover:invert"

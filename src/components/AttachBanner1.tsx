@@ -3,14 +3,14 @@ import React, { useEffect, useState } from "react";
 
 type BannerProps = {
   setIsBannerOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  imgURL: string[];
-  setImgURL: React.Dispatch<React.SetStateAction<string[]>>;
-};
+  imgURLApp1: string[];
+  setImgURLApp1: React.Dispatch<React.SetStateAction<string[]>>;
+}
 
-const AttachFileModal: React.FC<BannerProps> = ({
+const AttachFileModal1: React.FC<BannerProps> = ({
   setIsBannerOpen,
-  imgURL,
-  setImgURL,
+  imgURLApp1,
+  setImgURLApp1,
 }) => {
   const [file, setFile] = useState<File | null>(null);
 
@@ -37,7 +37,7 @@ const AttachFileModal: React.FC<BannerProps> = ({
       try {
         const url = await uploadImage(file);
         if (url) {
-          setImgURL((prev) => [...prev, url]);
+          setImgURLApp1((prev) => [...prev, url]);
           submitBanner(url);
         }
       } catch (err) {
@@ -60,7 +60,7 @@ const AttachFileModal: React.FC<BannerProps> = ({
         "http://localhost:8080/api/v1/dashboard/addBanner",
         {
           file: url,
-          type: "Website",
+          type: "App1",
           createdBy: userId,
         },
         {
@@ -159,4 +159,4 @@ const AttachFileModal: React.FC<BannerProps> = ({
   );
 };
 
-export default AttachFileModal;
+export default AttachFileModal1;

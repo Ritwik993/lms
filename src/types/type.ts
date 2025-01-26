@@ -1,6 +1,6 @@
 export type DashItem ={
     id:   number,
-    count: number | string,
+    count: number | null |string,
     title: string,
     image: string
 }

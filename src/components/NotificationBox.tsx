@@ -1,8 +1,49 @@
 import React, { useState } from "react";
 import X from "../assets/X1.svg";
+import axios from "axios";
+
+type FormData = {
+  message: string;
+  to: string;
+  createdBy: string;
+};
 
 const NotificationBoxModal: React.FC = () => {
   const [isOpen, setIsOpen] = useState(true); // Modal state
+  const [formData, setFormData] = useState<FormData>({
+    message: "",
+    to: "",
+    createdBy: "",
+  });
+
+  const handleSubmit = async () => {
+    const token = localStorage.getItem("token");
+    const userId = localStorage.getItem("userId");
+    try {
+      const res = await axios.post(
+        "http://localhost:8080/api/v1/dashboard/addNotification",
+        { ...formData, createdBy: userId },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      console.log(res.data);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
 
   const closeModal = () => {
     setIsOpen(false);
@@ -34,6 +75,9 @@ const NotificationBoxModal: React.FC = () => {
                 type="text"
                 placeholder="Write your section name here.."
                 className="mt-1 block w-full border-[#E9EAF0] border shadow-sm p-[10px] outline-none rounded-md"
+                name="message"
+                value={formData.message}
+                onChange={handleInputChange}
               />
             </div>
 
@@ -48,12 +92,15 @@ const NotificationBoxModal: React.FC = () => {
               <select
                 id="category"
                 className="mt-1 block w-full border-[#E9EAF0] border shadow-sm p-[10px] outline-none rounded-md"
+                name="to"
+                value={formData.to}
+                onChange={handleSelectChange}
               >
                 <option value="" disabled selected>
                   Select a category
                 </option>
-                <option>Paid User</option>
-                <option>Non-paid User</option>
+                <option value="Paid">Paid User</option>
+                <option value="Non Paid">Non-paid User</option>
               </select>
             </div>
 
@@ -65,7 +112,10 @@ const NotificationBoxModal: React.FC = () => {
               >
                 Cancel
               </button>
-              <button className="py-2 px-4 bg-blue-600 text-white rounded-md hover:bg-blue-700">
+              <button
+                className="py-2 px-4 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+                onClick={handleSubmit}
+              >
                 Save Changes
               </button>
             </div>

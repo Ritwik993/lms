@@ -102,42 +102,75 @@
 import React, { useState } from "react";
 
 interface Section {
-  section: string;
-  maxQuestions: number;
+  title: string;
+  marksPerQuestion: number;
   pdf: string;
-  cutoffScore: number;
-  isOptional: boolean;
-  fixedTiming: boolean;
+  negativeMarking: number;
+  isOptional: number;
+  isFixedTiming: number;
 }
 
-const SectionForm: React.FC = () => {
-  const [sections, setSections] = useState<Section[]>([
+type SectionProps = {
+  sections: Section[];
+  setSections: React.Dispatch<React.SetStateAction<Section[]>>;
+};
+
+type Option = {
+  name?: string;
+  image?: string;
+};
+
+type QuestionsForm = {
+  question: string;
+  options: Option[];
+  image: string;
+  correctAns: string;
+};
+
+const SectionForm: React.FC<SectionProps> = ({ sections, setSections }) => {
+  // const [sections, setSections] = useState<Section[]>([
+  //   {
+  //     title: "",
+  //     marksPerQuestion: -1,
+  //     pdf: "",
+  //     negativeMarking: 0,
+  //     isOptional: 1,
+  //     isFixedTiming: 0,
+  //   },
+  //   {
+  //     title: "",
+  //     marksPerQuestion: 10,
+  //     pdf: "",
+  //     negativeMarking: 50,
+  //     isOptional: 1,
+  //     isFixedTiming: 0,
+  //   },
+  //   {
+  //     title: "",
+  //     marksPerQuestion: 20,
+  //     pdf: "",
+  //     negativeMarking: 100,
+  //     isOptional: 1,
+  //     isFixedTiming: 0,
+  //   },
+  // ]);
+
+  const [questions, Setquestions] = useState<QuestionsForm[]>([
     {
-      section: "",
-      maxQuestions: -1,
-      pdf: "",
-      cutoffScore: 0,
-      isOptional: true,
-      fixedTiming: false,
-    },
-    {
-      section: "",
-      maxQuestions: 10,
-      pdf: "",
-      cutoffScore: 50,
-      isOptional: true,
-      fixedTiming: false,
-    },
-    {
-      section: "",
-      maxQuestions: 20,
-      pdf: "",
-      cutoffScore: 100,
-      isOptional: true,
-      fixedTiming: false,
+      question: "Testing Boss",
+      options: [
+        {
+          name: "A",
+          image: "ABCD",
+        },
+        {
+          name: "B",
+        },
+      ],
+      image: "xyz",
+      correctAns: "A",
     },
   ]);
-
   const handleChange = (
     index: number,
     field: keyof Section,
@@ -149,16 +182,17 @@ const SectionForm: React.FC = () => {
     setSections(updatedSections);
   };
 
-  const addSection = () => {
+  const addSection = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
     setSections([
       ...sections,
       {
-        section: "",
-        maxQuestions: -1,
+        title: "",
+        marksPerQuestion: -1,
         pdf: "",
-        cutoffScore: 0,
-        isOptional: true,
-        fixedTiming: false,
+        negativeMarking: 0,
+        isOptional: 1,
+        isFixedTiming: 0,
       },
     ]);
   };
@@ -178,7 +212,7 @@ const SectionForm: React.FC = () => {
               Upload Pdf
             </th>
             <th className="border border-gray-300 text-[#6D6F71] p-2">
-              Cutoff Score
+              Negative Marking
             </th>
             <th className="border border-gray-300 text-[#6D6F71] p-2">
               Is Optional
@@ -193,10 +227,8 @@ const SectionForm: React.FC = () => {
             <tr key={index}>
               <td className="border border-gray-300 p-2">
                 <select
-                  value={section.section}
-                  onChange={(e) =>
-                    handleChange(index, "section", e.target.value)
-                  }
+                  value={section.title}
+                  onChange={(e) => handleChange(index, "title", e.target.value)}
                   className="border border-gray-300 rounded w-full p-1 text-[#B4B4B4]"
                 >
                   <option value="">Select Section</option>
@@ -208,11 +240,11 @@ const SectionForm: React.FC = () => {
               <td className="border border-gray-300 p-2">
                 <input
                   type="number"
-                  value={section.maxQuestions}
+                  value={section.marksPerQuestion}
                   onChange={(e) =>
                     handleChange(
                       index,
-                      "maxQuestions",
+                      "marksPerQuestion",
                       parseInt(e.target.value)
                     )
                   }
@@ -240,18 +272,20 @@ const SectionForm: React.FC = () => {
                   type="file"
                   placeholder="No file chosen"
                   value={section.pdf}
-                  onChange={(e) =>
-                    handleChange(index, "pdf", e.target.value)
-                  }
+                  onChange={(e) => handleChange(index, "pdf", e.target.value)}
                   className="text-[#979DA2] font-semibold text-[12px] w-full p-2 outline-none border-[#CED4DA] border-2 border-opacity-50"
                 />
               </td>
               <td className="border border-gray-300 p-2">
                 <input
                   type="number"
-                  value={section.cutoffScore}
+                  value={section.negativeMarking}
                   onChange={(e) =>
-                    handleChange(index, "cutoffScore", parseInt(e.target.value))
+                    handleChange(
+                      index,
+                      "negativeMarking",
+                      parseInt(e.target.value)
+                    )
                   }
                   className="border border-gray-300 rounded w-full p-1 text-[#B4B4B4]"
                 />
@@ -259,7 +293,7 @@ const SectionForm: React.FC = () => {
               <td className="border border-gray-300 p-2 text-center">
                 <input
                   type="checkbox"
-                  checked={section.isOptional}
+                  checked={section.isOptional === 1 ? true : false}
                   onChange={(e) =>
                     handleChange(index, "isOptional", e.target.checked)
                   }
@@ -268,9 +302,9 @@ const SectionForm: React.FC = () => {
               <td className="border border-gray-300 p-2 text-center">
                 <input
                   type="checkbox"
-                  checked={section.fixedTiming}
+                  checked={section.isFixedTiming === 1 ? true : false}
                   onChange={(e) =>
-                    handleChange(index, "fixedTiming", e.target.checked)
+                    handleChange(index, "isFixedTiming", e.target.checked)
                   }
                 />
               </td>
