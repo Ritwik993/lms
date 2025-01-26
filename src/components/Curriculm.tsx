@@ -220,6 +220,7 @@ const Curriculm: FC<CurriculumProps> = ({setActiveTab }) => {
 
   return (
     <div className="mb-[37px]">
+      {false && newSectionName}
       <div className="heading lg:px-[40px] px-[10px] py-[24px] bg-white flex gap-x-[20px] justify-between items-center border-b-[2px] border-opacity-10 border-b-[#6E7485]">
         <p className="font-semibold text-[#1D2026] lg:text-[24px] text-[18px] md:leading-[32px] leading-[26px] whitespace-nowrap">
           Course Curriculum
