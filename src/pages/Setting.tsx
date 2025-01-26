@@ -45,7 +45,7 @@ const Setting = () => {
     photo: null,
   });
 
-  const [profile, setProfile] = useState<SocialProfile>({
+  const [profile] = useState<SocialProfile>({
     personalWebsite: "",
     facebook: "",
     instagram: "",
@@ -55,7 +55,7 @@ const Setting = () => {
     youtube: "",
   });
 
-  const [notifications, setNotifications] = useState({
+  const [notifications] = useState({
     coursePurchase: false,
     courseReview: true,
     lectureComment: false,
