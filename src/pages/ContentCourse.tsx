@@ -20,10 +20,10 @@ import { updateSubject } from "../utils/subjectSlice";
 
 
 
-interface Topic {
-  id: number;
-  name: string;
-}
+// interface Topic {
+//   id: number;
+//   name: string;
+// }
 
 // interface Section {
 //   id: number;
