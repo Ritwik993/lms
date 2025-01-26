@@ -248,10 +248,10 @@ const CreateCourse = () => {
             />
           )}
           {activeTab === "curriculum" && (
-            <Curriculm setCount2={setCount2} setActiveTab={setActiveTab} />
+            <Curriculm  setActiveTab={setActiveTab} />
           )}
           {activeTab === "publish" && (
-            <PublishCourse setCount3={setCount3} setActiveTab={setActiveTab} publishFormState={publishFormState} setPublishFormState={setPublishFormState}/>
+            <PublishCourse  setActiveTab={setActiveTab} publishFormState={publishFormState} setPublishFormState={setPublishFormState}/>
           )}
         </div>
       </div>

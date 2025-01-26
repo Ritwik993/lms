@@ -3,7 +3,7 @@ import left_icon from "../assets/left.svg";
 import video from "../assets/Video.svg";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
-import { FC, useEffect, useState } from "react";
+import { FC, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import axios from "axios";
 
@@ -30,7 +30,7 @@ const uniqueKeys = new Set();
 const AdvanceInformation: FC<AdvanceInformationProps> = ({
   setCount1,
   setActiveTab,
-  courseid,
+  // courseid,
   advanceInfo,
   setAdvanceInfo
 }) => {

@@ -198,7 +198,6 @@ const CreateBanner = () => {
         {isBannerOpen && isWebsite && (
           <AttachFileModal
             setIsBannerOpen={setIsBannerOpen}
-            imgURL={imgURL}
             setImgURL={setImgURL}
           />
         )}
@@ -206,7 +205,6 @@ const CreateBanner = () => {
         {isBannerOpen && isApp1 && (
           <AttachFileModal1
             setIsBannerOpen={setIsBannerOpen}
-            imgURLApp1={imgURLApp1}
             setImgURLApp1={setImgURLApp1}
           />
         )}
@@ -214,7 +212,6 @@ const CreateBanner = () => {
         {isBannerOpen && isApp2 && (
           <AttachFileModal2
             setIsBannerOpen={setIsBannerOpen}
-            imgURLApp2={imgURLApp2}
             setImgURLApp2={setImgURLApp2}
           />
         )}

@@ -3,13 +3,11 @@ import React, { useEffect, useState } from "react";
 
 type BannerProps = {
   setIsBannerOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  imgURLApp2: string[];
   setImgURLApp2: React.Dispatch<React.SetStateAction<string[]>>;
 };
 
 const AttachFileModal2: React.FC<BannerProps> = ({
   setIsBannerOpen,
-  imgURLApp2,
   setImgURLApp2,
 }) => {
   const [file, setFile] = useState<File | null>(null);

@@ -12,13 +12,12 @@ type PublishFormState = {
 };
 
 type PublishCourseProps = {
-  setCount3: React.Dispatch<React.SetStateAction<number>>;
   setActiveTab: React.Dispatch<React.SetStateAction<Tab>>;
   publishFormState: PublishFormState;
   setPublishFormState: React.Dispatch<React.SetStateAction<PublishFormState>>;
 };
 
-const PublishCourse: FC<PublishCourseProps> = ({ setCount3, setActiveTab ,publishFormState,setPublishFormState}) => {
+const PublishCourse: FC<PublishCourseProps> = ({  setActiveTab ,publishFormState,setPublishFormState}) => {
   const { pathname } = useLocation();
   // const [curriculumFormState,setCurriculumFormState]=useState<FormState>({
   //   welcomeMsg:"",

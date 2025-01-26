@@ -7,11 +7,9 @@ import Query from "./pages/Query";
 import ScheduledClass from "./pages/ScheduledClass";
 import Setting from "./pages/Setting";
 import ContentCourse from "./pages/ContentCourse";
-import NotificationBox from "./components/NotificationBox";
-import AttachFileModal from "./components/AttachBanner";
+
 import NotificationBoxModal from "./components/NotificationBox";
 import TestSeries from "./pages/TestSeries";
-import Form from "./components/Form";
 import AddTest from "./pages/AddTest";
 import TestForm from "./components/TestForm";
 import ToogleSwitch from "./components/ToogleSwitch";
@@ -25,7 +23,6 @@ import Reviews from "./pages/Reviews";
 import LiveClassDetails from "./components/Demo";
 import { Provider } from "react-redux";
 import store from "./utils/store";
-import { useState } from "react";
 
 
 

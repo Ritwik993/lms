@@ -22,7 +22,6 @@ import {
 type Tab = "basic" | "advance" | "curriculum" | "publish";
 
 type CurriculumProps = {
-  setCount2: React.Dispatch<React.SetStateAction<number>>;
   setActiveTab: React.Dispatch<React.SetStateAction<Tab>>;
 };
 
@@ -31,11 +30,11 @@ interface Topic {
   name: string;
 }
 
-interface Section {
-  id: number;
-  name: string;
-  topics: Topic[];
-}
+// interface Section {
+//   id: number;
+//   name: string;
+//   topics: Topic[];
+// }
 
 interface LectureData {
   lectureTitle: string;
@@ -51,7 +50,7 @@ type ResponseData = {
   lectures: LectureData[];
 };
 
-const Curriculm: FC<CurriculumProps> = ({ setCount2, setActiveTab }) => {
+const Curriculm: FC<CurriculumProps> = ({setActiveTab }) => {
   const { pathname } = useLocation();
   const dispatch = useDispatch();
   const inputRef = useRef<HTMLInputElement | null>(null);
