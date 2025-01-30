@@ -30,6 +30,7 @@ const NotificationBoxModal: React.FC = () => {
         }
       );
       console.log(res.data);
+      setIsOpen(false);
     } catch (err) {
       console.error(err);
     }

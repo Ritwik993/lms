@@ -2,9 +2,15 @@ import MagnifyingGlass from "../assets/MagnifyingGlass.svg";
 import Bell from "../assets/Bell.svg";
 import person from "../assets/p.svg";
 import { useLocation } from "react-router-dom";
+import { Menu } from 'lucide-react';
+import { useDispatch, useSelector } from "react-redux";
+import { toggleMenu } from "../utils/appSlice";
+import { RootState } from "../utils/store";
 
 const Navbar = () => {
   const location = useLocation();
+  const dispatch=useDispatch();
+  const isOpen=useSelector((store:RootState)=>store.toggle);
   const routeNames: Record<string, string> = {
     "/": "Home",
     "/dashboard": "Dashboard",
@@ -22,14 +28,16 @@ const Navbar = () => {
     "/review":"Review"
   };
 
-  const currentPage = routeNames[location.pathname] || "Unkown Page";
+  const currentPage = routeNames[location.pathname] || "";
   return (
     <div className="font-sans flex xl:px-[160px] md:px-[80px] px-[40px] justify-between items-center md:py-[24px] py-[16px] bg-white">
+      {!isOpen && <Menu size={24} strokeWidth={2} className="lg:hidden block absolute mr-[20px] left-[5px] " onClick={()=>dispatch(toggleMenu(!isOpen))} />}
+
       <div className="bg-white">
-        <p className="text-[#6E7485] font-medium md:text-[14px] text-[10px] md:leading-[20px] leading:[16px] font-sans">
+        <p className="text-[#6E7485] font-medium md:text-[14px] text-[10px] md:leading-[20px] leading:[16px] font-sans ml-[5px]">
           Good Morning
         </p>
-        <p className="font-semibold md:text-[20px] text-[14px] md:leading-[26px] leading-[20px] text-[#1D2026] font-sans">
+        <p className="font-semibold md:text-[20px] text-[14px] md:leading-[26px] leading-[20px] text-[#1D2026] font-sans ml-[5px]">
           {currentPage}
         </p>
       </div>

@@ -4,6 +4,7 @@ import subjectSlice from "./subjectSlice";
 import sectionSlice from "./sectionSlice";
 import testSlice from "./testSlice";
 import activeTabSlice from "./activeTabSlice";
+import appSlice from "./appSlice";
 
 const store = configureStore({
   reducer: {
@@ -12,6 +13,7 @@ const store = configureStore({
     section: sectionSlice,
     test: testSlice,
     tabSelect: activeTabSlice,
+    toggle: appSlice,
   },
 });
 
