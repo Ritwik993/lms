@@ -3,15 +3,17 @@ import left_icon from "../assets/left.svg";
 import video from "../assets/Video.svg";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
-import { FC, useEffect } from "react";
+import { FC, useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import axios from "axios";
+import { useDispatch } from "react-redux";
+import { setActiveTab } from "../utils/activeTabSlice";
 
-type Tab = "basic" | "advance" | "curriculum" | "publish";
+// type Tab = "basic" | "advance" | "curriculum" | "publish";
 
 type AdvanceInformationProps = {
   setCount1: React.Dispatch<React.SetStateAction<number>>;
-  setActiveTab: React.Dispatch<React.SetStateAction<Tab>>;
+  // setActiveTab: React.Dispatch<React.SetStateAction<Tab>>;
   courseid: string;
   advanceInfo: AdvanceFormState;
   setAdvanceInfo: React.Dispatch<React.SetStateAction<AdvanceFormState>>;
@@ -29,10 +31,10 @@ type AdvanceFormState = {
 const uniqueKeys = new Set();
 const AdvanceInformation: FC<AdvanceInformationProps> = ({
   setCount1,
-  setActiveTab,
+  // setActiveTab
   // courseid,
   advanceInfo,
-  setAdvanceInfo
+  setAdvanceInfo,
 }) => {
   // const [advanceInfo, setAdvanceInfo] = useState<AdvanceFormState>({
   //   courseThumbnail: null,
@@ -43,7 +45,9 @@ const AdvanceInformation: FC<AdvanceInformationProps> = ({
   //   requirements: [""],
   // });
 
+  const dispatch = useDispatch();
   const { pathname } = useLocation();
+  const [isDisable, setIsDisable] = useState(false);
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -184,6 +188,7 @@ const AdvanceInformation: FC<AdvanceInformationProps> = ({
   const handleSubmit = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     const cid = localStorage.getItem("courseId");
+    setIsDisable(true);
 
     try {
       const token = localStorage.getItem("token");
@@ -209,10 +214,13 @@ const AdvanceInformation: FC<AdvanceInformationProps> = ({
       );
 
       console.log(res.data);
-      setActiveTab("curriculum");
+      // setActiveTab("curriculum");
+      dispatch(setActiveTab("curriculum"));
     } catch (err) {
       console.error(err);
       alert("An error occurred while submitting the form.");
+    } finally {
+      setIsDisable(false);
     }
   };
 
@@ -359,7 +367,8 @@ const AdvanceInformation: FC<AdvanceInformationProps> = ({
         {/* Teaching Points Section */}
         <div className="flex justify-between items-center lg:mt-[32px] mt-[40px] md:mb-[10px] mb-[24px] w-[90%] mx-auto">
           <p className="font-medium lg:text-[18px] text-[16px] text-[#1D2026] lg:leading-[24px] leading-[20px]">
-            What you will teach in this course ({advanceInfo.learnings.length}/8)
+            What you will teach in this course ({advanceInfo.learnings.length}
+            /8)
           </p>
           <button
             className="text-[#3A6BE4] lg:text-[14px] text-[12px] lg:leading-[20px] leading-[18px]"
@@ -479,15 +488,20 @@ const AdvanceInformation: FC<AdvanceInformationProps> = ({
         <div className="flex justify-between items-center mt-[32px] pb-[40px] pt-[60px] w-[90%] m-auto">
           <button
             className="text-[#6E7485] lg:text-[18px] text-[14px] font-semibold lg:leading-[56px] leading-[40px] px-[32px] border-[#E9EAF0] border-[1px]"
-            onClick={() => setActiveTab("basic")}
+            // onClick={() => setActiveTab("basic")}
+            onClick={() => dispatch(setActiveTab("basic"))}
           >
             Previous
           </button>
           <button
-            className="lg:text-[18px] text-[14px] font-semibold lg:leading-[56px] leading-[40px] text-white px-[32px] bg-[#3A6BE4]"
+            className={`text-white font-semibold text-[14px] lg:text-[18px] px-5 lg:px-8 py-2 lg:py-3 
+  bg-[#3A6BE4] rounded-lg transition-all duration-300 
+  hover:bg-[#2f5bcc] active:scale-95 focus:outline-none 
+  ${isDisable ? "opacity-50 cursor-not-allowed hover:bg-[#3A6BE4]" : ""}`}
             onClick={handleSubmit}
+            disabled={isDisable}
           >
-            Save & next
+            {isDisable ? "Saving..." : "Save & Next"}
           </button>
         </div>
       </form>

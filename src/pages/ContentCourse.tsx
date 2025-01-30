@@ -13,12 +13,11 @@ import UploadAssignmentModal from "../components/UploadAssignmentModal";
 import { useDispatch, useSelector } from "react-redux";
 import uploadFiles from "../utils/helper";
 import videouploadFiles from "../utils/videohelper";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { RootState } from "../utils/store";
 // import { updateLecture } from "../utils/lectureSlice";
 import { updateSubject } from "../utils/subjectSlice";
-
-
+import { setActiveTab } from "../utils/activeTabSlice";
 
 // interface Topic {
 //   id: number;
@@ -46,13 +45,14 @@ import { updateSubject } from "../utils/subjectSlice";
 //   setSections: React.Dispatch<React.SetStateAction<Section[]>>;
 // }
 
-
-const ContentCourse= () => {
+const ContentCourse = () => {
   const { id } = useParams();
   const numericId = Number(id);
   const lectures = useSelector((store: RootState) => store.lecture.lectures);
   const subjects = useSelector((store: RootState) => store.subject.subjects);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const [isDisable, setIsDisable] = useState(false);
   // const notesUrl: File[] = [];
 
   const [isVideo, setIsVideo] = useState(false);
@@ -161,6 +161,7 @@ const ContentCourse= () => {
 
   const handleSave = async () => {
     const token = localStorage.getItem("token");
+    setIsDisable(true);
     if (!token) {
       console.error("No token found");
       return;
@@ -200,7 +201,7 @@ const ContentCourse= () => {
           // Assuming numericId corresponds to the subject ID
           const updatedLecture = {
             // ...subject,
-             lectureTitle:lectures.lectureTitle,
+            lectureTitle: lectures.lectureTitle,
             id: Number(id),
             notes: formState.notes,
             dpp: formState.dpp,
@@ -218,8 +219,13 @@ const ContentCourse= () => {
           );
         }
       });
+      navigate("/createcourse");
+      // setActiveTab("curriculum")
+      dispatch(setActiveTab("curriculum"));
     } catch (err) {
       console.error("Error uploading files:", err);
+    } finally {
+      setIsDisable(false);
     }
   };
 
@@ -243,10 +249,14 @@ const ContentCourse= () => {
           </div>
           <div className="flex  justify-between  items-center w-[30%] min-w-max gap-x-[14px] ">
             <button
-              className="font-semibold lg:text-[16px] text-[14px] text-white lg:leading-[48px] leading-[40px] bg-[#3A6BE4] lg:px-[24px] px-[18px]"
+              className={`font-semibold text-white text-[14px] lg:text-[16px] px-5 lg:px-6 py-2 lg:py-3 
+  bg-[#3A6BE4] rounded-lg transition-all duration-300 
+  hover:bg-[#2f5bcc] active:scale-95 
+  ${isDisable ? "opacity-50 cursor-not-allowed" : ""}`}
               onClick={handleSave}
+              disabled={isDisable}
             >
-              Save
+              {isDisable ? "Saving..." : "Save"}
             </button>
             <div className="flex lg:gap-[12px] gap-[8px] items-center justify-center font-semibold lg:text-[16px] lg:px-[24px] px-[18px] text-[14px] text-[#000000] lg:leading-[48px] leading-[40px] bg-[#FDFDFD] min-w-max drop-shadow-md">
               <img src={Notepad} alt="" className="" />

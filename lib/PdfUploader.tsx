@@ -85,7 +85,7 @@ const PdfUploader: React.FC = () => {
 
   return (
     <div className="p-4 max-w-md mx-auto">
-      <h1 className="text-xl font-bold mb-4">Upload a PDF for Summarization</h1>
+      <h1 className="text-xl font-bold mb-4">Upload a PDF </h1>
       <input
         type="file"
         accept="application/pdf"

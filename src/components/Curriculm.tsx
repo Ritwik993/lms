@@ -18,12 +18,13 @@ import {
   updateSectionNameRedux,
   updateTopicNameRedux,
 } from "../utils/sectionSlice";
+import { setActiveTab } from "../utils/activeTabSlice";
 
-type Tab = "basic" | "advance" | "curriculum" | "publish";
+// type Tab = "basic" | "advance" | "curriculum" | "publish";
 
-type CurriculumProps = {
-  setActiveTab: React.Dispatch<React.SetStateAction<Tab>>;
-};
+// type CurriculumProps = {
+//   setActiveTab: React.Dispatch<React.SetStateAction<Tab>>;
+// };
 
 interface Topic {
   id: number;
@@ -50,7 +51,7 @@ type ResponseData = {
   lectures: LectureData[];
 };
 
-const Curriculm: FC<CurriculumProps> = ({setActiveTab }) => {
+const Curriculm = () => {
   const { pathname } = useLocation();
   const dispatch = useDispatch();
   const inputRef = useRef<HTMLInputElement | null>(null);
@@ -63,6 +64,7 @@ const Curriculm: FC<CurriculumProps> = ({setActiveTab }) => {
   // ]);s
 
   const sections = useSelector((store: RootState) => store.section.sections);
+  const [isDisable, setIsDisable] = useState(false);
 
   const [newSectionName, setNewSectionName] = useState("");
   const [editingSectionId, setEditingSectionId] = useState<number | null>(null);
@@ -192,19 +194,20 @@ const Curriculm: FC<CurriculumProps> = ({setActiveTab }) => {
 
   const handleSubmit = async () => {
     const token = localStorage.getItem("token");
+    setIsDisable(true);
     console.log({ ...subjects });
     // const {id,...rest}=subjects;
     const filteredSubjects = subjects.map((s) => {
       const { id, ...rest } = s;
       return rest;
     });
-    const courseId=localStorage.getItem("courseId");
-    const data:ResponseData[]=filteredSubjects;
+    const courseId = localStorage.getItem("courseId");
+    const data: ResponseData[] = filteredSubjects;
     try {
       // const {id,lectureTitle,...restform}=subjects
       const res = await axios.post(
         "http://localhost:8080/api/v1/curriculum/addCurriculum",
-        { courseId,data },
+        { courseId, data },
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -212,9 +215,12 @@ const Curriculm: FC<CurriculumProps> = ({setActiveTab }) => {
         }
       );
       console.log(res.data);
-      setActiveTab("publish");
+      // setActiveTab("publish");
+      dispatch(setActiveTab("publish"));
     } catch (err) {
       console.error(err);
+    } finally {
+      setIsDisable(false);
     }
   };
 
@@ -388,15 +394,20 @@ const Curriculm: FC<CurriculumProps> = ({setActiveTab }) => {
       <div className="flex justify-between items-center mt-[32px] pb-[40px] pt-[60px] w-[90%] m-auto">
         <button
           className="text-[#6E7485] lg:text-[18px] text-[14px] font-semibold lg:leading-[56px] leading-[40px] px-[32px] border-[#E9EAF0] border-[1px]"
-          onClick={() => setActiveTab("advance")}
+          // onClick={() => setActiveTab("advance")}
+          onClick={() => dispatch(setActiveTab("advance"))}
         >
           Previous
         </button>
         <button
-          className="lg:text-[18px] text-[14px] font-semibold lg:leading-[56px] leading-[40px] text-white px-[32px] bg-[#3A6BE4]"
+          className={`text-white font-semibold text-[14px] lg:text-[18px] px-5 lg:px-8 py-2 lg:py-3 
+  bg-[#3A6BE4] rounded-lg transition-all duration-300 
+  hover:bg-[#2f5bcc] active:scale-95 focus:outline-none 
+  ${isDisable ? "opacity-50 cursor-not-allowed hover:bg-[#3A6BE4]" : ""}`}
           onClick={handleSubmit}
+          disabled={isDisable}
         >
-          Save & next
+          {isDisable ? "Saving..." : "Save & Next"}
         </button>
       </div>
     </div>

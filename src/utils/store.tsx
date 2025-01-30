@@ -3,13 +3,15 @@ import lectureSlice from "./lectureSlice";
 import subjectSlice from "./subjectSlice";
 import sectionSlice from "./sectionSlice";
 import testSlice from "./testSlice";
+import activeTabSlice from "./activeTabSlice";
 
 const store = configureStore({
   reducer: {
     lecture: lectureSlice,
-    subject:subjectSlice,
-    section:sectionSlice,
-    test:testSlice,
+    subject: subjectSlice,
+    section: sectionSlice,
+    test: testSlice,
+    tabSelect: activeTabSlice,
   },
 });
 

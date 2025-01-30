@@ -1,4 +1,4 @@
-import  { useState } from "react";
+import { useState } from "react";
 import Navbar from "../components/Navbar";
 import stack1 from "../assets/Stack1.svg";
 import playCircle from "../assets/PlayCircle.svg";
@@ -8,9 +8,11 @@ import BasicInformation from "../components/BasicInformation";
 import AdvanceInformation from "../components/AdvanceInformation";
 import Curriculm from "../components/Curriculm";
 import PublishCourse from "../components/PublishCourse";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "../utils/store";
+import { setActiveTab } from "../utils/activeTabSlice";
 
-type Tab = "basic" | "advance" | "curriculum" | "publish";
-
+// type Tab = "basic" | "advance" | "curriculum" | "publish";
 
 type BasicFormState = {
   title: string;
@@ -31,7 +33,6 @@ type BasicFormState = {
   featured: boolean;
 };
 
-
 type AdvanceFormState = {
   courseThumbnail: File | null;
   courseTrailer: File | null;
@@ -41,11 +42,10 @@ type AdvanceFormState = {
   requirements: string[];
 };
 
-type PublishFormState={
-  welcomeMsg:string,
-  congratulationsMsg:string,
-}
-
+type PublishFormState = {
+  welcomeMsg: string;
+  congratulationsMsg: string;
+};
 
 // interface Topic {
 //   id: number;
@@ -73,9 +73,10 @@ type PublishFormState={
 //   setSections: React.Dispatch<React.SetStateAction<Section[]>>;
 // }
 
-
 const CreateCourse = () => {
-    const [basicInfo, setBasicInfo] = useState<BasicFormState>({
+  const dispatch = useDispatch();
+  const activeTab = useSelector((store: RootState) => store.tabSelect.tab);
+  const [basicInfo, setBasicInfo] = useState<BasicFormState>({
     title: "",
     subTitle: "",
     category: "",
@@ -94,13 +95,10 @@ const CreateCourse = () => {
     courseId: "",
   });
 
-   const [publishFormState,setPublishFormState]=useState<PublishFormState>({
-      welcomeMsg:"",
-      congratulationsMsg:"",
-    })
-  
-
-
+  const [publishFormState, setPublishFormState] = useState<PublishFormState>({
+    welcomeMsg: "",
+    congratulationsMsg: "",
+  });
 
   const [advanceInfo, setAdvanceInfo] = useState<AdvanceFormState>({
     courseThumbnail: null,
@@ -111,12 +109,7 @@ const CreateCourse = () => {
     requirements: [""],
   });
 
-
- 
-
-
-
-  const [activeTab, setActiveTab] = useState<Tab>("basic");
+  // const [activeTab, setActiveTab] = useState<Tab>("basic");
   const [count, setCount] = useState(0);
   const [count1, setCount1] = useState(0);
   // const [count2, setCount2] = useState(0);
@@ -162,7 +155,8 @@ const CreateCourse = () => {
               className={`py-[20px] flex items-center gap-x-2 min-w-0 cursor-pointer ${
                 activeTab === "basic" ? "border-b-2 border-[#1D2026]" : ""
               }`}
-              onClick={() => setActiveTab("basic")}
+              // onClick={() => setActiveTab("basic")}
+              onClick={() => dispatch(setActiveTab("basic"))}
             >
               <img src={stack1} className="object-contain" />
               <p className="text-[#1D2026] font-medium lg:text-[16px] text-[14px] md:leading-[22px] leading-[20px]">
@@ -179,7 +173,8 @@ const CreateCourse = () => {
               className={`py-[20px] flex items-center gap-x-2 min-w-0 cursor-pointer ${
                 activeTab === "advance" ? "border-b-2 border-[#1D2026]" : ""
               }`}
-              onClick={() => setActiveTab("advance")}
+              // onClick={() => setActiveTab("advance")}
+              onClick={() => dispatch(setActiveTab("advance"))}
             >
               <img src={clipBoard} className="object-contain" />
               <p className="text-[#1D2026] font-medium lg:text-[16px] text-[14px] md:leading-[22px] leading-[20px]">
@@ -196,7 +191,8 @@ const CreateCourse = () => {
               className={`py-[20px] flex items-center gap-x-2 min-w-0 cursor-pointer ${
                 activeTab === "curriculum" ? "border-b-2 border-[#1D2026]" : ""
               }`}
-              onClick={() => setActiveTab("curriculum")}
+              // onClick={() => setActiveTab("curriculum")}
+              onClick={() => dispatch(setActiveTab("curriculum"))}
             >
               <img src={monitor} className="object-contain" />
               <p className="text-[#1D2026] font-medium lg:text-[16px] text-[14px] md:leading-[22px] leading-[20px]">
@@ -213,7 +209,8 @@ const CreateCourse = () => {
               className={`py-[20px] flex items-center gap-x-2 min-w-0 cursor-pointer ${
                 activeTab === "publish" ? "border-b-2 border-[#1D2026]" : ""
               }`}
-              onClick={() => setActiveTab("publish")}
+              // onClick={() => setActiveTab("publish")}
+              onClick={() => dispatch(setActiveTab("publish"))}
             >
               <img src={playCircle} className="object-contain" />
               <p className="text-[#1D2026] font-medium lg:text-[16px] text-[14px] md:leading-[22px] leading-[20px]">
@@ -234,7 +231,7 @@ const CreateCourse = () => {
               basicInfo={basicInfo}
               setBasicInfo={setBasicInfo}
               setCount={setCount}
-              setActiveTab={setActiveTab}
+              // setActiveTab={setActiveTab}
               setCourseid={setCourseid}
             />
           )}
@@ -243,15 +240,19 @@ const CreateCourse = () => {
               advanceInfo={advanceInfo}
               setAdvanceInfo={setAdvanceInfo}
               setCount1={setCount1}
-              setActiveTab={setActiveTab}
+              // setActiveTab={setActiveTab}
               courseid={courseid}
             />
           )}
           {activeTab === "curriculum" && (
-            <Curriculm  setActiveTab={setActiveTab} />
+            <Curriculm />
           )}
           {activeTab === "publish" && (
-            <PublishCourse  setActiveTab={setActiveTab} publishFormState={publishFormState} setPublishFormState={setPublishFormState}/>
+            <PublishCourse
+              // setActiveTab={setActiveTab}
+              publishFormState={publishFormState}
+              setPublishFormState={setPublishFormState}
+            />
           )}
         </div>
       </div>

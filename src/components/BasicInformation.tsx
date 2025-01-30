@@ -1,6 +1,8 @@
 import axios from "axios";
 import { FC, useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
 import { Link, useLocation } from "react-router-dom";
+import { setActiveTab } from "../utils/activeTabSlice";
 
 type BasicFormState = {
   title: string;
@@ -34,20 +36,19 @@ type User = {
   phoneNumber: string;
 };
 
-type Tab = "basic" | "advance" | "curriculum" | "publish";
+// type Tab = "basic" | "advance" | "curriculum" | "publish";
 
 type BasicInformationProps = {
   setCount: React.Dispatch<React.SetStateAction<number>>; // Use lowercase `number` for TypeScript type
-  setActiveTab: React.Dispatch<React.SetStateAction<Tab>>;
+  // setActiveTab: React.Dispatch<React.SetStateAction<Tab>>;
   setCourseid: React.Dispatch<React.SetStateAction<string>>;
-  basicInfo:BasicFormState,
-  setBasicInfo:  React.Dispatch<React.SetStateAction<BasicFormState>>,
+  basicInfo: BasicFormState;
+  setBasicInfo: React.Dispatch<React.SetStateAction<BasicFormState>>;
 };
 
 const uniqueKeys = new Set();
 const BasicInformation: FC<BasicInformationProps> = ({
   setCount,
-  setActiveTab,
   setCourseid,
   basicInfo,
   setBasicInfo,
@@ -71,7 +72,8 @@ const BasicInformation: FC<BasicInformationProps> = ({
   //   courseId: "",
   // });
 
- 
+  const dispatch = useDispatch();
+  const [isDisable, setIsDisable] = useState(false);
 
   const { pathname } = useLocation();
 
@@ -120,7 +122,6 @@ const BasicInformation: FC<BasicInformationProps> = ({
       );
       console.log(res.data.data);
 
-
       setUsers(res.data.data);
 
       // console.log("users : " + JSON.stringify(users));
@@ -140,7 +141,6 @@ const BasicInformation: FC<BasicInformationProps> = ({
         return { ...prev, [name]: value };
       });
     }
-    
   };
 
   const handleSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -172,6 +172,7 @@ const BasicInformation: FC<BasicInformationProps> = ({
 
   const handleSubmit = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
+    setIsDisable(true);
 
     try {
       const {
@@ -197,17 +198,19 @@ const BasicInformation: FC<BasicInformationProps> = ({
             Authorization: `Bearer ${token}`, // Include the token in the Authorization header
           },
         }
-        
       );
 
-      localStorage.setItem("courseId",res.data.data._id);
-
+      localStorage.setItem("courseId", res.data.data._id);
 
       console.log(res.data);
-      setActiveTab("advance");
+
+      // setActiveTab("advance");
+      dispatch(setActiveTab("advance"));
     } catch (err) {
       console.error(err);
       alert("An error occurred while submitting the form.");
+    } finally {
+      setIsDisable(false);
     }
   };
 
@@ -487,10 +490,18 @@ const BasicInformation: FC<BasicInformationProps> = ({
             </button>
           </Link>
           <button
-            className="lg:text-[18px] text-[14px] font-semibold lg:leading-[56px] leading-[40px] text-white px-[32px] bg-[#3A6BE4]"
-            onClick={(e) => handleSubmit(e)}
+            className={`text-white font-semibold text-[14px] lg:text-[18px] px-6 lg:px-8 py-2 lg:py-3 
+  bg-[#3A6BE4] rounded-lg transition-all duration-300 
+  hover:bg-[#2f5bcc] active:scale-95 focus:outline-none 
+  ${isDisable ? "opacity-50 cursor-not-allowed" : ""}`}
+            onClick={(e) => {
+              if (!isDisable) {
+                handleSubmit(e);
+              }
+            }}
+            disabled={isDisable}
           >
-            Save & next
+            {isDisable ? "Saving..." : "Save & Next"}
           </button>
         </div>
       </form>

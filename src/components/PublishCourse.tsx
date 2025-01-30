@@ -3,8 +3,10 @@ import MagnifyingGlass from "../assets/MagnifyingGlass.svg";
 import Instructor from "./Instructor";
 import { useLocation } from "react-router-dom";
 import axios from "axios";
+import { useDispatch } from "react-redux";
+import { setActiveTab } from "../utils/activeTabSlice";
 
-type Tab = "basic" | "advance" | "curriculum" | "publish";
+// type Tab = "basic" | "advance" | "curriculum" | "publish";
 
 type PublishFormState = {
   welcomeMsg: string;
@@ -12,13 +14,14 @@ type PublishFormState = {
 };
 
 type PublishCourseProps = {
-  setActiveTab: React.Dispatch<React.SetStateAction<Tab>>;
+  // setActiveTab: React.Dispatch<React.SetStateAction<Tab>>;
   publishFormState: PublishFormState;
   setPublishFormState: React.Dispatch<React.SetStateAction<PublishFormState>>;
 };
 
-const PublishCourse: FC<PublishCourseProps> = ({  setActiveTab ,publishFormState,setPublishFormState}) => {
+const PublishCourse: FC<PublishCourseProps> = ({ publishFormState,setPublishFormState}) => {
   const { pathname } = useLocation();
+  const dispatch=useDispatch();
   // const [curriculumFormState,setCurriculumFormState]=useState<FormState>({
   //   welcomeMsg:"",
   //   congratulationsMsg:"",
@@ -131,7 +134,8 @@ const PublishCourse: FC<PublishCourseProps> = ({  setActiveTab ,publishFormState
         <div className="flex justify-between items-center mt-[32px] pb-[40px] pt-[60px] w-[90%] m-auto">
           <button
             className="text-[#6E7485] lg:text-[18px] text-[14px] font-semibold lg:leading-[56px] leading-[40px] px-[32px] border-[#E9EAF0] border-[1px]"
-            onClick={() => setActiveTab("curriculum")}
+            // onClick={() => setActiveTab("curriculum")}
+            onClick={()=>dispatch(setActiveTab("curriculum"))}
           >
             Previous
           </button>
