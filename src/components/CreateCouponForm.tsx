@@ -14,8 +14,13 @@ type Course = {
   title: string;
 };
 
-const CreateCouponForm: React.FC = () => {
+type Coupon = {
+  setRefresh: React.Dispatch<React.SetStateAction<boolean>>;
+};
+
+const CreateCouponForm: React.FC<Coupon> = ({ setRefresh }) => {
   const [courses, setCourses] = useState<Course[]>([]);
+
   const [formData, setFormData] = useState<FormData>({
     code: "",
     discountPer: null,
@@ -40,6 +45,7 @@ const CreateCouponForm: React.FC = () => {
         }
       );
       setCourses(res.data.data);
+      
     } catch (err) {
       console.error(err);
     }
@@ -67,7 +73,7 @@ const CreateCouponForm: React.FC = () => {
     try {
       const res = await axios.post(
         "http://localhost:8080/api/v1/coupan/addCoupan",
-        { ...formData, createdBy:userId },
+        { ...formData, createdBy: userId },
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -75,13 +81,21 @@ const CreateCouponForm: React.FC = () => {
         }
       );
       console.log(res.data);
+      setRefresh(true);
+      setFormData({
+        code: "",
+        discountPer: null,
+        discountAmount: null,
+        courseId: "",
+        createdBy: "",
+      });
     } catch (err) {
       console.error(err);
     }
   };
 
   return (
-    <div className="bg-white p-6 shadow rounded">
+    <div className="bg-white p-6 shadow rounded max-h-min">
       <h2 className="text-2xl font-bold mb-2">Make a Coupon Code</h2>
       <p className="text-gray-600 mb-4">Create a custom referral code.</p>
       <form onSubmit={handleSubmit}>
@@ -144,7 +158,7 @@ const CreateCouponForm: React.FC = () => {
         </div>
         <button
           type="submit"
-          className="w-full bg-gray-800 text-white py-2 px-4 rounded hover:bg-gray-900 transition"
+          className="w-full bg-gray-800 text-white py-2 px-4 rounded hover:bg-gray-900 transition my-[20px]"
         >
           Create Referral
         </button>

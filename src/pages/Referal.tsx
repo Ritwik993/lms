@@ -1,3 +1,4 @@
+import { useState } from "react";
 import CreateCouponForm from "../components/CreateCouponForm";
 import Navbar from "../components/Navbar";
 import ReferralCodes from "../components/ReferalCodes";
@@ -10,6 +11,7 @@ interface Referral {
 }
 
 const Referal = () => {
+  const [refresh,setRefresh]=useState(false);
   const referrals: Referral[] = [
     {
       sno: 1,
@@ -34,8 +36,8 @@ const Referal = () => {
     <div className="flex-1 lg:ml-[250px] bg-[#F5F7FA] overflow-x-hidden">
       <Navbar />
       <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 mt-[60px] gap-x-10 px-[20px]">
-        <CreateCouponForm />
-        <ReferralCodes />
+        <CreateCouponForm setRefresh={setRefresh}/>
+        <ReferralCodes refresh={refresh} setRefresh={setRefresh}/>
       </div>
 
 

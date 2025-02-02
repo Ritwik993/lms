@@ -1,36 +1,169 @@
-import React, { useState } from "react";
+import { AnyAction } from "@reduxjs/toolkit";
+import axios from "axios";
+import React, { useEffect, useState } from "react";
+
+// {
+//   "title": "Advanced Physics for JEE",
+//   "description": "A live class on thermodynamics covering advanced problems.",
+//   "courseId": "67582f5d730ac38366934880",
+//   "subjectId": "6759d1539d7668d9b4b71c72",
+//   "startTime": "2025-01-20T10:00:00Z",
+//   "endTime": "2025-01-20T12:00:00Z",
+//   "createdBy": "6751f31ea2712db85bd07dde",
+//   "courseCategory": "JEE",
+//   "status": "UPCOMING",
+//   "thumbNail": "xyz"
+// }
 
 interface LiveClassData {
   title: string;
-  courses: string;
+  description: string;
+  courseId: string;
+  subjectName:string;
+  subjectId: string;
   link: string;
-  date: string;
-  time: string;
+  startDate: string;
+  startTime: string;
+  courseCategory: string;
+  status: string;
+  thumbNail: string;
 }
 
 interface LiveClassModalProps {
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const LiveClassModal: React.FC<LiveClassModalProps> = ({  setIsOpen}) => {
+type Course = {
+  _id: string;
+  title: string;
+  category: string;
+};
+
+type Subject = {
+  subjectTitle: string;
+};
+
+const LiveClassModal: React.FC<LiveClassModalProps> = ({ setIsOpen }) => {
+  const [courses, setCourses] = useState<Course[]>([]);
+  const [subjects, setSubjects] = useState<Subject[]>();
+  const [error, setError] = useState<String>();
+
   const [formData, setFormData] = useState<LiveClassData>({
     title: "",
-    courses: "",
+    description: "",
+    courseId: "",
+    subjectName:"",
+    subjectId: "",
     link: "",
-    date: "",
-    time: "",
+    startDate: "",
+    startTime: "",
+    courseCategory: "",
+    status: "UPCOMING",
+    thumbNail: "xyz",
   });
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  useEffect(() => {
+    getCourses();
+  }, []);
+
+  const getCourses = async () => {
+    const token = localStorage.getItem("token");
+    try {
+      const res = await axios.get(
+        "http://localhost:8080/api/v1/course/getCourses",
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      setCourses(res.data.data);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const handleChange = async(
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => {
     const { name, value } = e.target;
+
+    if (name === "courseId") {
+      await getSubjectsData(value);
+    }
+
+    if (name === "subjectName") {
+      await getSubjectId(value);
+      // return;
+    }
+
     setFormData((prev) => ({
       ...prev,
       [name]: value,
     }));
   };
 
-  const handleSave = () => {
-    setIsOpen(false);
+  const getSubjectId = async (name: string) => {
+    try {
+      const token = localStorage.getItem("token");
+      const res = await axios.get(
+        "http://localhost:8080/api/v1/course/getSubjects",
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      const foundSubject = res.data.data.find((d:any) => d.title === name);
+
+      if (foundSubject) {
+        setFormData((prev) => ({
+          ...prev,
+          subjectId: foundSubject._id,
+        }));
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const getSubjectsData = async (cid: string) => {
+    try {
+      const token = localStorage.getItem("token");
+      const res = await axios.get(
+        `http://localhost:8080/api/v1/course/getCourses?id=${cid}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      // console.log(res.data.data[0].subjects);
+      setSubjects(res.data.data[0].subjects);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const handleSave = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      const userId = localStorage.getItem("userId");
+      const res = await axios.post(
+        "http://localhost:8080/api/v1/course/getGoogleMeetLink",
+        { ...formData, createdBy: userId },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      console.log(res.data);
+      setIsOpen(false);
+    } catch (err) {
+      console.log(err);
+      setError("Unable to create Live Class");
+    }
   };
 
   return (
@@ -38,7 +171,6 @@ const LiveClassModal: React.FC<LiveClassModalProps> = ({  setIsOpen}) => {
       <div className="bg-white rounded-lg shadow-lg w-96 p-6">
         <h2 className="text-xl font-semibold mb-4">Live Class</h2>
 
-   
         <div className="mb-4">
           <label className="block text-sm font-medium mb-1">
             Live Class Title
@@ -53,45 +185,90 @@ const LiveClassModal: React.FC<LiveClassModalProps> = ({  setIsOpen}) => {
           />
         </div>
 
-  
+        <div className="mb-4">
+          <label className="block text-sm font-medium mb-1">
+            Live Class Description
+          </label>
+          <input
+            type="text"
+            name="description"
+            placeholder="Write your description name here.."
+            value={formData.description}
+            onChange={handleChange}
+            className="w-full border rounded-md p-2 text-sm focus:ring-blue-500 focus:border-blue-500"
+          />
+        </div>
+
         <div className="mb-4">
           <label className="block text-sm font-medium mb-1">
             Select Courses
           </label>
-          <input
-            type="text"
-            name="courses"
-            placeholder="Name Of Courses Selected"
-            value={formData.courses}
+          <select
+            name="courseId"
+            value={formData.courseId}
             onChange={handleChange}
             className="w-full border rounded-md p-2 text-sm focus:ring-blue-500 focus:border-blue-500"
-          />
+          >
+            <option value="">Select Course</option>
+            {courses.map((c) => (
+              <option key={c._id} value={c._id}>
+                {c.title}
+              </option>
+            ))}
+          </select>
         </div>
 
-        
         <div className="mb-4">
           <label className="block text-sm font-medium mb-1">
-            Link for live class
+            Select Subject
           </label>
-          <input
-            type="text"
-            name="link"
-            placeholder="Link for live class"
-            value={formData.link}
+          <select
+            name="subjectName"
+            value={formData.subjectName}
             onChange={handleChange}
             className="w-full border rounded-md p-2 text-sm focus:ring-blue-500 focus:border-blue-500"
-          />
+          >
+            <option value="">Select Subject</option>
+            {subjects?.map((s, i) => (
+              <option key={i} value={s.subjectTitle}>
+                {s.subjectTitle}
+              </option>
+            ))}
+          </select>
         </div>
 
-        
+        <div className="mb-4">
+          <label className="block text-sm font-medium mb-1">
+            Select Category
+          </label>
+          <select
+            name="courseCategory"
+            value={formData.courseCategory}
+            onChange={handleChange}
+            className="w-full border rounded-md p-2 text-sm focus:ring-blue-500 focus:border-blue-500"
+          >
+            <option value="">Select Category</option>
+            {courses.map((c) => (
+              <option key={c._id} value={c._id}>
+                {c.category}
+              </option>
+            ))}
+
+            {/* <option value="JEE">JEE</option>
+            <option value="NEET">NEET</option>
+            <option value="KCET">KCET</option>
+            <option value="COMEDK">COMEDK</option> */}
+          </select>
+        </div>
+
         <div className="mb-4">
           <label className="block text-sm font-medium mb-1">
             Schedule For Later (Date)
           </label>
           <input
             type="date"
-            name="date"
-            value={formData.date}
+            name="startDate"
+            value={formData.startDate}
             onChange={handleChange}
             className="w-full border rounded-md p-2 text-sm focus:ring-blue-500 focus:border-blue-500"
           />
@@ -99,13 +276,11 @@ const LiveClassModal: React.FC<LiveClassModalProps> = ({  setIsOpen}) => {
 
         {/* Schedule Time */}
         <div className="mb-4">
-          <label className="block text-sm font-medium mb-1">
-            Schedule For Later (Time)
-          </label>
+          <label className="block text-sm font-medium mb-1">Start Time</label>
           <input
             type="time"
-            name="time"
-            value={formData.time}
+            name="startTime"
+            value={formData.startTime}
             onChange={handleChange}
             className="w-full border rounded-md p-2 text-sm focus:ring-blue-500 focus:border-blue-500"
           />
@@ -114,7 +289,7 @@ const LiveClassModal: React.FC<LiveClassModalProps> = ({  setIsOpen}) => {
         {/* Actions */}
         <div className="flex justify-between mt-4">
           <button
-            onClick={()=>setIsOpen(false)}
+            onClick={() => setIsOpen(false)}
             className="px-4 py-2 text-sm text-gray-700 border border-gray-300 rounded-md hover:bg-gray-100"
           >
             Cancel
@@ -126,6 +301,7 @@ const LiveClassModal: React.FC<LiveClassModalProps> = ({  setIsOpen}) => {
             Save Changes
           </button>
         </div>
+        {error && <p className="text-red-800 text-center mt-2">{error}</p>}
       </div>
     </div>
   );
