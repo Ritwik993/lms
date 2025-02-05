@@ -4,35 +4,48 @@ import img1 from "../assets/Course image1.svg";
 // import img2 from '../assets/Course image 2.svg';
 // import img3 from '../assets/Course image 3.svg';
 import axios from "axios";
+// import { Link } from "react-router-dom";
 
 interface TableData {
+  id: string;
   course: string;
   courseId: string;
   userId: string;
   instructors: string;
   googleMeetLink: string;
   image: string;
-  status:string;
+  startDate:string;
+  startTime:string;
+  status: string;
 }
 
-const ScheduleClassTable: React.FC = () => {
+type ScheduleClassTableProps={
+  data: TableData[];
+  setData: React.Dispatch<React.SetStateAction<TableData[]>>;
+  isOpen: boolean;
+}
+
+const ScheduleClassTable: React.FC<ScheduleClassTableProps> = ({data,setData,isOpen}) => {
   // Define table data
 
-  const [data, setData] = useState<TableData[]>([
-    {
-      course: "",
-      courseId: "",
-      userId: "",
-      instructors: "Shreyas",
-      googleMeetLink: "",
-      status:"",
-      image: img1,
-    },
-  ]);
+  // const [data, setData] = useState<TableData[]>([
+  //   {
+  //     id: "",
+  //     course: "",
+  //     courseId: "",
+  //     userId: "",
+  //     instructors: "Shreyas",
+  //     googleMeetLink: "",
+  //     status: "",
+  //     startDate:"",
+  //     startTime:"",
+  //     image: img1,
+  //   },
+  // ]);
 
   useEffect(() => {
     getLiveClasses();
-  }, []);
+  }, [isOpen]);
 
   const getLiveClasses = async () => {
     try {
@@ -62,7 +75,7 @@ const ScheduleClassTable: React.FC = () => {
               },
             }
           );
-          console.log(instructorRes.data.data[0])
+          console.log(instructorRes.data.data[0]);
           return instructorRes.data.data[0].firstName;
         } catch (error) {
           console.error("Error fetching instructor:", error);
@@ -72,18 +85,21 @@ const ScheduleClassTable: React.FC = () => {
 
       // Resolve all instructor fetches
       const instructors = await Promise.all(instructorPromises);
-      console.log("The data is")
+      console.log("The data is");
 
-      console.log(JSON.stringify(instructors,null,2));
+      console.log(JSON.stringify(instructors, null, 2));
 
       // Format the data
       const formattedData = liveClasses.map((item: any, index: number) => ({
+        id: item._id,
         course: item.title,
         courseId: item.courseId,
         userId: item.createdBy,
         instructors: instructors[index], // Assign fetched instructor names
         googleMeetLink: item.googleMeetLink,
-        status:item.status,
+        status: item.status,
+        startDate:item.startDate,
+        startTime:item.startTime,
         image: img1,
       }));
 
@@ -94,6 +110,30 @@ const ScheduleClassTable: React.FC = () => {
   };
 
   console.log(JSON.stringify(data, null, 2));
+
+  const handleCancel = async (id: string) => {
+    try {
+      const token = localStorage.getItem("token");
+      const res = await axios.put(
+        `http://localhost:8080/api/v1/course/updateLiveClass/${id}?status=CLOSED`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      // getLiveClasses();
+
+      // Update the table state after the API call
+      setData((prevData) => prevData.filter((item) => item.id !== id));
+      console.log(res.data);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  console.log(data);
 
   // const getLiveClasses = async () => {
   //   try {
@@ -212,35 +252,84 @@ const ScheduleClassTable: React.FC = () => {
         ),
       },
       {
-        Header: "CLASS LINK",
-        accessor: "googleMeetLink",
-        Cell: ({ value }: { value: string }) => (
-          <a
-            href={value}
-            className="text-blue-500 hover:underline font-medium text-sm md:text-base whitespace-nowrap"
-            target="_blank"
-          >
-            Link
-            {/* {value} */}
-          </a>
+        Header: "Date and Time",
+        accessor: "startDate",
+        Cell: ({ value,row }: { value: string ,row:any}) => (
+          // <a
+          //   href={value}
+          //   className="text-blue-500 hover:underline font-medium text-sm md:text-base whitespace-nowrap"
+          //   target="_blank"
+          // >
+          //   Link
+          //   {/* {value} */}
+          // </a>
+          <div className=" w-full h-full flex flex-col gap-[30px]">
+          {/* <div className="font-bold text-gray-800 text-sm md:text-base">
+            {value}
+          </div> */}
+          <div className="text-xs md:text-sm text-gray-600 mt-1">
+            <span className="font-semibold">Date :</span>{" "}
+            {value}
+          </div>
+
+          <div className="text-xs md:text-sm text-gray-600 mt-1 ">
+            <span className="font-semibold">Time :</span>{" "}
+            {row.original.startTime}
+          </div>
+        </div>
+          
         ),
       },
       {
         Header: "ACTION",
-        Cell: () => (
+        accessor: "id",
+        Cell: ({ value, row }: { value: string; row: any }) => (
           <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-4">
-            <button className="px-3 py-2 bg-gray-200 text-gray-700 text-sm  hover:bg-gray-300 whitespace-nowrap" >
+            <button
+              className="px-3 py-2 bg-gray-200 text-gray-700 text-sm  hover:bg-gray-300 whitespace-nowrap"
+              onClick={() => handleCancel(value)}
+            >
               Cancel Class
             </button>
-            <button className="px-3 py-2 bg-blue-500 text-white text-sm  hover:bg-blue-600 whitespace-nowrap">
-              Start Now
-            </button>
+            <a href={row.original.googleMeetLink} target="_blank">
+              <button className="px-3 py-2 bg-blue-500 text-white text-sm  hover:bg-blue-600 whitespace-nowrap">
+                Start Now
+              </button>
+            </a>
           </div>
         ),
       },
     ],
     []
   );
+
+  // const handleCancel = async (id: string) => {
+  //   try {
+  //     const token = localStorage.getItem("token");
+  //     const res = await axios.put(
+  //       `http://localhost:8080/api/v1/course/updateLiveClass/${id}?status=CLOSED`,
+  //       {
+  //         headers: {
+  //           Authorization: `Bearer ${token}`,
+  //         },
+  //       }
+  //     );
+
+  //     // getLiveClasses();
+
+  //      // Update the table state after the API call
+  //      setData((prevData) =>
+  //     prevData.map((item) =>
+  //       item.id === id ? { ...item, status: "CLOSED" } : item
+  //     )
+  //   );
+  //     console.log(res.data);
+  //   } catch (err) {
+  //     console.log(err);
+  //   }
+  // };
+
+  // console.log(data);
 
   const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } =
     useTable<TableData>({ columns, data });

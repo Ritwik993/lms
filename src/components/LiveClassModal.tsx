@@ -159,6 +159,9 @@ const LiveClassModal: React.FC<LiveClassModalProps> = ({ setIsOpen }) => {
         }
       );
       console.log(res.data);
+      setTimeout(() => {
+        window.scrollTo({ top: document.body.scrollHeight, behavior: "smooth" });
+      }, 300);
       setIsOpen(false);
     } catch (err) {
       console.log(err);
