@@ -12,24 +12,24 @@ type FormState = {
   noOfQuestions: number | null;
   totalMarks: number | null;
   totalDuration: number | null;
-  sortingOrder: 0 | 1 | null;
+  sortingOrder: 0 | 1 ;
   allowPdfMaterialDownload: number;
   startDate: string;
   endDate: string;
   testMaterial: File|string|null;
 };
 
-type Option = {
-  name?: string;
-  image?: string;
-};
+// type Option = {
+//   name?: string;
+//   image?: string;
+// };
 
-type QuestionsForm = {
-  question: string;
-  options: Option[];
-  image: string;
-  correctAns: string;
-};
+// type QuestionsForm = {
+//   question: string;
+//   options: Option[];
+//   image: string;
+//   correctAns: string;
+// };
 
 interface Section {
   title: string;
@@ -37,7 +37,7 @@ interface Section {
   pdf: File | null;
   negativeMarking: number | null;
   isOptional: number;
-  isFixedTiming: number | null;
+  isFixedTiming: number;
   questions: [];
 }
 
@@ -51,7 +51,7 @@ const TestForm = () => {
     noOfQuestions: null,
     totalMarks: null,
     totalDuration: null,
-    sortingOrder: null,
+    sortingOrder: 0,
     allowPdfMaterialDownload: 0,
     startDate: "",
     endDate: "",
@@ -65,7 +65,7 @@ const TestForm = () => {
       pdf: null,
       negativeMarking: null,
       isOptional: 0,
-      isFixedTiming: null,
+      isFixedTiming: 0,
       questions: [],
     },
     // {

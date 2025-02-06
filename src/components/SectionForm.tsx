@@ -99,8 +99,8 @@
 
 // export default SectionForm;
 
-import axios from "axios";
-import React, { useState } from "react";
+// import axios from "axios";
+// import React, { useState } from "react";
 
 interface Section {
   title: string;
@@ -108,7 +108,7 @@ interface Section {
   pdf: File | null;
   negativeMarking: number | null;
   isOptional: number;
-  isFixedTiming: number | null;
+  isFixedTiming: number;
   questions: [];
 }
 
@@ -117,17 +117,17 @@ type SectionProps = {
   setSections: React.Dispatch<React.SetStateAction<Section[]>>;
 };
 
-type Option = {
-  name?: string;
-  image?: string;
-};
+// type Option = {
+//   name?: string;
+//   image?: string;
+// };
 
-type QuestionsForm = {
-  question: string;
-  options: Option[];
-  image: string;
-  correctAns: string;
-};
+// type QuestionsForm = {
+//   question: string;
+//   options: Option[];
+//   image: string;
+//   correctAns: string;
+// };
 
 const SectionForm: React.FC<SectionProps> = ({ sections, setSections }) => {
   // const [sections, setSections] = useState<Section[]>([
