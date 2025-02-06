@@ -2,10 +2,15 @@ import CourseImage from "../assets/Course Images.svg";
 import Star from "../assets/Star.svg";
 import User from "../assets/User.svg";
 import Dot from "../assets/DotsThree1.svg";
-import { useState } from "react";
+import { FC } from "react";
+// import { useState } from "react";
 
-const VideoCard = () => {
-  const [isVisible,setIsVisible]=useState(false);
+type VideoProps={
+  setIsVisible: React.Dispatch<React.SetStateAction<boolean>>;
+  isVisible: boolean;
+}
+
+const VideoCard:FC<VideoProps> = ({isVisible,setIsVisible}) => {
   return (
     <div className="bg-white w-[250px] ">
       <div>

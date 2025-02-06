@@ -1,8 +1,10 @@
 import Navbar from "../components/Navbar";
 import MagnifyingGlass from "../assets/MagnifyingGlass.svg";
 import VideoCard from "../components/VideoCard";
+import { useState } from "react";
 
 const Courses = () => {
+  const [isVisible,setIsVisible]=useState(false);
   return (
     <div className="flex-1 lg:ml-[250px] bg-[#F5F7FA] overflow-x-hidden pb-[100px]">
       <Navbar />
@@ -57,22 +59,22 @@ const Courses = () => {
 
       <div className=" w-[96%] mx-auto  mt-[80px] pt-[20px]">
         <div className="w-[96%] mx-auto flex flex-wrap gap-x-[20px] gap-y-[10px] items-center justify-center">
-          <VideoCard />
-          <VideoCard />
-          <VideoCard />
-          <VideoCard />
-          <VideoCard />
-          <VideoCard />
-          <VideoCard />
-          <VideoCard />
-          <VideoCard />
-          <VideoCard />
-          <VideoCard />
-          <VideoCard />
-          <VideoCard />
-          <VideoCard />
-          <VideoCard />
-          <VideoCard />
+          <VideoCard isVisible={isVisible} setIsVisible={setIsVisible}/>
+          <VideoCard isVisible={isVisible} setIsVisible={setIsVisible}/>
+          <VideoCard isVisible={isVisible} setIsVisible={setIsVisible}/>
+          <VideoCard isVisible={isVisible} setIsVisible={setIsVisible}/>
+          <VideoCard isVisible={isVisible} setIsVisible={setIsVisible}/>
+          <VideoCard isVisible={isVisible} setIsVisible={setIsVisible}/>
+          <VideoCard isVisible={isVisible} setIsVisible={setIsVisible}/>
+          <VideoCard isVisible={isVisible} setIsVisible={setIsVisible}/>
+          <VideoCard isVisible={isVisible} setIsVisible={setIsVisible}/>
+          <VideoCard isVisible={isVisible} setIsVisible={setIsVisible}/>
+          <VideoCard isVisible={isVisible} setIsVisible={setIsVisible}/>
+          <VideoCard isVisible={isVisible} setIsVisible={setIsVisible}/>
+          <VideoCard isVisible={isVisible} setIsVisible={setIsVisible}/>
+          <VideoCard isVisible={isVisible} setIsVisible={setIsVisible}/>
+          <VideoCard isVisible={isVisible} setIsVisible={setIsVisible}/>
+          <VideoCard isVisible={isVisible} setIsVisible={setIsVisible}/>
 
 
           
