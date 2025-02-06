@@ -2,8 +2,10 @@ import CourseImage from "../assets/Course Images.svg";
 import Star from "../assets/Star.svg";
 import User from "../assets/User.svg";
 import Dot from "../assets/DotsThree1.svg";
+import { useState } from "react";
 
 const VideoCard = () => {
+  const [isVisible,setIsVisible]=useState(false);
   return (
     <div className="bg-white w-[250px] ">
       <div>
@@ -36,7 +38,14 @@ const VideoCard = () => {
 
       <div className="px-4 py-4 flex justify-between items-center">
         <p className="text-[#3A6BE4] text-[18px] font-semibold leading-[24px]">Rs 24.00</p>
-        <img src={Dot} className="object-contain"/>
+        <div className="relative">
+        <img src={Dot} className="object-contain " onClick={()=>setIsVisible((prev)=>!prev)}/>
+        {isVisible && <div className="absolute p-2 bg-white  rounded-[4px] ">
+        <p className="text-[#4E5566]  leading-[20px]  whitespace-nowrap border-b-[2px] border-opacity-10 border-b-[#6E7485] cursor-pointer hover:bg-slate-100 p-1">View Details</p>
+          <p className="text-[#4E5566]  leading-[20px]  whitespace-nowrap border-b-[2px] border-opacity-10 border-b-[#6E7485] cursor-pointer hover:bg-slate-100 p-1">Edit Course</p>
+          <p className="text-[#4E5566] leading-[20px]  whitespace-nowrap cursor-pointer hover:bg-slate-100 p-1">Student Details</p>
+        </div>}
+        </div>
       </div>
     </div>
   );

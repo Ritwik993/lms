@@ -9,24 +9,15 @@ type FormState = {
   testStatus: string;
   status: string;
   testSeriesId: string;
-  noOfQuestions: number;
-  totalMarks: number;
-  totalDuration: number;
-  sortingOrder: 0 | 1;
+  noOfQuestions: number | null;
+  totalMarks: number | null;
+  totalDuration: number | null;
+  sortingOrder: 0 | 1 | null;
   allowPdfMaterialDownload: number;
   startDate: string;
   endDate: string;
-  testMaterial: string;
+  testMaterial: File|string|null;
 };
-
-interface Section {
-  title: string;
-  marksPerQuestion: number;
-  pdf: string;
-  negativeMarking: number;
-  isOptional: number;
-  isFixedTiming: number;
-}
 
 type Option = {
   name?: string;
@@ -40,6 +31,16 @@ type QuestionsForm = {
   correctAns: string;
 };
 
+interface Section {
+  title: string;
+  marksPerQuestion: number | null;
+  pdf: File | null;
+  negativeMarking: number | null;
+  isOptional: number;
+  isFixedTiming: number | null;
+  questions: [];
+}
+
 const TestForm = () => {
   const [formState, setFormState] = useState<FormState>({
     title: "",
@@ -47,59 +48,62 @@ const TestForm = () => {
     testStatus: "",
     status: "",
     testSeriesId: "",
-    noOfQuestions: 0,
-    totalMarks: 0,
-    totalDuration: 0,
-    sortingOrder: 0,
+    noOfQuestions: null,
+    totalMarks: null,
+    totalDuration: null,
+    sortingOrder: null,
     allowPdfMaterialDownload: 0,
     startDate: "",
     endDate: "",
-    testMaterial: "",
+    testMaterial: null,
   });
 
   const [sections, setSections] = useState<Section[]>([
     {
       title: "",
-      marksPerQuestion: -1,
-      pdf: "",
-      negativeMarking: 0,
-      isOptional: 1,
-      isFixedTiming: 0,
+      marksPerQuestion: null,
+      pdf: null,
+      negativeMarking: null,
+      isOptional: 0,
+      isFixedTiming: null,
+      questions: [],
     },
-    {
-      title: "",
-      marksPerQuestion: 10,
-      pdf: "",
-      negativeMarking: 50,
-      isOptional: 1,
-      isFixedTiming: 0,
-    },
-    {
-      title: "",
-      marksPerQuestion: 20,
-      pdf: "",
-      negativeMarking: 100,
-      isOptional: 1,
-      isFixedTiming: 0,
-    },
+    // {
+    //   title: "",
+    //   marksPerQuestion: 10,
+    //   pdf: null,
+    //   negativeMarking: 50,
+    //   isOptional: 1,
+    //   isFixedTiming: 0,
+    //   questions:[]
+    // },
+    // {
+    //   title: "",
+    //   marksPerQuestion: 20,
+    //   pdf: null,
+    //   negativeMarking: 100,
+    //   isOptional: 1,
+    //   isFixedTiming: 0,
+    //   questions:[],
+    // },
   ]);
 
-  const [questions, Setquestions] = useState<QuestionsForm[]>([
-    {
-      question: "Testing Boss",
-      options: [
-        {
-          name: "A",
-          image: "ABCD",
-        },
-        {
-          name: "B",
-        },
-      ],
-      image: "xyz",
-      correctAns: "A",
-    },
-  ]);
+  // const [questions, Setquestions] = useState<QuestionsForm[]>([
+  //   {
+  //     question: "Testing Boss",
+  //     options: [
+  //       {
+  //         name: "A",
+  //         image: "ABCD",
+  //       },
+  //       {
+  //         name: "B",
+  //       },
+  //     ],
+  //     image: "xyz",
+  //     correctAns: "A",
+  //   },
+  // ]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
@@ -108,12 +112,83 @@ const TestForm = () => {
     setFormState((prev) => ({ ...prev, [name]: value }));
   };
 
+  const handleFileChange =async (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    if (e.target.files && e.target?.files.length > 0) {
+      const file = e.target.files[0];
+      const urlString=await uploadToCloudinary(file);
+      setFormState((prev) => ({ ...prev, testMaterial: urlString }));
+    }
+  };
+
   const handleDescription = (value: string) => {
     setFormState((prev) => ({ ...prev, testDescription: value }));
   };
 
+  const uploadToCloudinary = async (file: File): Promise<string | null> => {
+    if (!file) return null;
+    const formData = new FormData();
+    formData.append("file", file);
+    const token = localStorage.getItem("token");
+    try {
+      const res = await axios.post(
+        "http://localhost:8080/api/v1/assets/upload/image",
+        formData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+      return res.data.fileUrl;
+    } catch (err) {
+      console.log(err);
+      return null;
+    }
+  };
+
+  const handlePdf = async () => {
+    try {
+      const token = localStorage.getItem("token");
+
+      // Process all PDFs concurrently
+      const updatedSections = await Promise.all(
+        sections.map(async (section) => {
+          if (!section.pdf) return section; // If no PDF, return unchanged section
+
+          try {
+            const data = await uploadToCloudinary(section.pdf); // Wait for upload
+            const res = await axios.post(
+              "https://pw-railway-parser-production.up.railway.app/parse-pdf",
+              { pdfUrl: data },
+              {
+                headers: {
+                  Authorization: `Bearer ${token}`,
+                },
+              }
+            );
+
+            return { ...section, questions: res.data.data }; // Return updated section
+          } catch (err) {
+            console.error("Error processing PDF:", err);
+            return section; // Return unchanged section on error
+          }
+        })
+      );
+
+      setSections(updatedSections); // Update state once after all operations finish
+    } catch (error) {
+      console.error("Error in handlePdf:", error);
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    console.log(sections);
+    await handlePdf();
+
     const token = localStorage.getItem("token");
     try {
       const res = await axios.post(
@@ -123,7 +198,6 @@ const TestForm = () => {
           testSeriesId: "678f644466fee6d59947250d",
           status: "ACTIVE",
           sections,
-          questions,
         },
         {
           headers: {
@@ -247,7 +321,7 @@ const TestForm = () => {
                     placeholder="Enter no. of questions"
                     className="text-[#979DA2] font-semibold text-[12px] w-full p-2 outline-none border-[#CED4DA] border-2 border-opacity-50"
                     name="noOfQuestions"
-                    value={formState.noOfQuestions}
+                    value={formState.noOfQuestions||""}
                     onChange={handleInputChange}
                   />
                 </div>
@@ -264,7 +338,7 @@ const TestForm = () => {
                     placeholder="Enter total marks"
                     className="text-[#979DA2] font-semibold text-[12px] w-full p-2 outline-none border-[#CED4DA] border-2 border-opacity-50"
                     name="totalMarks"
-                    value={formState.totalMarks}
+                    value={formState.totalMarks||""}
                     onChange={handleInputChange}
                   />
                 </div>
@@ -281,7 +355,7 @@ const TestForm = () => {
                     placeholder="Enter duration in minutes"
                     className="text-[#979DA2] font-semibold text-[12px] w-full p-2 outline-none border-[#CED4DA] border-2 border-opacity-50 "
                     name="totalDuration"
-                    value={formState.totalDuration}
+                    value={formState.totalDuration||""}
                     onChange={handleInputChange}
                   />
                 </div>
@@ -295,7 +369,7 @@ const TestForm = () => {
                   </label>
                   <input
                     id="sorting"
-                    value={formState.sortingOrder}
+                    value={formState.sortingOrder||""}
                     name="sortingOrder"
                     type="number"
                     className="text-[#979DA2] font-semibold text-[12px] w-full p-2 outline-none border-[#CED4DA] border-2 border-opacity-50 "
@@ -374,6 +448,7 @@ const TestForm = () => {
                       type="file"
                       placeholder="No file chosen"
                       className="text-[#979DA2] font-semibold text-[12px] w-full p-2 outline-none border-[#CED4DA] border-2 border-opacity-50"
+                      onChange={handleFileChange}
                     />
                     <p className="text-[#9FA5AA] text-[10px] font-semibold">
                       Test will be active for attempts from the selected date

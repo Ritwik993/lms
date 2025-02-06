@@ -99,15 +99,17 @@
 
 // export default SectionForm;
 
+import axios from "axios";
 import React, { useState } from "react";
 
 interface Section {
   title: string;
-  marksPerQuestion: number;
-  pdf: string;
-  negativeMarking: number;
+  marksPerQuestion: number | null;
+  pdf: File | null;
+  negativeMarking: number | null;
   isOptional: number;
-  isFixedTiming: number;
+  isFixedTiming: number | null;
+  questions: [];
 }
 
 type SectionProps = {
@@ -155,22 +157,22 @@ const SectionForm: React.FC<SectionProps> = ({ sections, setSections }) => {
   //   },
   // ]);
 
-  const [questions, Setquestions] = useState<QuestionsForm[]>([
-    {
-      question: "Testing Boss",
-      options: [
-        {
-          name: "A",
-          image: "ABCD",
-        },
-        {
-          name: "B",
-        },
-      ],
-      image: "xyz",
-      correctAns: "A",
-    },
-  ]);
+  // const [questions, Setquestions] = useState<QuestionsForm[]>([
+  //   {
+  //     question: "Testing Boss",
+  //     options: [
+  //       {
+  //         name: "A",
+  //         image: "ABCD",
+  //       },
+  //       {
+  //         name: "B",
+  //       },
+  //     ],
+  //     image: "xyz",
+  //     correctAns: "A",
+  //   },
+  // ]);
   const handleChange = (
     index: number,
     field: keyof Section,
@@ -182,6 +184,19 @@ const SectionForm: React.FC<SectionProps> = ({ sections, setSections }) => {
     setSections(updatedSections);
   };
 
+  const handleFileChange = (
+    index: number,
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    if (e.target.files && e.target.files.length > 0) {
+      const file = e.target.files[0];
+      const updatedSections = sections.map((section, i) =>
+        i === index ? { ...section, pdf: file } : section
+      );
+      setSections(updatedSections);
+    }
+  };
+
   const addSection = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     setSections([
@@ -189,10 +204,11 @@ const SectionForm: React.FC<SectionProps> = ({ sections, setSections }) => {
       {
         title: "",
         marksPerQuestion: -1,
-        pdf: "",
+        pdf: null,
         negativeMarking: 0,
         isOptional: 1,
         isFixedTiming: 0,
+        questions: [],
       },
     ]);
   };
@@ -240,7 +256,7 @@ const SectionForm: React.FC<SectionProps> = ({ sections, setSections }) => {
               <td className="border border-gray-300 p-2">
                 <input
                   type="number"
-                  value={section.marksPerQuestion}
+                  value={section.marksPerQuestion || ""}
                   onChange={(e) =>
                     handleChange(
                       index,
@@ -271,15 +287,15 @@ const SectionForm: React.FC<SectionProps> = ({ sections, setSections }) => {
                   id="title"
                   type="file"
                   placeholder="No file chosen"
-                  value={section.pdf}
-                  onChange={(e) => handleChange(index, "pdf", e.target.value)}
+                  name="pdf"
+                  onChange={(e) => handleFileChange(index, e)}
                   className="text-[#979DA2] font-semibold text-[12px] w-full p-2 outline-none border-[#CED4DA] border-2 border-opacity-50"
                 />
               </td>
               <td className="border border-gray-300 p-2">
                 <input
                   type="number"
-                  value={section.negativeMarking}
+                  value={section.negativeMarking || ""}
                   onChange={(e) =>
                     handleChange(
                       index,
@@ -293,9 +309,9 @@ const SectionForm: React.FC<SectionProps> = ({ sections, setSections }) => {
               <td className="border border-gray-300 p-2 text-center">
                 <input
                   type="checkbox"
-                  checked={section.isOptional === 1 ? true : false}
+                  checked={section.isOptional === 1?true:false}
                   onChange={(e) =>
-                    handleChange(index, "isOptional", e.target.checked)
+                    handleChange(index, "isOptional", e.target.checked ? 1 : 0)
                   }
                 />
               </td>
@@ -304,7 +320,11 @@ const SectionForm: React.FC<SectionProps> = ({ sections, setSections }) => {
                   type="checkbox"
                   checked={section.isFixedTiming === 1 ? true : false}
                   onChange={(e) =>
-                    handleChange(index, "isFixedTiming", e.target.checked)
+                    handleChange(
+                      index,
+                      "isFixedTiming",
+                      e.target.checked ? 1 : 0
+                    )
                   }
                 />
               </td>
