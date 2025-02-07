@@ -4,7 +4,7 @@ import pencil from "../assets/PencilLine.svg";
 import trash from "../assets/Trash.svg";
 import { Link, useLocation } from "react-router-dom";
 import DownArrow from "../assets/CaretDown.svg";
-import { FC, useEffect, useRef, useState } from "react";
+import {  useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { addLecture } from "../utils/lectureSlice";
 import { addSubject } from "../utils/subjectSlice";

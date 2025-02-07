@@ -4,8 +4,7 @@ import User from "../assets/User.svg";
 import Dot from "../assets/DotsThree1.svg";
 import { FC } from "react";
 import { useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
-import { setActiveTab } from "../utils/activeTabSlice";
+// import { useDispatch } from "react-redux";
 
 type VideoCardProps = {
   activeCardId: number | null;
@@ -16,7 +15,7 @@ type VideoCardProps = {
 const VideoCard: FC<VideoCardProps> = ({ activeCardId, onToggle, id }) => {
   // const [isVisible,setIsVisible]=useState(false);
   const navigate = useNavigate();
-  const dispatch = useDispatch();
+  // const dispatch = useDispatch();
   return (
     <div className="bg-white w-[250px] ">
       <div>

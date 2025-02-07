@@ -23,7 +23,6 @@ import Reviews from "./pages/Reviews";
 import LiveClassDetails from "./components/Demo";
 import { Provider } from "react-redux";
 import store from "./utils/store";
-import PdfUploader from "../lib/PdfUploader.js";
 
 
 
@@ -147,10 +146,6 @@ function App() {
     {
       path: "/demo",
       element: <LiveClassDetails />,
-    },
-    {
-      path:"/ai",
-      element:<PdfUploader/>
     }
   ]);
 
