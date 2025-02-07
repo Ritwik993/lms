@@ -25,7 +25,8 @@ const Navbar = () => {
     "/createtest/:id": "Add a New Test Series",
     "/course": "My Courses",
     "/referal":"Configure Referal",
-    "/review":"Review"
+    "/review":"Review",
+    "/student":"Student"
   };
 
   const currentPage = routeNames[location.pathname] || "";

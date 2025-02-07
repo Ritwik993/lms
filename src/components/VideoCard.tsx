@@ -70,7 +70,12 @@ const VideoCard: FC<VideoCardProps> = ({ activeCardId, onToggle, id }) => {
               >
                 Edit Course
               </p>
-              <p className="text-[#4E5566] leading-[20px]  whitespace-nowrap cursor-pointer hover:bg-slate-100 p-1">
+              <p
+                className="text-[#4E5566] leading-[20px]  whitespace-nowrap cursor-pointer hover:bg-slate-100 p-1"
+                onClick={() => {
+                  navigate("/student");
+                }}
+              >
                 Student Details
               </p>
             </div>
