@@ -4,7 +4,10 @@ import VideoCard from "../components/VideoCard";
 import { useState } from "react";
 
 const Courses = () => {
-  const [isVisible,setIsVisible]=useState(false);
+  const [activeCardId,setActiveCardId]=useState<number|null>(null);
+  const handleToggle=(id:number)=>{
+    setActiveCardId((prev)=>(prev===id?null:id));
+  }
   return (
     <div className="flex-1 lg:ml-[250px] bg-[#F5F7FA] overflow-x-hidden pb-[100px]">
       <Navbar />
@@ -58,25 +61,9 @@ const Courses = () => {
       </div>
 
       <div className=" w-[96%] mx-auto  mt-[80px] pt-[20px]">
-        <div className="w-[96%] mx-auto flex flex-wrap gap-x-[20px] gap-y-[10px] items-center justify-center">
-          <VideoCard isVisible={isVisible} setIsVisible={setIsVisible}/>
-          <VideoCard isVisible={isVisible} setIsVisible={setIsVisible}/>
-          <VideoCard isVisible={isVisible} setIsVisible={setIsVisible}/>
-          <VideoCard isVisible={isVisible} setIsVisible={setIsVisible}/>
-          <VideoCard isVisible={isVisible} setIsVisible={setIsVisible}/>
-          <VideoCard isVisible={isVisible} setIsVisible={setIsVisible}/>
-          <VideoCard isVisible={isVisible} setIsVisible={setIsVisible}/>
-          <VideoCard isVisible={isVisible} setIsVisible={setIsVisible}/>
-          <VideoCard isVisible={isVisible} setIsVisible={setIsVisible}/>
-          <VideoCard isVisible={isVisible} setIsVisible={setIsVisible}/>
-          <VideoCard isVisible={isVisible} setIsVisible={setIsVisible}/>
-          <VideoCard isVisible={isVisible} setIsVisible={setIsVisible}/>
-          <VideoCard isVisible={isVisible} setIsVisible={setIsVisible}/>
-          <VideoCard isVisible={isVisible} setIsVisible={setIsVisible}/>
-          <VideoCard isVisible={isVisible} setIsVisible={setIsVisible}/>
-          <VideoCard isVisible={isVisible} setIsVisible={setIsVisible}/>
-
-
+        <div className="w-[96%] mx-auto flex flex-wrap gap-x-[20px] gap-y-[10px] ">
+          
+          {[1,2,3,4,5,6,7].map((id)=><VideoCard key={id} activeCardId={activeCardId} onToggle={handleToggle} id={id}/>)}
           
         </div>
 

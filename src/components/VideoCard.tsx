@@ -3,14 +3,20 @@ import Star from "../assets/Star.svg";
 import User from "../assets/User.svg";
 import Dot from "../assets/DotsThree1.svg";
 import { FC } from "react";
-// import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { setActiveTab } from "../utils/activeTabSlice";
 
-type VideoProps={
-  setIsVisible: React.Dispatch<React.SetStateAction<boolean>>;
-  isVisible: boolean;
-}
+type VideoCardProps = {
+  activeCardId: number | null;
+  onToggle: (id: number) => void;
+  id: number;
+};
 
-const VideoCard:FC<VideoProps> = ({isVisible,setIsVisible}) => {
+const VideoCard: FC<VideoCardProps> = ({ activeCardId, onToggle, id }) => {
+  // const [isVisible,setIsVisible]=useState(false);
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
   return (
     <div className="bg-white w-[250px] ">
       <div>
@@ -42,14 +48,34 @@ const VideoCard:FC<VideoProps> = ({isVisible,setIsVisible}) => {
       </div>
 
       <div className="px-4 py-4 flex justify-between items-center">
-        <p className="text-[#3A6BE4] text-[18px] font-semibold leading-[24px]">Rs 24.00</p>
+        <p className="text-[#3A6BE4] text-[18px] font-semibold leading-[24px]">
+          Rs 24.00
+        </p>
         <div className="relative">
-        <img src={Dot} className="object-contain " onClick={()=>setIsVisible((prev)=>!prev)}/>
-        {isVisible && <div className="absolute p-2 bg-white  rounded-[4px] ">
-        <p className="text-[#4E5566]  leading-[20px]  whitespace-nowrap border-b-[2px] border-opacity-10 border-b-[#6E7485] cursor-pointer hover:bg-slate-100 p-1">View Details</p>
-          <p className="text-[#4E5566]  leading-[20px]  whitespace-nowrap border-b-[2px] border-opacity-10 border-b-[#6E7485] cursor-pointer hover:bg-slate-100 p-1">Edit Course</p>
-          <p className="text-[#4E5566] leading-[20px]  whitespace-nowrap cursor-pointer hover:bg-slate-100 p-1">Student Details</p>
-        </div>}
+          <img
+            src={Dot}
+            className="object-contain "
+            onClick={() => onToggle(id)}
+          />
+          {activeCardId === id && (
+            <div className="absolute p-2 bg-white  rounded-[4px] ">
+              <p className="text-[#4E5566]  leading-[20px]  whitespace-nowrap border-b-[2px] border-opacity-10 border-b-[#6E7485] cursor-pointer hover:bg-slate-100 p-1">
+                View Details
+              </p>
+              <p
+                className="text-[#4E5566]  leading-[20px]  whitespace-nowrap border-b-[2px] border-opacity-10 border-b-[#6E7485] cursor-pointer hover:bg-slate-100 p-1"
+                onClick={() => {
+                  navigate("/createCourse");
+                  // dispatch(setActiveTab("curriculum"));
+                }}
+              >
+                Edit Course
+              </p>
+              <p className="text-[#4E5566] leading-[20px]  whitespace-nowrap cursor-pointer hover:bg-slate-100 p-1">
+                Student Details
+              </p>
+            </div>
+          )}
         </div>
       </div>
     </div>
