@@ -177,17 +177,21 @@ const TestForm = () => {
           }
         })
       );
-
+    
       setSections(updatedSections); // Update state once after all operations finish
+      return updatedSections;
     } catch (error) {
       console.error("Error in handlePdf:", error);
+      return sections;
     }
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     console.log(sections);
-    await handlePdf();
+    const updatedSection=await handlePdf();
+
+    
 
     const token = localStorage.getItem("token");
     try {
@@ -197,7 +201,7 @@ const TestForm = () => {
           ...formState,
           testSeriesId: "678f644466fee6d59947250d",
           status: "ACTIVE",
-          sections,
+          sections:updatedSection,
         },
         {
           headers: {
@@ -369,7 +373,7 @@ const TestForm = () => {
                   </label>
                   <input
                     id="sorting"
-                    value={formState.sortingOrder||""}
+                    value={formState.sortingOrder}
                     name="sortingOrder"
                     type="number"
                     className="text-[#979DA2] font-semibold text-[12px] w-full p-2 outline-none border-[#CED4DA] border-2 border-opacity-50 "
