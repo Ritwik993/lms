@@ -2,6 +2,8 @@ import { useState } from "react";
 import Navbar from "./Navbar";
 import SectionForm from "./SectionForm";
 import axios from "axios";
+import {  toast } from 'react-toastify';
+import moment from 'moment'
 
 type FormState = {
   title: string;
@@ -14,8 +16,8 @@ type FormState = {
   totalDuration: number | null;
   sortingOrder: 0 | 1 ;
   allowPdfMaterialDownload: number;
-  startDate: string;
-  endDate: string;
+  startDate: Date;
+  endDate: Date;
   testMaterial: File|string|null;
 };
 
@@ -35,7 +37,7 @@ interface Section {
   title: string;
   marksPerQuestion: number | null;
   pdf: File | null;
-  negativeMarking: number | null;
+  negativeMarking: 1|0;
   isOptional: number;
   isFixedTiming: number;
   questions: [];
@@ -53,8 +55,8 @@ const TestForm = () => {
     totalDuration: null,
     sortingOrder: 0,
     allowPdfMaterialDownload: 0,
-    startDate: "",
-    endDate: "",
+    startDate: new Date(),
+    endDate: new Date(),
     testMaterial: null,
   });
 
@@ -63,7 +65,7 @@ const TestForm = () => {
       title: "",
       marksPerQuestion: null,
       pdf: null,
-      negativeMarking: null,
+      negativeMarking: 0,
       isOptional: 0,
       isFixedTiming: 0,
       questions: [],
@@ -109,6 +111,10 @@ const TestForm = () => {
     e.preventDefault();
     const { name, type } = e.target;
     const value = type === "number" ? e.target.valueAsNumber : e.target.value;
+    if(name==='startDate' || name==='endDate'){
+      setFormState((prev)=>({...prev,[name]: moment(value).toDate()}))
+      return;
+    }
     setFormState((prev) => ({ ...prev, [name]: value }));
   };
 
@@ -210,8 +216,44 @@ const TestForm = () => {
         }
       );
       console.log(res.data);
+      toast.success('Test Created', {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: false,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored"
+        });
+        // setFormState({
+        //   title: "",
+        //   testDescription: "",
+        //   testStatus: "",
+        //   status: "",
+        //   testSeriesId: "",
+        //   noOfQuestions: null,
+        //   totalMarks: null,
+        //   totalDuration: null,
+        //   sortingOrder: 0,
+        //   allowPdfMaterialDownload: 0,
+        //   startDate: "",
+        //   endDate: "",
+        //   testMaterial: null,
+        // })
+
     } catch (err) {
       console.error(err);
+      toast.error("Error", {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: false,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored"
+        });
     }
   };
   return (
@@ -402,7 +444,9 @@ const TestForm = () => {
                       placeholder="2024-11-2013:41:38"
                       className="text-[#979DA2] font-semibold text-[12px] w-full p-2 outline-none border-[#CED4DA] border-2 border-opacity-50"
                       name="startDate"
-                      value={formState.startDate}
+                      type="date"
+                      value={formState.startDate ? moment(formState.startDate).format("YYYY-MM-DDTHH:mm") : ""}
+                      min={moment().format("YYYY-MM-DDTHH:mm")}
                       onChange={handleInputChange}
                     />
                     <p className="text-[#9FA5AA] text-[10px] font-semibold">
@@ -422,7 +466,9 @@ const TestForm = () => {
                       placeholder="2024-11-20 13:41:38"
                       className="text-[#979DA2] font-semibold text-[12px] w-full p-2 outline-none border-[#CED4DA] border-2 border-opacity-50"
                       name="endDate"
-                      value={formState.endDate}
+                      type="date"
+                      value={formState.endDate ? moment(formState.endDate).format("YYYY-MM-DDTHH:mm") : ""}
+                      min={moment().format("YYYY-MM-DDTHH:mm")}
                       onChange={handleInputChange}
                     />
                     <p className="text-[#9FA5AA] text-[10px] font-semibold">

@@ -106,7 +106,7 @@ interface Section {
   title: string;
   marksPerQuestion: number | null;
   pdf: File | null;
-  negativeMarking: number | null;
+  negativeMarking: 1|0;
   isOptional: number;
   isFixedTiming: number;
   questions: [];
@@ -295,7 +295,7 @@ const SectionForm: React.FC<SectionProps> = ({ sections, setSections }) => {
               <td className="border border-gray-300 p-2">
                 <input
                   type="number"
-                  value={section.negativeMarking || ""}
+                  value={section.negativeMarking }
                   onChange={(e) =>
                     handleChange(
                       index,

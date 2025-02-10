@@ -1,5 +1,6 @@
-import React from "react";
+import React, { useState } from "react";
 import Navbar from "../components/Navbar";
+import ReviewModal from "../components/ReviewModal";
 
 interface Review {
   id: number;
@@ -41,13 +42,16 @@ const reviews: Review[] = [
 ];
 
 const Reviews: React.FC = () => {
+  const [isOpen,setIsOpen]=useState(false);
   return (
     <div className=" bg-[#F5F7FA] flex-1 lg:ml-[250px] overflow-x-hidden">
       <Navbar />
       <div className="p-6 bg-gray-100 min-h-screen w-[90%] mx-auto">
-        <button className="mb-4 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
+        <button className="mb-4 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700" onClick={()=>setIsOpen(true)}>
           New Review
         </button>
+
+        {isOpen && <ReviewModal isOpen={isOpen} onClose={()=>setIsOpen(false)}/>}
 
         <div className="overflow-x-auto">
           <table className="min-w-full bg-white border border-gray-200">

@@ -24,6 +24,7 @@ import LiveClassDetails from "./components/Demo";
 import { Provider } from "react-redux";
 import store from "./utils/store";
 import StudentTable from "./pages/StudentTable";
+import { ToastContainer} from 'react-toastify';
 
 
 
@@ -158,6 +159,7 @@ function App() {
     <DndProvider backend={HTML5Backend}>
       <Provider store={store}>
         <RouterProvider router={appRouter} />
+        <ToastContainer />
       </Provider>
     </DndProvider>
   );
