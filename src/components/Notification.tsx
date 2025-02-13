@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import Plus_icon from "../assets/PlusCircle.svg";
-import Comment from "./Comment";
 import NotificationBoxModal from "./NotificationBox";
 import axios from "axios";
 import messageIcon from "../assets/message.svg";
