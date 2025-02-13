@@ -17,6 +17,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../utils/store";
 import { Menu } from "lucide-react";
 import { toggleMenu } from "../utils/appSlice";
+import { setActiveTab } from "../utils/activeTabSlice";
 
 const Sidebar = () => {
   const [active, setActive] = useState(false);
@@ -47,7 +48,9 @@ const Sidebar = () => {
           <div className="flex flex-col ">
             <div
               className="flex gap-[12px] items-center  text-[#8C94A3] hover:bg-[#3A6BE4] hover:text-white px-[24px] py-[12px]  cursor-pointer group"
-              onClick={() => setActive(!active)}
+              onClick={() =>{ setActive(!active)
+                dispatch(setActiveTab("basic"))
+              }}
             >
               <Book
                 size={24}

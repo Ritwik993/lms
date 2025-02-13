@@ -25,6 +25,7 @@ import { Provider } from "react-redux";
 import store from "./utils/store";
 import StudentTable from "./pages/StudentTable";
 import { ToastContainer} from 'react-toastify';
+import FreeVideos from "./pages/FreeVideos";
 
 
 
@@ -138,13 +139,12 @@ function App() {
           path: "/review",
           element: <Reviews />,
         },
-        
+        {
+          path:"/free",
+          element:<FreeVideos/>
+        }
       ],
-    },
-    {
-      path: "/notification",
-      element: <NotificationBoxModal />,
-    },
+    }, 
     {
       path: "/form",
       element: <ToogleSwitch />,

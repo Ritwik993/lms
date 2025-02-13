@@ -3,6 +3,9 @@ import AttachFileModal from "./AttachBanner";
 import AttachFileModal1 from "./AttachBanner1";
 import AttachFileModal2 from "./AttachBanner2";
 import axios from "axios";
+// import { StepBack } from 'lucide-react';
+import { ArrowLeft } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 
 type imgURLType = {
   url: string;
@@ -171,6 +174,22 @@ const CreateBanner = () => {
                       >
                         X
                       </button>
+                      {imgURL.length>1 && <ArrowLeft onClick={()=>setCurrentIndex((prev)=>{
+                        if(prev==0){
+                          prev=0;
+                        }else{
+                          prev=prev-1;
+                        }
+                        return prev;
+                    })} className="absolute h-[50px] w-[50px] top-1/2 text-white"/>}
+                    {imgURL.length>1 && <ArrowRight onClick={()=>setCurrentIndex((prev)=>{
+                        if(prev<imgURL.length-1){
+                          prev=prev+1;
+                        }else{
+                          prev=prev;
+                        }
+                        return prev;
+                    })} className="absolute h-[50px] w-[50px] top-1/2 right-0 text-white"/>}
                     </div>
                   )
               )}

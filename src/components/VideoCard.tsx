@@ -2,33 +2,72 @@ import CourseImage from "../assets/Course Images.svg";
 import Star from "../assets/Star.svg";
 import User from "../assets/User.svg";
 import Dot from "../assets/DotsThree1.svg";
-import { FC } from "react";
+import { FC, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { setActiveTab } from "../utils/activeTabSlice";
+import DOMPurify from "dompurify";
+
+
+
+type VideoDataType = {
+  courseThumbnail: string;
+  category: string;
+  courseDescription: string;
+  price: number;
+};
 
 type VideoCardProps = {
   activeCardId: number | null;
-  onToggle: (id: number) => void;
+  onToggle: (id: number|null) => void;
   id: number;
+  data:VideoDataType;
 };
 
-const VideoCard: FC<VideoCardProps> = ({ activeCardId, onToggle, id }) => {
+
+
+const VideoCard: FC<VideoCardProps> = ({ activeCardId, onToggle, id ,data}) => {
   // const [isVisible,setIsVisible]=useState(false);
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const menuRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
+        onToggle(null); // Close the menu when clicking outside
+      }
+    };
+
+    if (activeCardId === id) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [activeCardId, id, onToggle]);
   return (
-    <div className="bg-white w-[250px] ">
-      <div>
-        <img src={CourseImage} className="object-contain w-full" />
+    <div className="bg-white w-[250px] h-[500px]  max-h-min">
+      <div className="w-full h-1/2">
+        {
+          data.courseThumbnail ?<img src={data.courseThumbnail} className="object-cover w-full h-full" />:<img src={CourseImage} className="object-cover w-full h-full" />
+        }
+        {/* <img src={CourseImage} className="object-contain w-full" /> */}
       </div>
       <div className="mt-2 p-4 border-b-[2px] border-opacity-10 border-b-[#6E7485]">
         <p className="text-[#342F98] bg-[#EBEBFF] text-[10px] font-medium leading-[12px] max-w-min p-2 mb-2">
-          Developments
+          {/* Developments */}
+          {data.category}
         </p>
-        <p className="text-[#1D2026] font-medium text-[16px] leading-[22px] ">
-          Premiere Pro CC for Beginners: Video Editing in Premiere
-        </p>
+        {data.courseDescription ? (<p className="text-[#1D2026] font-medium text-[16px] leading-[22px] " dangerouslySetInnerHTML={{__html:DOMPurify.sanitize(data.courseDescription)}}>
+          {/* Premiere Pro CC for Beginners: Video Editing in Premiere */}
+          {/* {data.courseDescription} */}
+        </p>):
+        (<p className="text-[#1D2026] font-medium text-[16px] leading-[22px] ">
+          Premiere Pro CC for Beginners: Video Editing
+          {/* {data.courseDescription} */}
+        </p>)}
       </div>
 
       <div className="px-4 py-2 flex justify-between items-center  border-b-[2px] border-opacity-10 border-b-[#6E7485]">
@@ -47,9 +86,9 @@ const VideoCard: FC<VideoCardProps> = ({ activeCardId, onToggle, id }) => {
         </div>
       </div>
 
-      <div className="px-4 py-4 flex justify-between items-center">
+      <div className="px-4 py-4 flex justify-between items-center ">
         <p className="text-[#3A6BE4] text-[18px] font-semibold leading-[24px]">
-          Rs 24.00
+          Rs {data.price}
         </p>
         <div className="relative">
           <img
@@ -58,7 +97,7 @@ const VideoCard: FC<VideoCardProps> = ({ activeCardId, onToggle, id }) => {
             onClick={() => onToggle(id)}
           />
           {activeCardId === id && (
-            <div className="absolute p-2 bg-white  rounded-[4px] ">
+            <div className="absolute p-2 bg-white  rounded-[4px] " ref={menuRef}>
               <p className="text-[#4E5566]  leading-[20px]  whitespace-nowrap border-b-[2px] border-opacity-10 border-b-[#6E7485] cursor-pointer hover:bg-slate-100 p-1">
                 View Details
               </p>

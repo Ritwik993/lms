@@ -1,13 +1,48 @@
 import Navbar from "../components/Navbar";
 import MagnifyingGlass from "../assets/MagnifyingGlass.svg";
 import VideoCard from "../components/VideoCard";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import axios from "axios";
+import { BASE_URL } from "../constants/url";
+
+type VideoDataType = {
+  courseThumbnail: string;
+  category: string;
+  courseDescription: string;
+  price: number;
+};
 
 const Courses = () => {
-  const [activeCardId,setActiveCardId]=useState<number|null>(null);
-  const handleToggle=(id:number)=>{
-    setActiveCardId((prev)=>(prev===id?null:id));
-  }
+  const [activeCardId, setActiveCardId] = useState<number | null>(null);
+  const [videoData, setVideoData] = useState<VideoDataType[]>([]);
+  const handleToggle = (id: number | null) => {
+    setActiveCardId((prev) => (prev === id ? null : id));
+  };
+  useEffect(() => {
+    getVideos();
+  }, []);
+
+  const getVideos = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      const res = await axios.get(`${BASE_URL}/api/v1/course/getCourses`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      const videos = res.data.data;
+      const formattedData = videos.map((v: VideoDataType) => ({
+        courseThumbnail: v.courseThumbnail,
+        category: v.category,
+        courseDescription: v.courseDescription,
+        price: v.price || 24,
+      }));
+      setVideoData(formattedData);
+      // console.log(res.data);
+    } catch (err) {
+      console.log(err);
+    }
+  };
   return (
     <div className="flex-1 lg:ml-[250px] bg-[#F5F7FA] overflow-x-hidden pb-[100px]">
       <Navbar />
@@ -61,10 +96,24 @@ const Courses = () => {
       </div>
 
       <div className=" w-[96%] mx-auto  mt-[80px] pt-[20px]">
-        <div className="w-[96%] mx-auto flex flex-wrap gap-x-[20px] gap-y-[10px] ">
-          
-          {[1,2,3,4,5,6,7].map((id)=><VideoCard key={id} activeCardId={activeCardId} onToggle={handleToggle} id={id}/>)}
-          
+        <div className="w-[96%] mx-auto grid xl:grid-cols-4 lg:grid-cols-3 grid-cols-2   gap-6">
+          {/* {[1, 2, 3, 4, 5, 6, 7].map((id) => (
+            <VideoCard
+              key={id}
+              activeCardId={activeCardId}
+              onToggle={handleToggle}
+              id={id}
+            />
+          ))} */}
+          {
+            videoData.map((v,id)=>
+            (
+              <VideoCard key={id}  data={v} activeCardId={activeCardId}
+              onToggle={handleToggle}
+              id={id}/>
+            )
+            )
+          }
         </div>
 
         {/* <div className=" w-[96%] mx-auto flex justify-between mt-[40px] items-center">
@@ -80,10 +129,7 @@ const Courses = () => {
           </button>
         </div>
       </div> */}
-        
       </div>
-
-      
     </div>
   );
 };

@@ -26,7 +26,8 @@ const Navbar = () => {
     "/course": "My Courses",
     "/referal":"Configure Referal",
     "/review":"Review",
-    "/student":"Student"
+    "/student":"Student",
+    "/free":"Free Videos"
   };
 
   const currentPage = routeNames[location.pathname] || "";

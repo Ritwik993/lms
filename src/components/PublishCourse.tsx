@@ -1,10 +1,12 @@
 import { FC, useEffect } from "react";
 import MagnifyingGlass from "../assets/MagnifyingGlass.svg";
 import Instructor from "./Instructor";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useDispatch } from "react-redux";
 import { setActiveTab } from "../utils/activeTabSlice";
+import { BASE_URL } from "../constants/url";
+import { toast } from "react-toastify";
 
 // type Tab = "basic" | "advance" | "curriculum" | "publish";
 
@@ -22,6 +24,7 @@ type PublishCourseProps = {
 const PublishCourse: FC<PublishCourseProps> = ({ publishFormState,setPublishFormState}) => {
   const { pathname } = useLocation();
   const dispatch=useDispatch();
+  const navigate=useNavigate();
   // const [curriculumFormState,setCurriculumFormState]=useState<FormState>({
   //   welcomeMsg:"",
   //   congratulationsMsg:"",
@@ -42,7 +45,7 @@ const PublishCourse: FC<PublishCourseProps> = ({ publishFormState,setPublishForm
     const token = localStorage.getItem("token");
     try {
       const res = await axios.put(
-        `http://localhost:8080/api/v1/course/updateCourse/${cid}`,
+        `${BASE_URL}/api/v1/course/updateCourse/${cid}`,
         publishFormState,
         {
           headers: {
@@ -50,9 +53,30 @@ const PublishCourse: FC<PublishCourseProps> = ({ publishFormState,setPublishForm
           },
         }
       );
+       toast.success('Course Created', {
+              position: "top-right",
+              autoClose: 5000,
+              hideProgressBar: false,
+              closeOnClick: false,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+              theme: "colored"
+              });
+            navigate('/course');
       console.log(res.data);
     } catch (err) {
       console.error(err);
+        toast.error("Error", {
+              position: "top-right",
+              autoClose: 5000,
+              hideProgressBar: false,
+              closeOnClick: false,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+              theme: "colored"
+              });
     }
   };
   return (
