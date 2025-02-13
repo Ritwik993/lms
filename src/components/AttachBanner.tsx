@@ -1,9 +1,15 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 
+type imgURLType={
+  url:string;
+  _id:string;
+  status:string;
+}
+
 type BannerProps = {
   setIsBannerOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  setImgURL: React.Dispatch<React.SetStateAction<string[]>>;
+  setImgURL: React.Dispatch<React.SetStateAction<imgURLType[]>>;
 };
 
 const AttachFileModal: React.FC<BannerProps> = ({
@@ -35,7 +41,7 @@ const AttachFileModal: React.FC<BannerProps> = ({
       try {
         const url = await uploadImage(file);
         if (url) {
-          setImgURL((prev) => [...prev, url]);
+          setImgURL((prev) => [...prev, {url:url,_id:"",status:"ACTIVE"}]);
           submitBanner(url);
         }
       } catch (err) {
@@ -67,7 +73,7 @@ const AttachFileModal: React.FC<BannerProps> = ({
           },
         }
       );
-      console.log(res.data);
+      setImgURL((prev) => prev.map((p)=>p.url===url?{url:url,_id:res.data.data._id,status:"ACTIVE"}:p));
     } catch (err) {
       console.log(err);
     }

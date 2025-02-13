@@ -4,7 +4,8 @@ import User from "../assets/User.svg";
 import Dot from "../assets/DotsThree1.svg";
 import { FC } from "react";
 import { useNavigate } from "react-router-dom";
-// import { useDispatch } from "react-redux";
+import { useDispatch } from "react-redux";
+import { setActiveTab } from "../utils/activeTabSlice";
 
 type VideoCardProps = {
   activeCardId: number | null;
@@ -15,7 +16,7 @@ type VideoCardProps = {
 const VideoCard: FC<VideoCardProps> = ({ activeCardId, onToggle, id }) => {
   // const [isVisible,setIsVisible]=useState(false);
   const navigate = useNavigate();
-  // const dispatch = useDispatch();
+  const dispatch = useDispatch();
   return (
     <div className="bg-white w-[250px] ">
       <div>
@@ -65,7 +66,7 @@ const VideoCard: FC<VideoCardProps> = ({ activeCardId, onToggle, id }) => {
                 className="text-[#4E5566]  leading-[20px]  whitespace-nowrap border-b-[2px] border-opacity-10 border-b-[#6E7485] cursor-pointer hover:bg-slate-100 p-1"
                 onClick={() => {
                   navigate("/createCourse");
-                  // dispatch(setActiveTab("curriculum"));
+                  dispatch(setActiveTab("curriculum"));
                 }}
               >
                 Edit Course

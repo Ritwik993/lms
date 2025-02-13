@@ -2,10 +2,17 @@ import { useEffect, useState } from "react";
 import AttachFileModal from "./AttachBanner";
 import AttachFileModal1 from "./AttachBanner1";
 import AttachFileModal2 from "./AttachBanner2";
+import axios from "axios";
+
+type imgURLType = {
+  url: string;
+  _id: string;
+  status: string;
+};
 
 const CreateBanner = () => {
   const [isBannerOpen, setIsBannerOpen] = useState(false);
-  const [imgURL, setImgURL] = useState<string[]>([]);
+  const [imgURL, setImgURL] = useState<imgURLType[]>([]);
   const [imgURLApp1, setImgURLApp1] = useState<string[]>([]);
   const [imgURLApp2, setImgURLApp2] = useState<string[]>([]);
 
@@ -18,8 +25,12 @@ const CreateBanner = () => {
   const [isApp1, setIsApp1] = useState(false);
   const [isApp2, setIsApp2] = useState(false);
 
+  // useEffect(()=>{
+  //   get
+  // })
+
   useEffect(() => {
-    if (!isPaused && isWebsite&& imgURL.length > 0) {
+    if (!isPaused && isWebsite && imgURL.length > 0) {
       const interval = setInterval(() => {
         setCurrentIndex((prevIndex) =>
           prevIndex === imgURL.length - 1 ? 0 : prevIndex + 1
@@ -28,7 +39,7 @@ const CreateBanner = () => {
 
       return () => clearInterval(interval);
     }
-  }, [imgURL, isPaused,isWebsite]);
+  }, [imgURL, isPaused, isWebsite]);
 
   useEffect(() => {
     if (!isPaused && isApp1 && imgURLApp1.length > 0) {
@@ -40,7 +51,7 @@ const CreateBanner = () => {
 
       return () => clearInterval(interval);
     }
-  }, [imgURLApp1, isPaused,isApp1]);
+  }, [imgURLApp1, isPaused, isApp1]);
 
   useEffect(() => {
     if (!isPaused && isApp2 && imgURLApp2.length > 0) {
@@ -52,7 +63,28 @@ const CreateBanner = () => {
 
       return () => clearInterval(interval);
     }
-  }, [imgURLApp2, isPaused,isApp2]);
+  }, [imgURLApp2, isPaused, isApp2]);
+
+  const removeImageWeb = async (id: string) => {
+    try {
+      const token = localStorage.getItem("token");
+      const res = await axios.put(
+        `http://localhost:8080/api/v1/dashboard/updateBanner/${id}`,
+        {
+          status: "INACTIVE",
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      console.log(res.data);
+      setImgURL((prev)=>prev.filter((p)=>p._id!==id));
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
   // console.log(imgURL);
   return (
@@ -110,30 +142,42 @@ const CreateBanner = () => {
 
       {/* Middle - Sliding Banner */}
       {isWebsite && (
-        <div className="overflow-x-hidden middle flex-3">
+        <div className="overflow-x-hidden middle flex-3 relative">
           {imgURL.length > 0 ? (
             <div
               className="flex transition-transform duration-500 ease-in-out"
               style={{
-                transform: `translateX(-${currentIndex * 100}%)`, // Move based on index
+                transform: `translateX(-${currentIndex * 100}%)`,
               }}
-              onMouseEnter={() => setIsPaused(true)} // Pause on hover
-              onMouseLeave={() => setIsPaused(false)} // Resume after hover
+              onMouseEnter={() => setIsPaused(true)}
+              onMouseLeave={() => setIsPaused(false)}
             >
-              {imgURL.map((image, index) => (
-                <img
-                  key={index}
-                  src={image}
-                  alt={`Slide ${index}`}
-                  className="w-full h-[300px] object-contain"
-                />
-              ))}
+              {imgURL.map(
+                (image, index) =>
+                  image.status === "ACTIVE" && (
+                    <div
+                      key={index}
+                      className="relative w-full h-[300px] flex-shrink-0"
+                    >
+                      <img
+                        src={image.url}
+                        alt={`Slide ${index}`}
+                        className="w-full h-full object-contain"
+                      />
+                      {/* Close button */}
+                      <button
+                        className="absolute top-4 right-2 bg-red-600 text-white px-2 py-1 rounded-full text-sm"
+                        onClick={() => removeImageWeb(image._id)}
+                      >
+                        X
+                      </button>
+                    </div>
+                  )
+              )}
             </div>
-          ) : (
-            <div className="flex items-center justify-center bg-[#E5E5E5] h-[300px]">
-              <p className="text-[#999] text-[16px]">No Banners Available</p>
-            </div>
-          )}
+          ) : (<div className="flex items-center justify-center bg-[#E5E5E5] h-[300px]">
+            <p className="text-[#999] text-[16px]">No Banners Available</p>
+          </div>)}
         </div>
       )}
 

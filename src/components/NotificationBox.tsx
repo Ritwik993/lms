@@ -1,6 +1,17 @@
 import React, { useState } from "react";
 import X from "../assets/X1.svg";
 import axios from "axios";
+import {  toast } from 'react-toastify';
+
+type NotificationType = {
+  _id: string;
+  message: string;
+  to: string;
+  status: string;
+  createdBy: string;
+  createdAt:string;
+  userName:string;
+};
 
 type FormData = {
   message: string;
@@ -8,13 +19,19 @@ type FormData = {
   createdBy: string;
 };
 
-const NotificationBoxModal: React.FC = () => {
+type NotificationBoxModalProps={
+  setNotificationData: React.Dispatch<React.SetStateAction<NotificationType[]>>;
+}
+
+const NotificationBoxModal: React.FC<NotificationBoxModalProps> = ({setNotificationData}) => {
   const [isOpen, setIsOpen] = useState(true); // Modal state
   const [formData, setFormData] = useState<FormData>({
     message: "",
     to: "",
     createdBy: "",
   });
+
+  
 
   const handleSubmit = async () => {
     const token = localStorage.getItem("token");
@@ -29,10 +46,53 @@ const NotificationBoxModal: React.FC = () => {
           },
         }
       );
+
+      const name =await getUser(res.data.data.createdBy);
+      setNotificationData((prev)=>([{...res.data.data,userName:name},...prev]));
       console.log(res.data);
       setIsOpen(false);
+      toast.success('Notification created', {
+              position: "top-right",
+              autoClose: 5000,
+              hideProgressBar: false,
+              closeOnClick: false,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+              theme: "colored"
+              });
     } catch (err) {
+        toast.error("Error", {
+              position: "top-right",
+              autoClose: 5000,
+              hideProgressBar: false,
+              closeOnClick: false,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+              theme: "colored"
+              });
       console.error(err);
+    }
+  };
+
+  const getUser = async (name: string): Promise<string> => {
+    try {
+      const token = localStorage.getItem("token");
+      const res = await axios.get(
+        `http://localhost:8080/api/v1/auth/getUsers?userId=${name}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      // console.log("name = "+res.data.data[0].firstName)
+      return res.data.data[0].firstName;
+    } catch (err) {
+      console.log(err);
+      
+      return "Anonymous";
     }
   };
 

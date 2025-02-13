@@ -444,7 +444,7 @@ const TestForm = () => {
                       placeholder="2024-11-2013:41:38"
                       className="text-[#979DA2] font-semibold text-[12px] w-full p-2 outline-none border-[#CED4DA] border-2 border-opacity-50"
                       name="startDate"
-                      type="date"
+                      type="datetime-local"
                       value={formState.startDate ? moment(formState.startDate).format("YYYY-MM-DDTHH:mm") : ""}
                       min={moment().format("YYYY-MM-DDTHH:mm")}
                       onChange={handleInputChange}
@@ -466,7 +466,7 @@ const TestForm = () => {
                       placeholder="2024-11-20 13:41:38"
                       className="text-[#979DA2] font-semibold text-[12px] w-full p-2 outline-none border-[#CED4DA] border-2 border-opacity-50"
                       name="endDate"
-                      type="date"
+                      type="datetime-local"
                       value={formState.endDate ? moment(formState.endDate).format("YYYY-MM-DDTHH:mm") : ""}
                       min={moment().format("YYYY-MM-DDTHH:mm")}
                       onChange={handleInputChange}
