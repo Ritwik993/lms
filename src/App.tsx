@@ -8,7 +8,7 @@ import ScheduledClass from "./pages/ScheduledClass";
 import Setting from "./pages/Setting";
 import ContentCourse from "./pages/ContentCourse";
 
-import NotificationBoxModal from "./components/NotificationBox";
+// import NotificationBoxModal from "./components/NotificationBox";
 import TestSeries from "./pages/TestSeries";
 import AddTest from "./pages/AddTest";
 import TestForm from "./components/TestForm";
