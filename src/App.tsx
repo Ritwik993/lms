@@ -26,6 +26,7 @@ import store from "./utils/store";
 import StudentTable from "./pages/StudentTable";
 import { ToastContainer} from 'react-toastify';
 import FreeVideos from "./pages/FreeVideos";
+import ViewDetails from "./pages/viewDetails";
 
 
 
@@ -142,6 +143,10 @@ function App() {
         {
           path:"/free",
           element:<FreeVideos/>
+        },
+        {
+          path:"/view/:id",
+          element:<ViewDetails/>
         }
       ],
     }, 

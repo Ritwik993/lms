@@ -1,4 +1,7 @@
-import React, { useState } from "react";
+import axios from "axios";
+import React, { useEffect, useState } from "react";
+import { BASE_URL } from "../constants/url";
+import { toast } from "react-toastify";
 
 interface ReviewModalProps {
   isOpen: boolean;
@@ -6,33 +9,98 @@ interface ReviewModalProps {
 }
 
 type FormData = {
-  reviewerName: string;
+  name: string;
   review: string;
-  rating: string;
-  reviewDate: string;
+  rating: number | null;
+  courseId: string;
+};
+
+type Course = {
+  _id: string;
+  title: string;
 };
 
 const ReviewModal: React.FC<ReviewModalProps> = ({ isOpen, onClose }) => {
+  const [courses, setCourses] = useState<Course[]>([]);
+
+  useEffect(() => {
+    getCourses();
+  }, []);
+
+  const getCourses = async () => {
+    const token = localStorage.getItem("token");
+    try {
+      const res = await axios.get(`${BASE_URL}/api/v1/course/getCourses`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      setCourses(res.data.data);
+      // onClose();
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
   const [formData, setFormData] = useState<FormData>({
-    reviewerName: "",
+    name: "",
     review: "",
-    rating: "",
-    reviewDate: "",
+    rating: null,
+    courseId: "",
   });
 
   if (!isOpen) return null;
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+    >
+  ) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
+    if (name === "rating") {
+      setFormData((prev)=>({...prev,[name]:Number(value)}))
+    }else{
+      setFormData((prev) => ({
+        ...prev,
+        [name]: value,
+      }));
+    }
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async() => {
     console.log("Review Submitted:", formData);
-    onClose(); // Close modal after submission
+    try{
+      const token=localStorage.getItem("token");
+      const res=await axios.post(`${BASE_URL}/api/v1/dashboard/addReview`,formData,{
+        headers:{
+          Authorization:`Bearer ${token}`
+        }
+      })
+      console.log(res.data.data);
+      toast.success('Review Created', {
+              position: "top-right",
+              autoClose: 5000,
+              hideProgressBar: false,
+              closeOnClick: false,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+              theme: "colored"
+              });
+      onClose();
+    }catch(err){
+       toast.error("Error", {
+              position: "top-right",
+              autoClose: 5000,
+              hideProgressBar: false,
+              closeOnClick: false,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+              theme: "colored"
+              });
+      // console.log(err);
+    }
   };
 
   return (
@@ -47,10 +115,10 @@ const ReviewModal: React.FC<ReviewModalProps> = ({ isOpen, onClose }) => {
             <label className="block text-gray-700">Reviewer Name</label>
             <input
               type="text"
-              name="reviewerName"
+              name="name"
               className="w-full p-2 border rounded mt-1"
               placeholder="Enter name"
-              value={formData.reviewerName}
+              value={formData.name}
               onChange={handleChange}
             />
           </div>
@@ -75,20 +143,26 @@ const ReviewModal: React.FC<ReviewModalProps> = ({ isOpen, onClose }) => {
               placeholder="Upto 5"
               max={5}
               min={1}
-              value={formData.rating}
+              value={formData.rating || ""}
               onChange={handleChange}
             />
           </div>
 
           <div>
-            <label className="block text-gray-700">Review Date</label>
-            <input
-              type="date"
-              name="reviewDate"
+            <label className="block text-gray-700">Courses</label>
+            <select
+              name="courseId"
               className="w-full p-2 border rounded mt-1"
-              value={formData.reviewDate}
+              value={formData.courseId}
               onChange={handleChange}
-            />
+            >
+              <option value="">Select a course</option>
+              {courses.map((course) => (
+                <option key={course._id} value={course._id}>
+                  {course.title}
+                </option>
+              ))}
+            </select>
           </div>
         </div>
 

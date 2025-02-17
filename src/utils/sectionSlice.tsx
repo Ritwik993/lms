@@ -17,11 +17,11 @@ interface SectionState {
 
 const initialState: SectionState = {
   sections: [
-    {
-      id: 1,
-      name: "Section Name",
-      topics: [{ id: 1, name: "Chapter Name" }],
-    },
+    // {
+    //   id: 1,
+    //   name: "Section Name",
+    //   topics: [{ id: 1, name: "Chapter Name" }],
+    // },
   ],
 };
 
@@ -33,6 +33,10 @@ const sectionSlice = createSlice({
     addSectionRedux: (state, action: PayloadAction<{ id: number; name: string }>) => {
       const { id, name } = action.payload;
       state.sections.push({ id, name, topics: [] });
+    },
+
+    emptySection:(state)=>{
+      state.sections=[];
     },
 
     // Delete a section by ID
@@ -106,6 +110,7 @@ export const {
   addTopicRedux,
   deleteTopicRedux,
   updateTopicNameRedux,
+  emptySection,
 } = sectionSlice.actions;
 
 export default sectionSlice.reducer;

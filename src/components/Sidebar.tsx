@@ -18,6 +18,7 @@ import { RootState } from "../utils/store";
 import { Menu } from "lucide-react";
 import { toggleMenu } from "../utils/appSlice";
 import { setActiveTab } from "../utils/activeTabSlice";
+import { addEditId } from "../utils/editSlice";
 
 const Sidebar = () => {
   const [active, setActive] = useState(false);
@@ -25,7 +26,7 @@ const Sidebar = () => {
   const dispatch = useDispatch();
   return (
     <>
-      <div className="hidden lg:block  bg-[#1D2026] fixed top-0 bottom-0 w-[250px]  ">
+      <div className="hidden lg:block  bg-[#1D2026] fixed top-0 bottom-0 w-[250px] z-10 ">
         <div className="header flex gap-[10px] px-[24px] py-[20px] border-b-[2px] border-opacity-30 border-b-[#6E7485] mb-[10px]">
           <img src={icon} alt="icon" className="object-contain" />
           <p className="text-white font-semibold lg:text-[24px] text-[20px]">
@@ -48,8 +49,9 @@ const Sidebar = () => {
           <div className="flex flex-col ">
             <div
               className="flex gap-[12px] items-center  text-[#8C94A3] hover:bg-[#3A6BE4] hover:text-white px-[24px] py-[12px]  cursor-pointer group"
-              onClick={() =>{ setActive(!active)
-                dispatch(setActiveTab("basic"))
+              onClick={() => {
+                setActive(!active);
+                // dispatch(setActiveTab("basic"));
               }}
             >
               <Book
@@ -80,7 +82,13 @@ const Sidebar = () => {
             {active && (
               <>
                 <Link to="/createcourse">
-                  <div className="flex gap-[10px] text-[#8C94A3] hover:bg-[#3A6BE4] hover:text-white pl-[50px] py-[12px] items-center cursor-pointer group">
+                  <div
+                    className="flex gap-[10px] text-[#8C94A3] hover:bg-[#3A6BE4] hover:text-white pl-[50px] py-[12px] items-center cursor-pointer group"
+                    onClick={() => {
+                      dispatch(setActiveTab("basic"));
+                      dispatch(addEditId(null));
+                    }}
+                  >
                     <img
                       src={plusCircle}
                       className="object-contain group-hover:filter group-hover:brightness-0 group-hover:invert"
@@ -228,7 +236,7 @@ const Sidebar = () => {
       </div>
 
       {isOpen && (
-        <div className="block lg:hidden    bg-[#1D2026] fixed top-0 bottom-0 w-[250px]  ">
+        <div className="block lg:hidden    bg-[#1D2026] fixed top-0 bottom-0 w-[250px]  z-10">
           <div className="header flex gap-[10px] px-[24px] py-[20px] border-b-[2px] border-opacity-30 border-b-[#6E7485] mb-[10px] items-center">
             <Menu
               size={24}

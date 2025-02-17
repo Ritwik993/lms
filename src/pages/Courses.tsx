@@ -10,6 +10,7 @@ type VideoDataType = {
   category: string;
   courseDescription: string;
   price: number;
+  _id:string;
 };
 
 const Courses = () => {
@@ -36,6 +37,7 @@ const Courses = () => {
         category: v.category,
         courseDescription: v.courseDescription,
         price: v.price || 24,
+        _id:v._id,
       }));
       setVideoData(formattedData);
       // console.log(res.data);

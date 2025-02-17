@@ -4,7 +4,7 @@ import pencil from "../assets/PencilLine.svg";
 import trash from "../assets/Trash.svg";
 import { Link, useLocation } from "react-router-dom";
 import DownArrow from "../assets/CaretDown.svg";
-import {  useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { addLecture } from "../utils/lectureSlice";
 import { addSubject } from "../utils/subjectSlice";
@@ -15,10 +15,12 @@ import {
   addTopicRedux,
   deleteSectionRedux,
   deleteTopicRedux,
+  emptySection,
   updateSectionNameRedux,
   updateTopicNameRedux,
 } from "../utils/sectionSlice";
 import { setActiveTab } from "../utils/activeTabSlice";
+import { BASE_URL } from "../constants/url";
 
 // type Tab = "basic" | "advance" | "curriculum" | "publish";
 
@@ -58,6 +60,13 @@ const Curriculm = () => {
   const inputRef2 = useRef<HTMLInputElement | null>(null);
 
   const subjects = useSelector((store: RootState) => store.subject.subjects);
+  const editId = useSelector((store: RootState) => store.edit.editId);
+
+  useEffect(() => {
+    if (!editId) return; 
+    dispatch(emptySection());
+    getCourseData(editId);
+  }, [editId]);
 
   // const [sections, setSections] = useState<Section[]>([
   //   { id: 1, name: "Section Name", topics: [{ id: 1, name: "Chapter Name" }] },
@@ -71,6 +80,65 @@ const Curriculm = () => {
   const [editingSectionName, setEditingSectionName] = useState("");
   const [editingTopicId, setEditingTopicId] = useState<number | null>(null);
   const [editingTopicName, setEditingTopicName] = useState<string>("");
+
+  const getCourseData = async (editId: string | null) => {
+    if (editId === null || editId === "") {
+      return;
+    }
+    try {
+      const token = localStorage.getItem("token");
+      const res = await axios.get(
+        `${BASE_URL}/api/v1/course/getCourses?id=${editId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      const result = res.data.data;
+      console.log(result[0]);
+      const idArray: number[] = [];
+
+      result[0].subjects.map((re: any, index: number) => {
+        if (re.lectures.length === 0) {
+          return;
+        }
+
+        // const id = crypto.randomUUID();
+        const id = Date.now() + index;
+        idArray.push(id);
+
+        // console.log("called !!!");
+        dispatch(addSectionRedux({ id, name: re.subjectTitle }));
+      });
+
+      // console.log("u "+result[0].subjects.lectures);
+
+      // if(result[0].subjects.lectures>0){
+      //   result[0].subjects.lectures.map((le:any,i:number)=>{
+      //     const topic={
+      //       id:Date.now(),
+      //       name:le.lectureTitle,
+      //     }
+      //     addTopicRedux({sectionId:idArray[i],topic})
+      //   })
+      // }
+
+      result[0].subjects.map((s: any, i: number) => {
+        // console.log("u are "+JSON.stringify(s.lectures,null,2));
+        s.lectures.map((le: any) => {
+          // console.log(le.lectureTitle)
+          const topic = {
+            id: Date.now(),
+            name: le.lectureTitle,
+          };
+          dispatch(addTopicRedux({ sectionId: idArray[i], topic }));
+        });
+      });
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
   const addSection = (newSectionName: string) => {
     if (newSectionName.trim()) {
@@ -203,10 +271,11 @@ const Curriculm = () => {
     });
     const courseId = localStorage.getItem("courseId");
     const data: ResponseData[] = filteredSubjects;
+    console.log("this is "+JSON.stringify(data,null,2));
     try {
       // const {id,lectureTitle,...restform}=subjects
       const res = await axios.post(
-        "http://localhost:8080/api/v1/curriculum/addCurriculum",
+        `${BASE_URL}/api/v1/curriculum/addCurriculum`,
         { courseId, data },
         {
           headers: {

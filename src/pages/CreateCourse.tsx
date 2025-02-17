@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Navbar from "../components/Navbar";
 import stack1 from "../assets/Stack1.svg";
 import playCircle from "../assets/PlayCircle.svg";
@@ -11,6 +11,9 @@ import PublishCourse from "../components/PublishCourse";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../utils/store";
 import { setActiveTab } from "../utils/activeTabSlice";
+import { BASE_URL } from "../constants/url";
+import axios from "axios";
+// import { emptySection } from "../utils/sectionSlice";
 
 // type Tab = "basic" | "advance" | "curriculum" | "publish";
 
@@ -76,6 +79,68 @@ type PublishFormState = {
 const CreateCourse = () => {
   const dispatch = useDispatch();
   const activeTab = useSelector((store: RootState) => store.tabSelect.tab);
+  const editId = useSelector((store: RootState) => store.edit.editId);
+
+  useEffect(() => {
+      if (!editId) return; 
+      // dispatch(emptySection());
+      getCourseData(editId);
+    }, [editId]);
+
+
+    const getCourseData = async (editId: string | null) => {
+      if (editId === null || editId === "") {
+        return;
+      }
+      try {
+        const token = localStorage.getItem("token");
+        const res = await axios.get(
+          `${BASE_URL}/api/v1/course/getCourses?id=${editId}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        const result = res.data.data;
+        console.log(result[0]);
+        const basicData={
+          title: result[0].title,
+          subTitle: result[0].subTitle,
+          category: result[0].category,
+          subCategory: result[0].subCategory,
+          topic: result[0].topic,
+          language: result[0].language,
+          subtitleLanguage: result[0].subtitleLanguage,
+          courseLevels: result[0].courseLevels,
+          courseDurations: result[0].courseDurations,
+          instructor1: result[0].instructor1,
+          instructor2: result[0].instructor2,
+          instructor3: result[0].instructor3,
+          instructor4: result[0].instructor4,
+          instructor: result[0].instructor,
+          featured: false,
+          courseId: result[0].courseId,
+        }
+        setBasicInfo(basicData);
+
+        // const advanceData={
+        //   courseThumbnail: result[0].courseThumbnail,
+        //   courseTrailer: result[0].courseTrailer,
+        //   courseDescription: result[0]. courseDescription,
+        //   learnings: result[0].learnings,
+        //   targetAudience:result[0].targetAudience,
+        //   requirements: result[0].requirements,
+        // }
+
+        // setAdvanceInfo(advanceData);
+
+
+      } catch (err) {
+        console.log(err);
+      }
+    };
+  
   const [basicInfo, setBasicInfo] = useState<BasicFormState>({
     title: "",
     subTitle: "",
@@ -139,7 +204,7 @@ const CreateCourse = () => {
   //     case "publish":
   //       return (
   //         <PublishCourse setCount3={setCount3} setActiveTab={setActiveTab} />
-  //       );
+  //       );\
   //     default:
   //       return null;
   //   }
