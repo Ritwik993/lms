@@ -18,6 +18,8 @@ import { RootState } from "../utils/store";
 // import { updateLecture } from "../utils/lectureSlice";
 import { updateSubject } from "../utils/subjectSlice";
 import { setActiveTab } from "../utils/activeTabSlice";
+import { BASE_URL } from "../constants/url";
+import axios from "axios";
 
 // interface Topic {
 //   id: number;
@@ -46,7 +48,11 @@ import { setActiveTab } from "../utils/activeTabSlice";
 // }
 
 const ContentCourse = () => {
-  const { id } = useParams();
+  const { subject,chapter,id } = useParams();
+  const decodedChapterName = decodeURIComponent(chapter||"");
+  const decodedSubjectName = decodeURIComponent(subject||"");
+  console.log(decodedChapterName); 
+  console.log(decodedSubjectName);
   const numericId = Number(id);
   const lectures = useSelector((store: RootState) => store.lecture.lectures);
   const subjects = useSelector((store: RootState) => store.subject.subjects);
@@ -75,6 +81,13 @@ const ContentCourse = () => {
   const [testCount, setTestCount] = useState(0);
   const [dppCount, setDppCount] = useState(0);
   const [assignmentCount, setAssignmentCount] = useState(0);
+  const editId = useSelector((store: RootState) => store.edit.editId);
+
+    useEffect(() => {
+      if (!editId) return; 
+      // dispatch(emptySection());
+      getCourseData(editId);
+    }, [editId]);
 
   useEffect(() => {
     if (videoData) {
@@ -105,6 +118,67 @@ const ContentCourse = () => {
       setAssignmentCount((prev) => prev + 1);
     }
   }, [assignmentData]);
+
+
+  const getCourseData = async (editId: string | null) => {
+    if (editId === null || editId === "") {
+      return;
+    }
+    try {
+      const token = localStorage.getItem("token");
+      const res = await axios.get(
+        `${BASE_URL}/api/v1/course/getCourses?id=${editId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      const result = res.data.data;
+      console.log(result[0]);
+      // const idArray: number[] = [];
+
+      const ans=result[0].subjects.filter((s:any)=>
+        s.subjectTitle===decodedSubjectName
+      )
+      console.log("ans="+JSON.stringify(ans,null,2));
+
+      // const ans1=ans.lectures?.filter((l:any)=>l.lectureTitle===decodedChapterName);
+      // const ans1=ans.lectures;
+      const ans1=ans.map((a:any)=>
+        a.lectures?.filter((l:any)=>l.lectureTitle===decodedChapterName)
+      )
+      console.log("ans1="+JSON.stringify(ans1,null,2));
+
+      ans1.map((a:any)=>{
+        setVideoData(a[0].video);
+        setNotesData(a[0].notes);
+        setNotesData(a[0].test);
+        setNotesData(a[0].assignment);
+        setNotesData(a[0].dpp);
+      })
+
+      console.log(JSON.stringify(videoData,null,2));
+
+      // result[0].subjects.map((s: any, i: number) => {
+      //   // console.log("u are "+JSON.stringify(s.lectures,null,2));
+      //   s.lectures.map((le: any,k:number) => {
+      //     // console.log(le.lectureTitle)
+      //     const topic = {
+      //       id: generateUniqueNumber(),
+      //       name: le.lectureTitle,
+      //     };
+
+          
+      //     dispatch(addTopicRedux({ sectionId: idArray[i], topic }));
+      //   });
+      // });
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+
 
   // const handleSave = async () => {
   //   const token = localStorage.getItem("token");

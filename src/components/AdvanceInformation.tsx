@@ -8,6 +8,7 @@ import { useLocation } from "react-router-dom";
 import axios from "axios";
 import { useDispatch } from "react-redux";
 import { setActiveTab } from "../utils/activeTabSlice";
+import { BASE_URL } from "../constants/url";
 
 // type Tab = "basic" | "advance" | "curriculum" | "publish";
 
@@ -155,7 +156,7 @@ const AdvanceInformation: FC<AdvanceInformationProps> = ({
     const formData = new FormData();
     formData.append("file", file);
     const res = await axios.post(
-      "http://localhost:8080/api/v1/assets/upload/image",
+      `${BASE_URL}/api/v1/assets/upload/image`,
       formData,
       {
         headers: {
@@ -173,7 +174,7 @@ const AdvanceInformation: FC<AdvanceInformationProps> = ({
     const formData = new FormData();
     formData.append("file", file);
     const res = await axios.post(
-      "http://localhost:8080/api/v1/assets/upload/video",
+      `${BASE_URL}/api/v1/assets/upload/video`,
       formData,
       {
         headers: {
@@ -204,11 +205,11 @@ const AdvanceInformation: FC<AdvanceInformationProps> = ({
       //   ...restFormState,
       // };
       const res = await axios.put(
-        `http://localhost:8080/api/v1/course/updateCourse/${cid}`,
+        `${BASE_URL}/api/v1/course/updateCourse/${cid}`,
         { ...advanceInfo, welcomeMsg: "", congratulationsMsg: "" },
         {
           headers: {
-            Authorization: `Bearer ${token}`, // Include the token in the Authorization header
+            Authorization: `Bearer ${token}`, 
           },
         }
       );

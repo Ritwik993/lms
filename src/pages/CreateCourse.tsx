@@ -33,6 +33,7 @@ type BasicFormState = {
   instructor4?: string;
   courseId?: string;
   instructor?: string[];
+  paid:boolean;
   featured: boolean;
 };
 
@@ -119,6 +120,7 @@ const CreateCourse = () => {
           instructor3: result[0].instructor3,
           instructor4: result[0].instructor4,
           instructor: result[0].instructor,
+          paid:result[0].paid,
           featured: false,
           courseId: result[0].courseId,
         }
@@ -155,7 +157,8 @@ const CreateCourse = () => {
     instructor2: "",
     instructor3: "",
     instructor4: "",
-    instructor: ["6751f31ea2712db85bd07dde"],
+    instructor: [],
+    paid:false,
     featured: false,
     courseId: "",
   });

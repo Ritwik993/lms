@@ -3,6 +3,7 @@ import { FC, useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { Link, useLocation } from "react-router-dom";
 import { setActiveTab } from "../utils/activeTabSlice";
+import { BASE_URL } from "../constants/url";
 
 type BasicFormState = {
   title: string;
@@ -19,6 +20,7 @@ type BasicFormState = {
   instructor3?: string;
   instructor4?: string;
   courseId?: string;
+  paid:boolean;
   instructor?: string[];
   featured: boolean;
 };
@@ -77,6 +79,8 @@ const BasicInformation: FC<BasicInformationProps> = ({
 
   const { pathname } = useLocation();
 
+  // console.log(pathname);
+
   useEffect(() => {
     window.scrollTo(0, 0);
   }, [pathname]);
@@ -92,14 +96,11 @@ const BasicInformation: FC<BasicInformationProps> = ({
     const token = localStorage.getItem("token");
 
     try {
-      const res = await axios.get(
-        "http://localhost:8080/api/v1/course/getCourseId",
-        {
-          headers: {
-            Authorization: `Bearer ${token}`, // Include the token in the Authorization header
-          },
-        }
-      );
+      const res = await axios.get(`${BASE_URL}/api/v1/course/getCourseId`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       basicInfo.courseId = res.data.data;
       setCourseid(res.data.data);
       // console.log(res.data);
@@ -112,14 +113,11 @@ const BasicInformation: FC<BasicInformationProps> = ({
     // Retrieve the token from localStorage
     const token = localStorage.getItem("token");
     try {
-      const res = await axios.get(
-        "http://localhost:8080/api/v1/auth/getUsers",
-        {
-          headers: {
-            Authorization: `Bearer ${token}`, // Include the token in the Authorization header
-          },
-        }
-      );
+      const res = await axios.get(`${BASE_URL}/api/v1/auth/getUsers`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       console.log(res.data.data);
 
       setUsers(res.data.data);
@@ -149,6 +147,12 @@ const BasicInformation: FC<BasicInformationProps> = ({
       uniqueKeys.add(name);
       setCount(uniqueKeys.size);
     }
+    if(name==='paid'){
+      setBasicInfo((prev) => {
+        return { ...prev, [name]: value?true:false };
+      });
+      return;
+    }
     setBasicInfo((prev) => {
       return { ...prev, [name]: value };
     });
@@ -173,6 +177,14 @@ const BasicInformation: FC<BasicInformationProps> = ({
   const handleSubmit = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     setIsDisable(true);
+    if (basicInfo.instructor1)
+      basicInfo.instructor?.push(basicInfo.instructor1);
+    if (basicInfo.instructor2)
+      basicInfo.instructor?.push(basicInfo.instructor2);
+    if (basicInfo.instructor3)
+      basicInfo.instructor?.push(basicInfo.instructor3);
+    if (basicInfo.instructor4)
+      basicInfo.instructor?.push(basicInfo.instructor4);
 
     try {
       const {
@@ -191,11 +203,11 @@ const BasicInformation: FC<BasicInformationProps> = ({
 
       // Make the request with the token in the headers
       const res = await axios.post(
-        "http://localhost:8080/api/v1/course/addCourse",
+        `${BASE_URL}/api/v1/course/addCourse`,
         restFormState,
         {
           headers: {
-            Authorization: `Bearer ${token}`, // Include the token in the Authorization header
+            Authorization: `Bearer ${token}`,
           },
         }
       );
@@ -236,7 +248,7 @@ const BasicInformation: FC<BasicInformationProps> = ({
           </p>
           <input
             placeholder="Your course title"
-            className=" placeholder:text-[#8C94A3] border-[#E9EAF0] w-full h-full border-[2px] py-[10px] px-[10px]  outline-none"
+            className=" placeholder:text-[#8C94A3] border-[#E9EAF0] text-[#8C94A3] w-full h-full border-[2px] py-[10px] px-[10px]  outline-none"
             onChange={handleInputChange}
             value={basicInfo.title}
             name="title"
@@ -253,7 +265,7 @@ const BasicInformation: FC<BasicInformationProps> = ({
           </p>
           <input
             placeholder="Your course subtitle"
-            className=" placeholder:text-[#8C94A3] border-[#E9EAF0] w-full h-full border-[2px] py-[10px] px-[10px]  outline-none"
+            className=" placeholder:text-[#8C94A3] border-[#E9EAF0] text-[#8C94A3] w-full h-full border-[2px] py-[10px] px-[10px]  outline-none"
             type="text"
             name="subTitle"
             value={basicInfo.subTitle}
@@ -308,7 +320,7 @@ const BasicInformation: FC<BasicInformationProps> = ({
           </p>
           <input
             placeholder="What is primarily taught in your course?"
-            className=" placeholder:text-[#8C94A3] border-[#E9EAF0] w-full h-full border-[2px] py-[10px] px-[10px]  outline-none"
+            className=" placeholder:text-[#8C94A3]  border-[#E9EAF0] text-[#8C94A3] w-full h-full border-[2px] py-[10px] px-[10px]  outline-none"
             type="text"
             name="topic"
             value={basicInfo.topic}
@@ -404,6 +416,10 @@ const BasicInformation: FC<BasicInformationProps> = ({
               value={basicInfo.instructor1}
               onChange={handleSelectChange}
             >
+              <option value="" disabled>
+                Select
+              </option>
+
               {/* <option value="">Select</option>
               <option value="instructor1">Allot Instructor 1</option>
               <option value="instructor2">Allot Instructor 2</option>
@@ -437,11 +453,15 @@ const BasicInformation: FC<BasicInformationProps> = ({
               value={basicInfo.instructor2}
               onChange={handleSelectChange}
             >
-              <option value="">Select</option>
-              <option value="instructor1">Allot Instructor 1</option>
-              <option value="instructor2">Allot Instructor 2</option>
-              <option value="instructor3">Allot Instructor 3</option>
-              <option value="instructor4">Allot Instructor 4</option>
+              <option value="" disabled>
+                Select
+              </option>
+              {users.length > 0 &&
+                users.map((user) => (
+                  <option key={user._id} value={user._id}>
+                    {user.firstName} {user.lastName}
+                  </option>
+                ))}
             </select>
           </div>
 
@@ -455,11 +475,19 @@ const BasicInformation: FC<BasicInformationProps> = ({
               value={basicInfo.instructor3}
               onChange={handleSelectChange}
             >
-              <option value="">Select</option>
-              <option value="instructor1">Allot Instructor 1</option>
+              <option value="" disabled>
+                Select
+              </option>
+              {/* <option value="instructor1">Allot Instructor 1</option>
               <option value="instructor2">Allot Instructor 2</option>
               <option value="instructor3">Allot Instructor 3</option>
-              <option value="instructor4">Allot Instructor 4</option>
+              <option value="instructor4">Allot Instructor 4</option> */}
+              {users.length > 0 &&
+                users.map((user) => (
+                  <option key={user._id} value={user._id}>
+                    {user.firstName} {user.lastName}
+                  </option>
+                ))}
             </select>
           </div>
 
@@ -473,11 +501,34 @@ const BasicInformation: FC<BasicInformationProps> = ({
               value={basicInfo.instructor4}
               onChange={handleSelectChange}
             >
-              <option value="">Select</option>
-              <option value="instructor1">Allot Instructor 1</option>
-              <option value="instructor2">Allot Instructor 2</option>
-              <option value="instructor3">Allot Instructor 3</option>
-              <option value="instructor4">Allot Instructor 4</option>
+              <option value="" disabled>
+                Select
+              </option>
+              {users.length > 0 &&
+                users.map((user) => (
+                  <option key={user._id} value={user._id}>
+                    {user.firstName} {user.lastName}
+                  </option>
+                ))}
+            </select>
+          </div>
+
+
+          <div className="flex-1 min-w-max">
+            <p className="text-[#1D2026] lg:text-[14px] text-[12px] md:leading-[22px] leading-[20px]">
+              Paid
+            </p>
+            <select
+              className="border-[#E9EAF0] text-[#8C94A3] w-full  border-[2px] py-[10px] px-[10px]  outline-none"
+              name="paid"
+              value={basicInfo.paid?.toString()||""}
+              onChange={handleSelectChange}
+            >
+              <option value="" disabled>
+                Select
+              </option>
+              <option value="true">True</option>
+              <option value="false">False</option>
             </select>
           </div>
         </div>

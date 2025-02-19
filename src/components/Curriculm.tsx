@@ -21,6 +21,7 @@ import {
 } from "../utils/sectionSlice";
 import { setActiveTab } from "../utils/activeTabSlice";
 import { BASE_URL } from "../constants/url";
+import { generateUniqueNumber } from "../utils/generateUniqueNumber";
 
 // type Tab = "basic" | "advance" | "curriculum" | "publish";
 
@@ -104,34 +105,26 @@ const Curriculm = () => {
           return;
         }
 
-        // const id = crypto.randomUUID();
-        const id = Date.now() + index;
+        const id = generateUniqueNumber();
+        // const id = Date.now() + index;
         idArray.push(id);
 
         // console.log("called !!!");
         dispatch(addSectionRedux({ id, name: re.subjectTitle }));
       });
 
-      // console.log("u "+result[0].subjects.lectures);
-
-      // if(result[0].subjects.lectures>0){
-      //   result[0].subjects.lectures.map((le:any,i:number)=>{
-      //     const topic={
-      //       id:Date.now(),
-      //       name:le.lectureTitle,
-      //     }
-      //     addTopicRedux({sectionId:idArray[i],topic})
-      //   })
-      // }
+      
 
       result[0].subjects.map((s: any, i: number) => {
         // console.log("u are "+JSON.stringify(s.lectures,null,2));
-        s.lectures.map((le: any) => {
+        s.lectures.map((le: any,k:number) => {
           // console.log(le.lectureTitle)
           const topic = {
-            id: Date.now(),
+            id: generateUniqueNumber(),
             name: le.lectureTitle,
           };
+
+          
           dispatch(addTopicRedux({ sectionId: idArray[i], topic }));
         });
       });
@@ -417,7 +410,7 @@ const Curriculm = () => {
                 </div>
 
                 <div className="flex gap-2 lg:p-[24px] p-[12px]">
-                  <Link to={`/contentcourse/${section.id}`}>
+                  <Link to={`/contentcourse/${section.name}/${topic.name}/${section.id}`}>
                     <div className="flex bg-[#3D70F5] bg-opacity-25 lg:px-[16px] px-[10px]  gap-x-[4px]">
                       <p className=" text-[#3A6BE4] font-semibold lg:text-[14px] text-[12px] lg:leading-[40px] leading-[35px]  ">
                         Contents
