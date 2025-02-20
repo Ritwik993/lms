@@ -6,6 +6,7 @@ import { toast } from "react-toastify";
 interface ReviewModalProps {
   isOpen: boolean;
   onClose: () => void;
+  setSuccess: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 type FormData = {
@@ -20,7 +21,7 @@ type Course = {
   title: string;
 };
 
-const ReviewModal: React.FC<ReviewModalProps> = ({ isOpen, onClose }) => {
+const ReviewModal: React.FC<ReviewModalProps> = ({ isOpen, onClose ,setSuccess}) => {
   const [courses, setCourses] = useState<Course[]>([]);
 
   useEffect(() => {
@@ -36,6 +37,7 @@ const ReviewModal: React.FC<ReviewModalProps> = ({ isOpen, onClose }) => {
         },
       });
       setCourses(res.data.data);
+      // setSuccess(true);
       // onClose();
     } catch (err) {
       console.error(err);
@@ -87,6 +89,7 @@ const ReviewModal: React.FC<ReviewModalProps> = ({ isOpen, onClose }) => {
               progress: undefined,
               theme: "colored"
               });
+              setSuccess(prev=>!prev);
       onClose();
     }catch(err){
        toast.error("Error", {

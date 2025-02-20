@@ -153,26 +153,12 @@ const ContentCourse = () => {
       ans1.map((a:any)=>{
         setVideoData(a[0].video);
         setNotesData(a[0].notes);
-        setNotesData(a[0].test);
-        setNotesData(a[0].assignment);
-        setNotesData(a[0].dpp);
+        setTestData(a[0].test);
+        setAssignmentData(a[0].assignment);
+        setDppData(a[0].dpp);
       })
 
       console.log(JSON.stringify(videoData,null,2));
-
-      // result[0].subjects.map((s: any, i: number) => {
-      //   // console.log("u are "+JSON.stringify(s.lectures,null,2));
-      //   s.lectures.map((le: any,k:number) => {
-      //     // console.log(le.lectureTitle)
-      //     const topic = {
-      //       id: generateUniqueNumber(),
-      //       name: le.lectureTitle,
-      //     };
-
-          
-      //     dispatch(addTopicRedux({ sectionId: idArray[i], topic }));
-      //   });
-      // });
     } catch (err) {
       console.log(err);
     }

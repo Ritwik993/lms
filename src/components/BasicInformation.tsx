@@ -4,6 +4,8 @@ import { useDispatch } from "react-redux";
 import { Link, useLocation } from "react-router-dom";
 import { setActiveTab } from "../utils/activeTabSlice";
 import { BASE_URL } from "../constants/url";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 
 type BasicFormState = {
   title: string;
@@ -14,13 +16,16 @@ type BasicFormState = {
   language: string;
   subtitleLanguage?: string;
   courseLevels: string;
-  courseDurations: string;
+  courseDurations: number|null;
   instructor1: string;
   instructor2: string;
   instructor3?: string;
   instructor4?: string;
   courseId?: string;
-  paid:boolean;
+  paid: boolean;
+  startDate: Date;
+  endDate: Date;
+  price: number | null;
   instructor?: string[];
   featured: boolean;
 };
@@ -79,6 +84,8 @@ const BasicInformation: FC<BasicInformationProps> = ({
 
   const { pathname } = useLocation();
 
+  
+
   // console.log(pathname);
 
   useEffect(() => {
@@ -134,6 +141,18 @@ const BasicInformation: FC<BasicInformationProps> = ({
       uniqueKeys.add(name);
       setCount(uniqueKeys.size);
     }
+    if(name==="price"){
+      setBasicInfo((prev)=>{
+        return {...prev,[name]:Number(value)}
+      })
+      return
+    }
+    if(name==="courseDurations"){
+      setBasicInfo((prev)=>{
+        return {...prev,[name]:Number(value)}
+      })
+      return
+    }
     if (value.length <= 80) {
       setBasicInfo((prev) => {
         return { ...prev, [name]: value };
@@ -147,12 +166,13 @@ const BasicInformation: FC<BasicInformationProps> = ({
       uniqueKeys.add(name);
       setCount(uniqueKeys.size);
     }
-    if(name==='paid'){
+    if (name === "paid") {
       setBasicInfo((prev) => {
-        return { ...prev, [name]: value?true:false };
+        return { ...prev, [name]: value ? true : false };
       });
       return;
     }
+    
     setBasicInfo((prev) => {
       return { ...prev, [name]: value };
     });
@@ -387,7 +407,15 @@ const BasicInformation: FC<BasicInformationProps> = ({
             <p className="text-[#1D2026] lg:text-[14px] text-[12px] md:leading-[22px] leading-[20px]">
               Durations
             </p>
-            <select
+
+            <input
+              className=" placeholder:text-[#8C94A3]  border-[#E9EAF0] text-[#8C94A3] w-full h-full border-[2px] py-[10px] px-[10px]  outline-none"
+              type="text"
+              name="courseDurations"
+              value={basicInfo.courseDurations?.toString()}
+              onChange={handleInputChange}
+            />
+            {/* <select
               className="border-[#E9EAF0] text-[#8C94A3] w-full  border-[2px] py-[10px] px-[10px]  outline-none"
               name="courseDurations"
               value={basicInfo.courseDurations}
@@ -398,9 +426,9 @@ const BasicInformation: FC<BasicInformationProps> = ({
               <option value="courseDurations2">courseDurations 2 </option>
               <option value="courseDurations3">courseDurations 3</option>
               <option value="courseDurations4">courseDurations 4 </option>
-            </select>
+            </select> */}
             <span className="text-[#8C94A3] md:text-[14px] text-[12px] absolute right-[20px] bottom-[10px]">
-              Day
+              hours
             </span>
           </div>
         </div>
@@ -513,7 +541,6 @@ const BasicInformation: FC<BasicInformationProps> = ({
             </select>
           </div>
 
-
           <div className="flex-1 min-w-max">
             <p className="text-[#1D2026] lg:text-[14px] text-[12px] md:leading-[22px] leading-[20px]">
               Paid
@@ -521,7 +548,7 @@ const BasicInformation: FC<BasicInformationProps> = ({
             <select
               className="border-[#E9EAF0] text-[#8C94A3] w-full  border-[2px] py-[10px] px-[10px]  outline-none"
               name="paid"
-              value={basicInfo.paid?.toString()||""}
+              value={basicInfo.paid?.toString() || ""}
               onChange={handleSelectChange}
             >
               <option value="" disabled>
@@ -530,6 +557,56 @@ const BasicInformation: FC<BasicInformationProps> = ({
               <option value="true">True</option>
               <option value="false">False</option>
             </select>
+          </div>
+
+          <div className="flex-1 min-w-max">
+            <p className="text-[#1D2026] lg:text-[14px] text-[12px] md:leading-[22px] leading-[20px]">
+              startDate
+            </p>
+            <DatePicker
+              selected={basicInfo.startDate}
+              dateFormat='dd/MM/yyyy'
+              showYearDropdown
+              scrollableMonthYearDropdown
+              minDate={new Date()}
+              onChange={(date) => {
+                if (date)
+                  setBasicInfo((prev) => ({ ...prev, startDate: date }));
+              }}
+              className="border-[#E9EAF0] text-[#8C94A3] w-full  border-[2px] py-[10px] px-[10px]  outline-none"
+            />
+          </div>
+
+          <div className="flex-1 min-w-max">
+            <p className="text-[#1D2026] lg:text-[14px] text-[12px] md:leading-[22px] leading-[20px]">
+              endDate
+            </p>
+            <DatePicker
+              selected={basicInfo.endDate}
+              dateFormat='dd/MM/yyyy'
+              showYearDropdown
+              scrollableMonthYearDropdown
+              minDate={new Date()}
+              onChange={(date) => {
+                if (date) {
+                  setBasicInfo((prev) => ({ ...prev, endDate: date }));
+                }
+              }}
+              className="border-[#E9EAF0] text-[#8C94A3] w-full  border-[2px] py-[10px] px-[10px]  outline-none"
+            />
+          </div>
+
+          <div className="flex-1 min-w-max">
+            <p className="text-[#1D2026] lg:text-[14px] text-[12px] md:leading-[22px] leading-[20px]">
+              Price
+            </p>
+            <input
+              className=" placeholder:text-[#8C94A3]  border-[#E9EAF0] text-[#8C94A3] w-full h-full border-[2px] py-[10px] px-[10px]  outline-none"
+              type="text"
+              name="price"
+              value={basicInfo.price?.toString()}
+              onChange={handleInputChange}
+            />
           </div>
         </div>
 

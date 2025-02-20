@@ -26,13 +26,16 @@ type BasicFormState = {
   language: string;
   subtitleLanguage?: string;
   courseLevels: string;
-  courseDurations: string;
+  courseDurations: number|null;
   instructor1: string;
   instructor2: string;
   instructor3?: string;
   instructor4?: string;
   courseId?: string;
   instructor?: string[];
+  startDate:Date;
+  endDate:Date;
+  price:number|null;
   paid:boolean;
   featured: boolean;
 };
@@ -121,21 +124,31 @@ const CreateCourse = () => {
           instructor4: result[0].instructor4,
           instructor: result[0].instructor,
           paid:result[0].paid,
+          startDate:result[0].startDate||"Not Available",
+          endDate:result[0].endDate||"Not Available",
+          price:result[0].price,
           featured: false,
           courseId: result[0].courseId,
         }
         setBasicInfo(basicData);
 
-        // const advanceData={
-        //   courseThumbnail: result[0].courseThumbnail,
-        //   courseTrailer: result[0].courseTrailer,
-        //   courseDescription: result[0]. courseDescription,
-        //   learnings: result[0].learnings,
-        //   targetAudience:result[0].targetAudience,
-        //   requirements: result[0].requirements,
-        // }
+        const advanceData={
+          courseThumbnail: result[0].courseThumbnail,
+          courseTrailer: result[0].courseTrailer,
+          courseDescription: result[0]. courseDescription,
+          learnings: result[0].learnings,
+          targetAudience:result[0].targetAudience,
+          requirements: result[0].requirements,
+        }
 
-        // setAdvanceInfo(advanceData);
+        setAdvanceInfo(advanceData);
+
+        const publishData = {
+          welcomeMsg: result[0]. welcomeMsg,
+          congratulationsMsg: result[0].congratulationsMsg,
+        };
+
+        setPublishFormState(publishData);
 
 
       } catch (err) {
@@ -152,13 +165,16 @@ const CreateCourse = () => {
     language: "",
     subtitleLanguage: "",
     courseLevels: "",
-    courseDurations: "",
+    courseDurations: null,
     instructor1: "",
     instructor2: "",
     instructor3: "",
     instructor4: "",
     instructor: [],
     paid:false,
+    price:null,
+    startDate:new Date(),
+    endDate:new Date(),
     featured: false,
     courseId: "",
   });

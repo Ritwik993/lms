@@ -209,7 +209,7 @@ const AdvanceInformation: FC<AdvanceInformationProps> = ({
         { ...advanceInfo, welcomeMsg: "", congratulationsMsg: "" },
         {
           headers: {
-            Authorization: `Bearer ${token}`, 
+            Authorization: `Bearer ${token}`,
           },
         }
       );
@@ -249,13 +249,25 @@ const AdvanceInformation: FC<AdvanceInformationProps> = ({
             </p>
             <div className="content flex flex-col lg:flex-row gap-4">
               <div className="image-container flex-1">
-                <img
+                {/* <img
                   src={
                     advanceInfo.courseThumbnail
                       ? URL.createObjectURL(advanceInfo.courseThumbnail)
                       : left_icon
                   }
                   alt="Course Thumbnail Placeholder"
+                  className="object-cover w-full aspect-square"
+                /> */}
+
+                <img
+                  src={
+                    typeof advanceInfo.courseThumbnail === "string"
+                      ? advanceInfo.courseThumbnail // Cloudinary URL
+                      : advanceInfo.courseThumbnail
+                      ? URL.createObjectURL(advanceInfo.courseThumbnail) // Local File
+                      : left_icon // Default fallback
+                  }
+                   alt="Course Thumbnail Placeholder"
                   className="object-cover w-full aspect-square"
                 />
               </div>
@@ -310,8 +322,19 @@ const AdvanceInformation: FC<AdvanceInformationProps> = ({
                   className="object-cover w-full lg:h-48 h-40"
                 /> */}
                 {advanceInfo.courseTrailer ? (
+                  // <video
+                  //   src={URL.createObjectURL(advanceInfo.courseTrailer)}
+                  //   controls
+                  //   className="object-cover w-full aspect-square"
+                  // />
                   <video
-                    src={URL.createObjectURL(advanceInfo.courseTrailer)}
+                    src={
+                      typeof advanceInfo.courseTrailer === "string"
+                        ? advanceInfo.courseTrailer // Cloudinary URL
+                        : advanceInfo.courseTrailer
+                        ? URL.createObjectURL(advanceInfo.courseTrailer) // Local File
+                        : "" // Fallback if no video is provided
+                    }
                     controls
                     className="object-cover w-full aspect-square"
                   />
