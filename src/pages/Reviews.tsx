@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Navbar from "../components/Navbar";
 import ReviewModal from "../components/ReviewModal";
 import axios from "axios";
@@ -23,10 +23,18 @@ const Reviews: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [reviews,setReviews]=useState<FormData[]>([]);
   const [success,setSuccess]=useState(false);
+  const bottomRef = useRef<HTMLDivElement>(null); 
 
   useEffect(()=>{
     getReviews();
   },[success])
+
+  useEffect(() => {
+    // Scroll to bottom when new review is added
+    if (reviews.length > 0) {
+      bottomRef.current?.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [reviews]); // Runs when reviews change
 
   const getReviews=async()=>{
     try{
@@ -92,6 +100,8 @@ const Reviews: React.FC = () => {
               ))}
             </tbody>
           </table>
+          {/* Invisible div at the bottom to scroll into view */}
+          <div ref={bottomRef}></div>
         </div>
       </div>
     </div>
