@@ -20,13 +20,18 @@ type AdvanceInformationProps = {
   setAdvanceInfo: React.Dispatch<React.SetStateAction<AdvanceFormState>>;
 };
 
+type FAQ={
+  question:string;
+  answer:string;
+}
+
 type AdvanceFormState = {
   courseThumbnail: File | null;
   courseTrailer: File | null;
   courseDescription: string;
   learnings: string[];
   targetAudience: string[];
-  requirements: string[];
+  requirements: FAQ[];
 };
 
 const uniqueKeys = new Set();
@@ -135,20 +140,25 @@ const AdvanceInformation: FC<AdvanceInformationProps> = ({
       }));
   };
 
-  const handleRequirementChange = (index: number, value: string) => {
-    if (!uniqueKeys.has("requirements")) {
-      uniqueKeys.add("requirements");
-      setCount1(uniqueKeys.size);
-    }
-    const updatedrequirements = [...advanceInfo.requirements];
-    updatedrequirements[index] = value;
-    if (value.length <= 120) {
-      setAdvanceInfo((prev) => ({
-        ...prev,
-        requirements: updatedrequirements,
-      }));
-    }
-  };
+  // const handleRequirementChange = (index: number, value: string) => {
+  //   if (!uniqueKeys.has("requirements")) {
+  //     uniqueKeys.add("requirements");
+  //     setCount1(uniqueKeys.size);
+  //   }
+    const handleRequirementChange = (index: number, field: "question" | "answer", value: string) => {
+      const updatedrequirements = [...advanceInfo.requirements];
+      updatedrequirements[index] = { 
+        ...updatedrequirements[index], 
+        [field]: value 
+      };
+    
+      if (value.length <= 120) {
+        setAdvanceInfo((prev) => ({
+          ...prev,
+          requirements: updatedrequirements,
+        }));
+      }
+    };
 
   const uploadImage = async (file: File | null) => {
     if (!file) return null;
@@ -391,7 +401,7 @@ const AdvanceInformation: FC<AdvanceInformationProps> = ({
         {/* Teaching Points Section */}
         <div className="flex justify-between items-center lg:mt-[32px] mt-[40px] md:mb-[10px] mb-[24px] w-[90%] mx-auto">
           <p className="font-medium lg:text-[18px] text-[16px] text-[#1D2026] lg:leading-[24px] leading-[20px]">
-            What you will teach in this course ({advanceInfo.learnings.length}
+            What is your schedule in this course ({advanceInfo.learnings.length}
             /8)
           </p>
           <button
@@ -417,7 +427,7 @@ const AdvanceInformation: FC<AdvanceInformationProps> = ({
             <div className="relative">
               <input
                 type="text"
-                placeholder="What you will teach in this course..."
+                placeholder="What is your schedule in this course..."
                 className="placeholder-text-[#8C94A3] border-[#E9EAF0] border w-full outline-none py-[5px] pl-[5px] pr-[80px]"
                 value={item}
                 onChange={(e) => handleTeachChange(index, e.target.value)}
@@ -431,7 +441,7 @@ const AdvanceInformation: FC<AdvanceInformationProps> = ({
 
         <div className="flex justify-between items-center lg:mt-[32px] mt-[40px] md:mb-[10px] mb-[24px] w-[90%] mx-auto">
           <p className="font-medium lg:text-[18px] text-[16px] text-[#1D2026] lg:leading-[24px] leading-[20px]">
-            Target Audience ({advanceInfo.targetAudience.length}/8)
+            What you will get ({advanceInfo.targetAudience.length}/8)
           </p>
           <button
             className="text-[#3A6BE4] lg:text-[14px] text-[12px] lg:leading-[20px] leading-[18px]"
@@ -457,7 +467,7 @@ const AdvanceInformation: FC<AdvanceInformationProps> = ({
             <div className="relative">
               <input
                 type="text"
-                placeholder="Who this course is for..."
+                placeholder="What will be the outcome of this course..."
                 className="placeholder-text-[#8C94A3] border-[#E9EAF0] border w-full outline-none py-[5px] pl-[10px] pr-[80px]"
                 value={item}
                 onChange={(e) => handleAudienceChange(index, e.target.value)}
@@ -471,7 +481,7 @@ const AdvanceInformation: FC<AdvanceInformationProps> = ({
 
         <div className="flex justify-between items-center lg:mt-[32px] mt-[40px] md:mb-[10px] mb-[24px] w-[90%] mx-auto">
           <p className="font-medium lg:text-[18px] text-[16px] text-[#1D2026] lg:leading-[24px] leading-[20px]">
-            Course requirements ({advanceInfo.requirements.length}/8)
+            FAQ ({advanceInfo.requirements.length}/8)
           </p>
           <button
             className="text-[#3A6BE4] lg:text-[14px] text-[12px] lg:leading-[20px] leading-[18px]"
@@ -480,7 +490,7 @@ const AdvanceInformation: FC<AdvanceInformationProps> = ({
               if (advanceInfo.requirements.length < 8) {
                 setAdvanceInfo((prev) => ({
                   ...prev,
-                  requirements: [...prev.requirements, ""],
+                  requirements: [...prev.requirements, {question:"",answer:""}],
                 }));
               }
             }}
@@ -497,13 +507,26 @@ const AdvanceInformation: FC<AdvanceInformationProps> = ({
             <div className="relative">
               <input
                 type="text"
-                placeholder="What is you course requirements..."
-                value={desc}
+                placeholder="Question...."
+                value={desc.question}
                 className="placeholder-text-[#8C94A3] border-[#E9EAF0] border w-full outline-none py-[5px] pl-[10px] pr-[80px]"
-                onChange={(e) => handleRequirementChange(index, e.target.value)}
+                onChange={(e) => handleRequirementChange(index, "question",e.target.value)}
               />
               <p className="text-[#4E5566] md:text-[14px] text-[12px] md:leading-[22px] leading-[20px] absolute top-[5px] right-[10px]">
-                {desc.length}/120
+                {desc.question?.length}/120
+              </p>
+            </div>
+
+            <div className="relative mt-4">
+              <input
+                type="text"
+                placeholder="Answer"
+                value={desc.answer}
+                className="placeholder-text-[#8C94A3] border-[#E9EAF0] border w-full outline-none py-[5px] pl-[10px] pr-[80px]"
+                onChange={(e) => handleRequirementChange(index,"answer", e.target.value)}
+              />
+              <p className="text-[#4E5566] md:text-[14px] text-[12px] md:leading-[22px] leading-[20px] absolute top-[5px] right-[10px]">
+                {desc.answer?.length}/120
               </p>
             </div>
           </div>

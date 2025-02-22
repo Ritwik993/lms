@@ -51,12 +51,12 @@ const VideoCard: FC<VideoCardProps> = ({
     };
   }, [activeCardId, id, onToggle]);
   return (
-    <div className="bg-white w-[250px] h-[500px]  max-h-min">
-      <div className="w-full h-1/2">
+    <div className="bg-white w-[230px] h-[500px]  max-h-min">
+      <div className="w-full h-[150px] ">
         {data.courseThumbnail ? (
           <img
             src={data.courseThumbnail}
-            className="object-cover w-full h-full"
+            className="object-contain w-full h-full "
           />
         ) : (
           <img src={CourseImage} className="object-cover w-full h-full" />

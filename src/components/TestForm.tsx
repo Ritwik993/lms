@@ -4,6 +4,7 @@ import SectionForm from "./SectionForm";
 import axios from "axios";
 import {  toast } from 'react-toastify';
 import moment from 'moment'
+import { useParams } from "react-router-dom";
 
 type FormState = {
   title: string;
@@ -59,6 +60,8 @@ const TestForm = () => {
     endDate: new Date(),
     testMaterial: null,
   });
+
+  const {testId}=useParams();
 
   const [sections, setSections] = useState<Section[]>([
     {
@@ -205,7 +208,7 @@ const TestForm = () => {
         "http://localhost:8080/api/v1/testSeries/addTests",
         {
           ...formState,
-          testSeriesId: "678f644466fee6d59947250d",
+          testSeriesId: testId,
           status: "ACTIVE",
           sections:updatedSection,
         },

@@ -40,13 +40,19 @@ type BasicFormState = {
   featured: boolean;
 };
 
+
+type FAQ={
+  question:string;
+  answer:string;
+}
+
 type AdvanceFormState = {
   courseThumbnail: File | null;
   courseTrailer: File | null;
   courseDescription: string;
   learnings: string[];
   targetAudience: string[];
-  requirements: string[];
+  requirements: FAQ[];
 };
 
 type PublishFormState = {
@@ -124,8 +130,8 @@ const CreateCourse = () => {
           instructor4: result[0].instructor4,
           instructor: result[0].instructor,
           paid:result[0].paid,
-          startDate:result[0].startDate||"Not Available",
-          endDate:result[0].endDate||"Not Available",
+          startDate:result[0].startDate||new Date(),
+          endDate:result[0].endDate||new Date(),
           price:result[0].price,
           featured: false,
           courseId: result[0].courseId,
@@ -190,7 +196,7 @@ const CreateCourse = () => {
     courseDescription: "",
     learnings: [""],
     targetAudience: [""],
-    requirements: [""],
+    requirements: [{question:"",answer:""}],
   });
 
   // const [activeTab, setActiveTab] = useState<Tab>("basic");

@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import ToggleSwitch2 from "./ToggleSwitch2";
 import axios from "axios";
+import { BASE_URL } from "../constants/url";
+import { toast } from "react-toastify";
 
 type CreateTestSeriesPopupProps = {
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
@@ -14,20 +16,20 @@ const CreateTestSeriesPopup = ({ setIsOpen }: CreateTestSeriesPopupProps) => {
 
   const handleSubmit = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
-    const userId=localStorage.getItem("userId");
+    const userId = localStorage.getItem("userId");
 
     const testSeriesData = {
       title,
       price,
       sortBy,
-      createdBy:userId,
-      isEnabled: enabled ? 1 : 0, 
+      createdBy: userId,
+      isEnabled: enabled ? 1 : 0,
     };
 
     const token = localStorage.getItem("token");
     try {
       const res = await axios.post(
-        "http://localhost:8080/api/v1/testSeries/addTestSeries",
+        `${BASE_URL}/api/v1/testSeries/addTestSeries`,
         testSeriesData,
         {
           headers: {
@@ -36,8 +38,28 @@ const CreateTestSeriesPopup = ({ setIsOpen }: CreateTestSeriesPopupProps) => {
         }
       );
       console.log("Test data:", res.data);
+      toast.success("Test Created", {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: false,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+      });
     } catch (err) {
       console.error(err);
+      toast.error("Error", {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: false,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+      });
     }
 
     console.log("Test Series Data:", testSeriesData);

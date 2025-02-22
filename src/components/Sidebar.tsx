@@ -10,6 +10,7 @@ import { ChevronDown } from "lucide-react";
 import { ChevronUp } from "lucide-react";
 import { TvMinimalPlay } from "lucide-react";
 import { BadgeIndianRupee } from "lucide-react";
+import { Facebook } from 'lucide-react';
 
 import { useState } from "react";
 import { Link } from "react-router-dom";
@@ -19,11 +20,14 @@ import { Menu } from "lucide-react";
 import { toggleMenu } from "../utils/appSlice";
 import { setActiveTab } from "../utils/activeTabSlice";
 import { addEditId } from "../utils/editSlice";
+import { emptySection } from "../utils/sectionSlice";
 
 const Sidebar = () => {
   const [active, setActive] = useState(false);
   const isOpen = useSelector((store: RootState) => store.toggle);
   const dispatch = useDispatch();
+  // const sections = useSelector((store: RootState) => store.section.sections);
+
   return (
     <>
       <div className="hidden lg:block  bg-[#1D2026] fixed top-0 bottom-0 w-[250px] z-10 ">
@@ -35,7 +39,7 @@ const Sidebar = () => {
         </div>
         <div className="listContainer">
           <Link to="/dashboard">
-            <div className="flex gap-[12px] text-[#8C94A3]  hover:bg-[#3A6BE4] hover:text-white px-[24px] py-[12px] items-center cursor-pointer group">
+            <div className="flex gap-[12px] text-[#8C94A3]  hover:bg-[#3A6BE4] hover:text-white px-[24px] py-[12px] items-center cursor-pointer group" onClick={()=>dispatch(emptySection())}>
               <img
                 src={chartBar}
                 className="object-contain group-hover:filter group-hover:brightness-0 group-hover:invert"
@@ -87,6 +91,7 @@ const Sidebar = () => {
                     onClick={() => {
                       dispatch(setActiveTab("basic"));
                       dispatch(addEditId(null));
+                      // dispatch(emptySection());
                     }}
                   >
                     <img
@@ -102,7 +107,8 @@ const Sidebar = () => {
 
                 <Link to="/course">
                   {" "}
-                  <div className="flex gap-[10px] text-[#8C94A3] hover:bg-[#3A6BE4] hover:text-white pl-[50px] py-[12px] items-center cursor-pointer group">
+                     
+                  <div className="flex gap-[10px] text-[#8C94A3] hover:bg-[#3A6BE4] hover:text-white pl-[50px] py-[12px] items-center cursor-pointer group" onClick={()=>dispatch(emptySection())}>
                     <Book
                       size={24}
                       strokeWidth={2}
@@ -116,7 +122,7 @@ const Sidebar = () => {
 
                 <Link to="/scheduleClass">
                   {" "}
-                  <div className="flex gap-[10px] text-[#8C94A3] hover:bg-[#3A6BE4] hover:text-white pl-[50px] py-[12px] items-center cursor-pointer group">
+                  <div className="flex gap-[10px] text-[#8C94A3] hover:bg-[#3A6BE4] hover:text-white pl-[50px] py-[12px] items-center cursor-pointer group" onClick={()=>dispatch(emptySection())}>
                     <TvMinimalPlay
                       size={24}
                       strokeWidth={2}
@@ -124,6 +130,21 @@ const Sidebar = () => {
                     />
                     <p className="font-medium md:text-[14px] text-[12px] leading-[20px]">
                       Live Class
+                    </p>
+                  </div>
+                </Link>
+
+
+                <Link to="/free">
+                  {" "}
+                  <div className="flex gap-[10px] text-[#8C94A3] hover:bg-[#3A6BE4] hover:text-white pl-[50px] py-[12px] items-center cursor-pointer group" onClick={()=>dispatch(emptySection())}>
+                    <Facebook
+                      size={24}
+                      strokeWidth={2}
+                      className="object-contain group-hover:filter group-hover:brightness-0 group-hover:invert"
+                    />
+                    <p className="font-medium md:text-[14px] text-[12px] leading-[20px]">
+                      Free Videos
                     </p>
                   </div>
                 </Link>
@@ -156,7 +177,7 @@ const Sidebar = () => {
         </div> */}
 
           <Link to="/testseries">
-            <div className="flex gap-[12px] text-[#8C94A3]  hover:bg-[#3A6BE4] hover:text-white px-[24px] py-[12px] items-center cursor-pointer group">
+            <div className="flex gap-[12px] text-[#8C94A3]  hover:bg-[#3A6BE4] hover:text-white px-[24px] py-[12px] items-center cursor-pointer group" onClick={()=>dispatch(emptySection())}>
               <img
                 src={stack}
                 className="object-contain group-hover:filter group-hover:brightness-0 group-hover:invert"
@@ -175,7 +196,7 @@ const Sidebar = () => {
         </div> */}
 
           <Link to="/query">
-            <div className="flex gap-[12px] text-[#8C94A3]  hover:bg-[#3A6BE4] hover:text-white px-[24px] py-[12px] items-center cursor-pointer group">
+            <div className="flex gap-[12px] text-[#8C94A3]  hover:bg-[#3A6BE4] hover:text-white px-[24px] py-[12px] items-center cursor-pointer group" onClick={()=>dispatch(emptySection())}>
               <img
                 src={chat}
                 className="object-contain group-hover:filter group-hover:brightness-0 group-hover:invert "
@@ -187,7 +208,7 @@ const Sidebar = () => {
           </Link>
 
           <Link to="/review">
-            <div className="flex gap-[12px] text-[#8C94A3]  hover:bg-[#3A6BE4] hover:text-white px-[24px] py-[12px] items-center  cursor-pointer group">
+            <div className="flex gap-[12px] text-[#8C94A3]  hover:bg-[#3A6BE4] hover:text-white px-[24px] py-[12px] items-center  cursor-pointer group" onClick={()=>dispatch(emptySection())}>
               <img
                 src={chartBar}
                 className="object-contain group-hover:filter group-hover:brightness-0 group-hover:invert"
@@ -199,7 +220,7 @@ const Sidebar = () => {
           </Link>
 
           <Link to="/referal">
-            <div className="flex gap-[12px] text-[#8C94A3]  hover:bg-[#3A6BE4] hover:text-white px-[24px] py-[12px] items-center  cursor-pointer group">
+            <div className="flex gap-[12px] text-[#8C94A3]  hover:bg-[#3A6BE4] hover:text-white px-[24px] py-[12px] items-center  cursor-pointer group" onClick={()=>dispatch(emptySection())}>
               <BadgeIndianRupee
                 size={24}
                 strokeWidth={2}
@@ -212,7 +233,7 @@ const Sidebar = () => {
           </Link>
 
           <Link to="/setting">
-            <div className="flex gap-[12px] text-[#8C94A3]  hover:bg-[#3A6BE4] hover:text-white px-[24px] py-[12px] items-center  cursor-pointer group">
+            <div className="flex gap-[12px] text-[#8C94A3]  hover:bg-[#3A6BE4] hover:text-white px-[24px] py-[12px] items-center  cursor-pointer group" onClick={()=>dispatch(emptySection())}>
               <img
                 src={setting}
                 className="object-contain group-hover:filter group-hover:brightness-0 group-hover:invert"
@@ -223,7 +244,7 @@ const Sidebar = () => {
             </div>
           </Link>
 
-          <div className="flex gap-[12px] text-[#8C94A3]  hover:bg-[#3A6BE4] hover:text-white px-[24px] py-[12px] items-center  cursor-pointer mt-auto group">
+          <div className="flex gap-[12px] text-[#8C94A3]  hover:bg-[#3A6BE4] hover:text-white px-[24px] py-[12px] items-center  cursor-pointer mt-auto group" onClick={()=>dispatch(emptySection())}>
             <img
               src={signOut}
               className="object-contain group-hover:filter group-hover:brightness-0 group-hover:invert"

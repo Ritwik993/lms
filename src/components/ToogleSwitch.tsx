@@ -1,7 +1,8 @@
-import { useState } from "react";
+import { FC, useState } from "react";
 
-const ToggleSwitch = () => {
-  const [isActive, setIsActive] = useState<boolean>(false);
+const ToggleSwitch:FC<any> = ({isEnabled}) => {
+  const [isActive, setIsActive] = useState<boolean>(isEnabled);
+  // setIsActive(isEnabled);
 
   return (
     <div

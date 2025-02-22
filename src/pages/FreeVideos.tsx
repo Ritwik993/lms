@@ -1,12 +1,34 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Navbar from "../components/Navbar";
+import AddCartItemModal from "../components/freeVideoModal";
+
+type FormData={
+  description: string;
+  freeVideos: string;
+  thumbnailLink: string;
+  videoLink: string;
+}
 
 const FreeVideos: React.FC = () => {
+  const [success,setSuccess]=useState(false);
+
+  const [formData,setFormData]=useState<FormData>({
+    description:"",
+    freeVideos: "",
+    thumbnailLink: "",
+    videoLink: "",
+  });
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [youtubeLink, setYoutubeLink] = useState("");
+  const [link,setLink]=useState("");
   const [thumbnail, setThumbnail] = useState<File | null>(null);
   const [videoList, setVideoList] = useState<
     { id: number; link: string; date: string }[]
   >([]);
+
+
+  
+
 
   const handleUploadThumbnail = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files && event.target.files.length > 0) {
@@ -14,8 +36,32 @@ const FreeVideos: React.FC = () => {
     }
   };
 
+  useEffect(()=>{
+    console.log("useEffect called")
+    // setYoutubeLink(formData.videoLink);
+
+    // if(youtubeLink){
+      console.log("videoLink = "+formData.videoLink);
+      console.log("utube link= "+youtubeLink);
+      handleCreate();
+      setYoutubeLink("");
+  },[link])
+
+  useEffect(()=>{
+    setYoutubeLink(formData.videoLink);
+    setLink(formData.videoLink);
+  },[success])
+
+ 
+
+
+
+
+
   const handleCreate = () => {
+    setYoutubeLink(formData.videoLink);
     if (!youtubeLink) return;
+    
 
     const newEntry = {
       id: videoList.length + 1,
@@ -75,6 +121,10 @@ const FreeVideos: React.FC = () => {
         >
           Create
         </button>
+
+
+        <button onClick={() => setIsModalOpen(true)} className="ml-2 px-4 py-2 bg-blue-500 text-white rounded">Open Modal</button>
+      {isModalOpen && <AddCartItemModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} formData={formData} setFormData={setFormData} success={success} setSuccess={setSuccess}/>}
 
         {/* Table Section */}
         <div className="mt-6">
