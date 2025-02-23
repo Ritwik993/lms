@@ -31,6 +31,9 @@ const testSlice = createSlice({
       const { id, name } = action.payload;
       state.tests.push({ testId: id, testName: name, test: [] });
     },
+    clearTest:(state,action)=>{
+      state.tests=state.tests.map((t:any)=>(t.testId===action.payload?{testId:t.testId,testName:t.testName,test:[]}:t))
+    },
     addTest: (state, action) => {
       const { testId, id,topicName} = action.payload;
       const t1 = state.tests.find((t) => t.testId === testId);
@@ -57,6 +60,6 @@ const testSlice = createSlice({
   },
 });
 
-export const { addTestSubject, addTest, updateTest, deleteTest } =
+export const { addTestSubject, addTest, updateTest, deleteTest,clearTest } =
   testSlice.actions;
 export default testSlice.reducer;

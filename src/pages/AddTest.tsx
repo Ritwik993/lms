@@ -9,7 +9,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../utils/store";
 import { useEffect, useRef } from "react";
 import { useState } from "react";
-import { addTest, deleteTest, updateTest } from "../utils/testSlice";
+import { addTest, clearTest, deleteTest, updateTest } from "../utils/testSlice";
 import axios from "axios";
 import { BASE_URL } from "../constants/url";
 
@@ -39,8 +39,8 @@ const AddTest = () => {
 
   const getPreviousTest=async(testId:string)=>{
     try{
-      console.log("tests=")
-      console.log(JSON.stringify(tests[0].test,null,2));
+      dispatch(clearTest(numIdx));
+
       // const existingTest = tests[0].test.find((t) => t.id === testId);
       // if (existingTest) return; // Avoid duplicate API calls  
       const token=localStorage.getItem("token");
@@ -51,7 +51,14 @@ const AddTest = () => {
       })
       console.log(res.data.data);
       const result=res.data.data[0].tests;
+      // console.log("testTiltle= "+result[0].testSections.length);
+      // // if(result[0]){
+      // //   return;
+      // // }
+      console.log(JSON.stringify(result,null,2));
       result.map((r:any)=>{
+        console.log("Test title = "+r.testTitle);
+        if(r.testTitle)
         dispatch(addTest({testId:numIdx,id:r._id,topicName:r.testTitle}))
       })
     }catch(err){
