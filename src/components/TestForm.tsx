@@ -120,6 +120,8 @@ const TestForm = () => {
         endDate: response[0].endDate,
         testMaterial: response[0].testMaterial,
       });
+      console.log("section="+JSON.stringify(response[0].testSections,null,2));
+      setSections(response[0].testSections);
     }catch(err){
       console.log(err);
     }
