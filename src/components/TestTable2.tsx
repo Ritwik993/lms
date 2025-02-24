@@ -113,11 +113,11 @@ const columns: Column<Data>[] = [
     Cell: ({ row }: { row: { original: Data } }) => {
       const dispatch=useDispatch();
       const handleTest=()=>{
-        dispatch(addTestSubject({id:row.original.serialNo,name:row.original.title}))
+        dispatch(addTestSubject({id:row.original._id,name:row.original.title}))
       }
       return (
         <div className="flex space-x-4 items-center ">
-          <Link to={`/createtest/${row.original.serialNo}/${row.original._id}`}>
+          <Link to={`/createtest/${row.original._id}`}>
             <button
               className="bg-blue-500 text-white px-3 py-1 rounded"
               onClick={handleTest}

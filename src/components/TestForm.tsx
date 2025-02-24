@@ -1,10 +1,12 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Navbar from "./Navbar";
 import SectionForm from "./SectionForm";
 import axios from "axios";
-import {  toast } from 'react-toastify';
-import moment from 'moment'
-import { useParams } from "react-router-dom";
+import { toast } from "react-toastify";
+import moment from "moment";
+import { useParams, useSearchParams } from "react-router-dom";
+import { BASE_URL } from "../constants/url";
+
 
 type FormState = {
   title: string;
@@ -15,11 +17,11 @@ type FormState = {
   noOfQuestions: number | null;
   totalMarks: number | null;
   totalDuration: number | null;
-  sortingOrder: 0 | 1 ;
+  sortingOrder: 0 | 1;
   allowPdfMaterialDownload: number;
   startDate: Date;
   endDate: Date;
-  testMaterial: File|string|null;
+  testMaterial: File | string | null;
 };
 
 // type Option = {
@@ -38,7 +40,7 @@ interface Section {
   title: string;
   marksPerQuestion: number | null;
   pdf: File | null;
-  negativeMarking: 1|0;
+  negativeMarking: 1 | 0;
   isOptional: number;
   isFixedTiming: number;
   questions: [];
@@ -60,8 +62,68 @@ const TestForm = () => {
     endDate: new Date(),
     testMaterial: null,
   });
+  const [searchParams] = useSearchParams();
+  console.log("searchParams = "+searchParams.toString())
+  const editValue = searchParams.get("edit")==="true"; //converting to boolean
+  const editId = searchParams.get("editId");
 
-  const {testId}=useParams();
+  const { id } = useParams();
+  // const tests = useSelector((store: RootState) => store.test.tests);
+  // let testData:any[]=[];
+  // if(test){
+    
+  //   tests=tests.filter((t)=>t.testId===Number(test))
+  // }
+
+  // console.log(testData);
+
+  useEffect(() => {
+    if (editValue) {
+
+      getTestData();
+    
+    }
+  }, [editValue]);
+
+  const getTestData=async()=>{
+    try{
+      const token=localStorage.getItem("token");
+      const res=await axios.get(`${BASE_URL}/api/v1/testSeries/getTestSeries?id=${id}`,{
+        headers:{
+          Authorization:`Bearer ${token}`
+        }
+      })
+
+      console.log("Test data = "+JSON.stringify(res.data.data[0].tests,null,2));
+      const testData=res.data.data[0].tests;
+      console.log("final="+JSON.stringify(testData,null,2));
+      // console.log("editId="+editId);
+      // console.log("edit Value ="+editValue);
+      const response=testData.filter((t:any)=>t._id===editId);
+
+
+      console.log("Final = "+JSON.stringify(response[0],null,2));
+      console.log("sortingOrder="+response[0].sortingOrder);
+
+      setFormState({
+        title: response[0].testTitle,
+        testDescription: response[0].testDescription,
+        testStatus: response[0].status,
+        status: response[0].status,
+        testSeriesId: response[0].testSeriesId,
+        noOfQuestions: response[0].noOfQuestions,
+        totalMarks: response[0].totalMarks,
+        totalDuration: response[0].totalDuration,
+        sortingOrder: response[0].sortingOrder?1:0,
+        allowPdfMaterialDownload: response[0].allowPdfMaterialDownload,
+        startDate: response[0].startDate,
+        endDate: response[0].endDate,
+        testMaterial: response[0].testMaterial,
+      });
+    }catch(err){
+      console.log(err);
+    }
+  }
 
   const [sections, setSections] = useState<Section[]>([
     {
@@ -114,19 +176,17 @@ const TestForm = () => {
     e.preventDefault();
     const { name, type } = e.target;
     const value = type === "number" ? e.target.valueAsNumber : e.target.value;
-    if(name==='startDate' || name==='endDate'){
-      setFormState((prev)=>({...prev,[name]: moment(value).toDate()}))
+    if (name === "startDate" || name === "endDate") {
+      setFormState((prev) => ({ ...prev, [name]: moment(value).toDate() }));
       return;
     }
     setFormState((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleFileChange =async (
-    e: React.ChangeEvent<HTMLInputElement>
-  ) => {
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target?.files.length > 0) {
       const file = e.target.files[0];
-      const urlString=await uploadToCloudinary(file);
+      const urlString = await uploadToCloudinary(file);
       setFormState((prev) => ({ ...prev, testMaterial: urlString }));
     }
   };
@@ -142,7 +202,7 @@ const TestForm = () => {
     const token = localStorage.getItem("token");
     try {
       const res = await axios.post(
-        "http://localhost:8080/api/v1/assets/upload/image",
+        `${BASE_URL}/api/v1/assets/upload/image`,
         formData,
         {
           headers: {
@@ -186,7 +246,7 @@ const TestForm = () => {
           }
         })
       );
-    
+
       setSections(updatedSections); // Update state once after all operations finish
       return updatedSections;
     } catch (error) {
@@ -198,19 +258,17 @@ const TestForm = () => {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     console.log(sections);
-    const updatedSection=await handlePdf();
-
-    
+    const updatedSection = await handlePdf();
 
     const token = localStorage.getItem("token");
     try {
       const res = await axios.post(
-        "http://localhost:8080/api/v1/testSeries/addTests",
+        `${BASE_URL}/api/v1/testSeries/addTests`,
         {
           ...formState,
-          testSeriesId: testId,
+          testSeriesId: id,
           status: "ACTIVE",
-          sections:updatedSection,
+          sections: updatedSection,
         },
         {
           headers: {
@@ -219,7 +277,7 @@ const TestForm = () => {
         }
       );
       console.log(res.data);
-      toast.success('Test Created', {
+      toast.success("Test Created", {
         position: "top-right",
         autoClose: 5000,
         hideProgressBar: false,
@@ -227,24 +285,23 @@ const TestForm = () => {
         pauseOnHover: true,
         draggable: true,
         progress: undefined,
-        theme: "colored"
-        });
-        // setFormState({
-        //   title: "",
-        //   testDescription: "",
-        //   testStatus: "",
-        //   status: "",
-        //   testSeriesId: "",
-        //   noOfQuestions: null,
-        //   totalMarks: null,
-        //   totalDuration: null,
-        //   sortingOrder: 0,
-        //   allowPdfMaterialDownload: 0,
-        //   startDate: "",
-        //   endDate: "",
-        //   testMaterial: null,
-        // })
-
+        theme: "colored",
+      });
+      // setFormState({
+      //   title: "",
+      //   testDescription: "",
+      //   testStatus: "",
+      //   status: "",
+      //   testSeriesId: "",
+      //   noOfQuestions: null,
+      //   totalMarks: null,
+      //   totalDuration: null,
+      //   sortingOrder: 0,
+      //   allowPdfMaterialDownload: 0,
+      //   startDate: "",
+      //   endDate: "",
+      //   testMaterial: null,
+      // })
     } catch (err) {
       console.error(err);
       toast.error("Error", {
@@ -255,8 +312,8 @@ const TestForm = () => {
         pauseOnHover: true,
         draggable: true,
         progress: undefined,
-        theme: "colored"
-        });
+        theme: "colored",
+      });
     }
   };
   return (
@@ -370,7 +427,7 @@ const TestForm = () => {
                     placeholder="Enter no. of questions"
                     className="text-[#979DA2] font-semibold text-[12px] w-full p-2 outline-none border-[#CED4DA] border-2 border-opacity-50"
                     name="noOfQuestions"
-                    value={formState.noOfQuestions||""}
+                    value={formState.noOfQuestions || ""}
                     onChange={handleInputChange}
                   />
                 </div>
@@ -387,7 +444,7 @@ const TestForm = () => {
                     placeholder="Enter total marks"
                     className="text-[#979DA2] font-semibold text-[12px] w-full p-2 outline-none border-[#CED4DA] border-2 border-opacity-50"
                     name="totalMarks"
-                    value={formState.totalMarks||""}
+                    value={formState.totalMarks || ""}
                     onChange={handleInputChange}
                   />
                 </div>
@@ -404,7 +461,7 @@ const TestForm = () => {
                     placeholder="Enter duration in minutes"
                     className="text-[#979DA2] font-semibold text-[12px] w-full p-2 outline-none border-[#CED4DA] border-2 border-opacity-50 "
                     name="totalDuration"
-                    value={formState.totalDuration||""}
+                    value={formState.totalDuration || ""}
                     onChange={handleInputChange}
                   />
                 </div>
@@ -448,7 +505,13 @@ const TestForm = () => {
                       className="text-[#979DA2] font-semibold text-[12px] w-full p-2 outline-none border-[#CED4DA] border-2 border-opacity-50"
                       name="startDate"
                       type="datetime-local"
-                      value={formState.startDate ? moment(formState.startDate).format("YYYY-MM-DDTHH:mm") : ""}
+                      value={
+                        formState.startDate
+                          ? moment(formState.startDate).format(
+                              "YYYY-MM-DDTHH:mm"
+                            )
+                          : ""
+                      }
                       min={moment().format("YYYY-MM-DDTHH:mm")}
                       onChange={handleInputChange}
                     />
@@ -470,7 +533,11 @@ const TestForm = () => {
                       className="text-[#979DA2] font-semibold text-[12px] w-full p-2 outline-none border-[#CED4DA] border-2 border-opacity-50"
                       name="endDate"
                       type="datetime-local"
-                      value={formState.endDate ? moment(formState.endDate).format("YYYY-MM-DDTHH:mm") : ""}
+                      value={
+                        formState.endDate
+                          ? moment(formState.endDate).format("YYYY-MM-DDTHH:mm")
+                          : ""
+                      }
                       min={moment().format("YYYY-MM-DDTHH:mm")}
                       onChange={handleInputChange}
                     />

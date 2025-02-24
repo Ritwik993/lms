@@ -121,11 +121,11 @@ function App() {
           element:<StudentTable/>
         },
         {
-          path: "/testform/:testId",
+          path: "/testform/:id",
           element: <TestForm />,
         },
         {
-          path: "/createTest/:id/:testId",
+          path: "/createTest/:id",
           element: <AddTest />,
         },
         {

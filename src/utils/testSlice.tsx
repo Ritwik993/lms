@@ -5,12 +5,14 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 interface TestType {
-  id: number;
+  id: string;
   topicName: string;
+  edit?: boolean;
+  data?: any;
 }
 
 interface TestDetails {
-  testId: number;
+  testId: string;
   testName: string;
   test: TestType[];
 }
@@ -31,14 +33,20 @@ const testSlice = createSlice({
       const { id, name } = action.payload;
       state.tests.push({ testId: id, testName: name, test: [] });
     },
-    clearTest:(state,action)=>{
-      state.tests=state.tests.map((t:any)=>(t.testId===action.payload?{testId:t.testId,testName:t.testName,test:[]}:t))
+    clearTest: (state, action) => {
+      state.tests = state.tests.map((t: any) =>
+        t.testId === action.payload
+          ? { testId: t.testId, testName: t.testName, test: [] }
+          : t
+      );
     },
     addTest: (state, action) => {
-      const { testId, id,topicName} = action.payload;
+      const { testId, id, topicName, edit, data } = action.payload;
+
       const t1 = state.tests.find((t) => t.testId === testId);
       if (t1) {
-        t1.test.push({id,topicName});
+        if (data) t1.test.push({ id, topicName, edit, data });
+        else t1.test.push({ id, topicName, edit });
       }
     },
     updateTest: (state, action) => {
@@ -60,6 +68,6 @@ const testSlice = createSlice({
   },
 });
 
-export const { addTestSubject, addTest, updateTest, deleteTest,clearTest } =
+export const { addTestSubject, addTest, updateTest, deleteTest, clearTest } =
   testSlice.actions;
 export default testSlice.reducer;

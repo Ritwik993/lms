@@ -3,7 +3,7 @@ import menu from "../assets/FolderNotchOpen1.svg";
 import plus from "../assets/Plus.svg";
 import pencil from "../assets/PencilLine.svg";
 import trash from "../assets/Trash.svg";
-import { Link, useParams } from "react-router-dom";
+import { data, Link, useParams } from "react-router-dom";
 import DownArrow from "../assets/Arrow - Down 2.svg";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../utils/store";
@@ -19,27 +19,27 @@ import { BASE_URL } from "../constants/url";
 // }
 
 const AddTest = () => {
-  const { id, testId } = useParams();
-  const numIdx = Number(id);
-  console.log(numIdx);
+  const { id } = useParams();
+  // const numIdx = Number(id);
+  // console.log(numIdx);
   const tests = useSelector((store: RootState) => store.test.tests);
   const dispatch = useDispatch();
   const inputRef = useRef<HTMLInputElement | null>(null);
   const [editingTestName, setEditingTestName] = useState("");
-  const [editingTestId, setEditingTestId] = useState<number | null>(null);
+  const [editingTestId, setEditingTestId] = useState<string | null>(null);
 
   
 
   useEffect(() => {
-    console.log("current testId= "+testId);
-    if(testId)
-    getPreviousTest(testId);
-  }, [testId]);
+    console.log("current testId= "+id);
+    if(id)
+    getPreviousTest(id);
+  }, [id]);
 
 
   const getPreviousTest=async(testId:string)=>{
     try{
-      dispatch(clearTest(numIdx));
+      dispatch(clearTest(id));
 
       // const existingTest = tests[0].test.find((t) => t.id === testId);
       // if (existingTest) return; // Avoid duplicate API calls  
@@ -59,7 +59,7 @@ const AddTest = () => {
       result.map((r:any)=>{
         console.log("Test title = "+r.testTitle);
         if(r.testTitle)
-        dispatch(addTest({testId:numIdx,id:r._id,topicName:r.testTitle}))
+        dispatch(addTest({testId:id,id:r._id,topicName:r.testTitle,edit:true,data:{...r}}))
       })
     }catch(err){
       console.log(err);
@@ -68,22 +68,24 @@ const AddTest = () => {
   
   const updateTestName = () => {
     dispatch(
-      updateTest({ testId: numIdx, id: editingTestId, data: editingTestName })
+      updateTest({ testId: id, id: editingTestId, data: editingTestName })
     );
     setEditingTestId(null);
     setEditingTestName("");
   };
 
-  const deleteTestFn = (id: number) => {
-    dispatch(deleteTest({ testId: numIdx, id }));
+  const deleteTestFn = (id: string) => {
+    dispatch(deleteTest({ testId: id, id }));
   };
 
   const addTestFn = () => {
+    const id1 = crypto.randomUUID();
+    console.log(id);
     dispatch(
-      addTest({ testId: numIdx, id: Date.now(), topicName: "New Test" })
+      addTest({ testId: id, id: id1, topicName: "New Test",edit:false,data:null })
     );
   };
-  const t = tests.find((t) => t.testId === numIdx);
+  const t = tests.find((t) => t.testId === id);
   return (
     <div className="flex-1 lg:ml-[250px] bg-[#F5F7FA] h-[100vh] overflow-x-hidden pb-[40px]">
       <Navbar />
@@ -109,7 +111,7 @@ const AddTest = () => {
         </div>
 
         {tests
-          .filter((el) => el.testId === numIdx)
+          .filter((el) => el.testId === id)
           .map((el) =>
             el.test.map((t) => (
               <div
@@ -145,16 +147,16 @@ const AddTest = () => {
                   </div>
 
                   <div className="flex gap-2 lg:p-[24px] p-[12px]">
-                    <Link to="/contentcourse">
+                    {/* <Link to="/contentcourse"> */}
                       <div className="flex bg-[#EBEBEB] bg-opacity-25 lg:px-[16px] px-[10px] gap-x-[4px]">
-                        <Link to={`/testform/${testId}`}>
+                        <Link to={`/testform/${id}?edit=${t.edit}&editId=${t.id}`}>
                           <p className="text-[#000000] font-semibold lg:text-[14px] text-[12px] lg:leading-[40px] leading-[35px]">
-                            Add Details
+                            {t.edit ?"Edit":"Add Details"}
                           </p>
                         </Link>
                         <img src={DownArrow} className="object-contain" />
                       </div>
-                    </Link>
+                    {/* </Link> */}
 
                     <img
                       src={pencil}

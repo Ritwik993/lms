@@ -261,7 +261,7 @@ const BasicInformation: FC<BasicInformationProps> = ({
           </button>
         </div>
       </div>
-      <form className="mt-[32px] flex flex-col gap-y-[24px]">
+      <div className="mt-[32px] flex flex-col gap-y-[24px]">
         <div className="w-[90%] m-auto relative">
           <p className="text-[#1D2026] md:text-[14px] text-[12px] md:leading-[22px] leading-[20px]">
             Title
@@ -632,7 +632,7 @@ const BasicInformation: FC<BasicInformationProps> = ({
             {isDisable ? "Saving..." : "Save & Next"}
           </button>
         </div>
-      </form>
+      </div>
     </div>
   );
 };

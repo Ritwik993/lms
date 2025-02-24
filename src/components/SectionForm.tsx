@@ -248,9 +248,13 @@ const SectionForm: React.FC<SectionProps> = ({ sections, setSections }) => {
                   className="border border-gray-300 rounded w-full p-1 text-[#B4B4B4]"
                 >
                   <option value="">Select Section</option>
-                  <option value="Section 1">Section 1</option>
-                  <option value="Section 2">Section 2</option>
-                  <option value="Section 3">Section 3</option>
+                  {
+                    sections.map((_,i)=>(
+                      <option value={`Section ${i+1}`}>Section {i+1}</option>
+                    ))
+                  }
+                  {/* <option value="Section 2">Section 2</option>
+                  <option value="Section 3">Section 3</option> */}
                 </select>
               </td>
               <td className="border border-gray-300 p-2">
