@@ -121,7 +121,9 @@ const TestForm = () => {
         testMaterial: response[0].testMaterial,
       });
       console.log("section="+JSON.stringify(response[0].testSections,null,2));
-      setSections(response[0].testSections);
+      const updatedSections=response[0].testSections.map((s)=>({...s,isOptional:s.isOptional?1:0,isFixedTiming:s.isFixedTiming?1:0}))
+      // setSections(response[0].testSections);
+      setSections(updatedSections);
     }catch(err){
       console.log(err);
     }
