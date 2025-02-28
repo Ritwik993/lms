@@ -100,7 +100,7 @@ const Curriculm = () => {
       console.log(result[0]);
       const idArray: number[] = [];
 
-      result[0].subjects.map((re: any, index: number) => {
+      result[0].subjects.map((re: any) => {
         if (re.lectures.length === 0) {
           return;
         }
@@ -117,7 +117,7 @@ const Curriculm = () => {
 
       result[0].subjects.map((s: any, i: number) => {
         // console.log("u are "+JSON.stringify(s.lectures,null,2));
-        s.lectures.map((le: any,k:number) => {
+        s.lectures.map((le: any) => {
           // console.log(le.lectureTitle)
           const topic = {
             id: generateUniqueNumber(),

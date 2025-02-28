@@ -48,10 +48,10 @@ import axios from "axios";
 // }
 
 const ContentCourse = () => {
-  const { subject,chapter,id } = useParams();
-  const decodedChapterName = decodeURIComponent(chapter||"");
-  const decodedSubjectName = decodeURIComponent(subject||"");
-  console.log(decodedChapterName); 
+  const { subject, chapter, id } = useParams();
+  const decodedChapterName = decodeURIComponent(chapter || "");
+  const decodedSubjectName = decodeURIComponent(subject || "");
+  console.log(decodedChapterName);
   console.log(decodedSubjectName);
   const numericId = Number(id);
   const lectures = useSelector((store: RootState) => store.lecture.lectures);
@@ -59,6 +59,7 @@ const ContentCourse = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [isDisable, setIsDisable] = useState(false);
+  const [flag, setFlag] = useState(false);
   // const notesUrl: File[] = [];
 
   const [isVideo, setIsVideo] = useState(false);
@@ -83,11 +84,11 @@ const ContentCourse = () => {
   const [assignmentCount, setAssignmentCount] = useState(0);
   const editId = useSelector((store: RootState) => store.edit.editId);
 
-    useEffect(() => {
-      if (!editId) return; 
-      // dispatch(emptySection());
-      getCourseData(editId);
-    }, [editId]);
+  useEffect(() => {
+    if (!editId) return;
+    // dispatch(emptySection());
+    getCourseData(editId);
+  }, [editId]);
 
   useEffect(() => {
     if (videoData) {
@@ -119,7 +120,6 @@ const ContentCourse = () => {
     }
   }, [assignmentData]);
 
-
   const getCourseData = async (editId: string | null) => {
     if (editId === null || editId === "") {
       return;
@@ -138,33 +138,36 @@ const ContentCourse = () => {
       console.log(result[0]);
       // const idArray: number[] = [];
 
-      const ans=result[0].subjects.filter((s:any)=>
-        s.subjectTitle===decodedSubjectName
-      )
-      console.log("ans="+JSON.stringify(ans,null,2));
+      const ans = result[0].subjects.filter(
+        (s: any) => s.subjectTitle === decodedSubjectName
+      );
+      console.log("ans=" + JSON.stringify(ans, null, 2));
 
       // const ans1=ans.lectures?.filter((l:any)=>l.lectureTitle===decodedChapterName);
       // const ans1=ans.lectures;
-      const ans1=ans.map((a:any)=>
-        a.lectures?.filter((l:any)=>l.lectureTitle===decodedChapterName)
-      )
-      console.log("ans1="+JSON.stringify(ans1,null,2));
+      const ans1 = ans.map((a: any) =>
+        a.lectures?.filter((l: any) => l.lectureTitle === decodedChapterName)
+      );
+      console.log("ans1=" + JSON.stringify(ans1, null, 2));
 
-      ans1.map((a:any)=>{
+      ans1.map((a: any) => {
         setVideoData(a[0].video);
+        setVideoCount(a[0].video.length-1);
         setNotesData(a[0].notes);
+        setNotesCount(a[0].notes.length-1);
         setTestData(a[0].test);
+        setTestCount(a[0].test.length-1);
         setAssignmentData(a[0].assignment);
+        setAssignmentCount(a[0].assignment.length-1);
         setDppData(a[0].dpp);
-      })
+        setDppCount(a[0].dpp.length-1);
+      });
 
-      console.log(JSON.stringify(videoData,null,2));
+      console.log(JSON.stringify(videoData, null, 2));
     } catch (err) {
       console.log(err);
     }
   };
-
-
 
   // const handleSave = async () => {
   //   const token = localStorage.getItem("token");
@@ -256,7 +259,7 @@ const ContentCourse = () => {
 
       // Find the corresponding subject and update its lectures
       // const lectureTitle=lectures.
-      subjects.forEach((subject) => {
+      subjects.forEach((subject: any) => {
         if (subject.id === numericId) {
           // Assuming numericId corresponds to the subject ID
           const updatedLecture = {
@@ -353,6 +356,8 @@ const ContentCourse = () => {
                   assignmentCount={assignmentCount}
                   setAssignmentData={setAssignmentData}
                   setAssignmentCount={setAssignmentCount}
+                  editId={editId}
+                  flag={flag}
                 />
                 <div className="flex flex-col gap-[5px]">
                   <p className="text-[14px] text-[#000000] font-medium lg:leading-[22px] leading-[18px]">
@@ -361,7 +366,10 @@ const ContentCourse = () => {
 
                   <div
                     className="bg-white lg:min-w-[170px] min-w-[100px] p-[10px] rounded-[10px] flex gap-x-[4px]"
-                    onClick={() => setIsVideo((prev) => !prev)}
+                    onClick={() => {
+                      setIsVideo((prev) => !prev);
+                      setFlag(true);
+                    }}
                   >
                     <img src={Camera} className="object-contain" />
                     <p>Video</p>
@@ -376,7 +384,10 @@ const ContentCourse = () => {
 
                   <div
                     className="bg-white lg:min-w-[170px] min-w-[100px] p-[10px] rounded-[10px] flex gap-x-[4px]"
-                    onClick={() => setIsNotes((prev) => !prev)}
+                    onClick={() => {
+                      setIsNotes((prev) => !prev);
+                      setFlag(true);
+                    }}
                   >
                     <img src={Notepad2} className="object-contain" />
                     <p>Notes</p>
@@ -391,7 +402,10 @@ const ContentCourse = () => {
 
                   <div
                     className="bg-white lg:min-w-[170px] min-w-[100px] p-[10px] rounded-[10px] flex gap-x-[4px]"
-                    onClick={() => setIsTest((prev) => !prev)}
+                    onClick={() => {
+                      setIsTest((prev) => !prev);
+                      setFlag(true);
+                    }}
                   >
                     <img src={Camera} className="object-contain" />
                     <p>Test</p>
@@ -406,7 +420,10 @@ const ContentCourse = () => {
 
                   <div
                     className="bg-white lg:min-w-[170px] min-w-[100px] p-[10px] rounded-[10px] flex gap-x-[4px]"
-                    onClick={() => setIsDpp((prev) => !prev)}
+                    onClick={() => {
+                      setIsDpp((prev) => !prev);
+                      setFlag(true);
+                    }}
                   >
                     <img src={Camera} className="object-contain" />
                     <p>DPP</p>
@@ -421,7 +438,10 @@ const ContentCourse = () => {
 
                   <div
                     className="bg-white lg:min-w-[170px] min-w-[100px] p-[10px] rounded-[10px] flex gap-x-[4px]"
-                    onClick={() => setIsAssignment((prev) => !prev)}
+                    onClick={() => {
+                      setIsAssignment((prev) => !prev);
+                      setFlag(true);
+                    }}
                   >
                     <img src={Camera} className="object-contain" />
                     <p>Assignment</p>

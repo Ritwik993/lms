@@ -2,22 +2,31 @@ import Navbar from "../components/Navbar";
 import MagnifyingGlass from "../assets/MagnifyingGlass.svg";
 import TestTable2 from "../components/TestTable2";
 import CreateTestSeriesPopup from "../components/CreateTestSeriesPopup";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 const TestSeries = () => {
   const [isOpen,setIsOpen]=useState(false);
+  const [success,setSuccess]=useState(false);
+  //   useEffect(() => {
+  //     if(isOpen){
+  //       document.body.style.overflowY = "hidden";
+  //       return () => {
+  //         document.body.style.overflowY = "scroll";
+  //       };
+  //     }
+  // }, [isOpen]);
   return (
     <div className=" flex-1 bg-[#F5F7FA] overflow-x-hidden lg:ml-[250px] mx-auto">
       <Navbar />
       <div className="bg-[#ECEDF0] mt-[82px] w-[90%] mx-auto   py-[35px] ">
-        <div className="flex justify-between items-center w-[90%] mx-auto  bg-white  pt-[20px] pb-[30px] px-[20px] mb-[28px]">
+        <div className="flex justify-between items-center w-[90%] mx-auto  bg-white  pt-[20px] pb-[30px] px-[20px] mb-[28px] ">
           <p className="font-semibold text-[#90949A] lg:text-[18px] text-[14px]">
             TEST SERIES
           </p>
           <button className="hover:text-[#B7C4E9] text-white font-semibold lg:text-[15px] text-[12px] min-w-max bg-[#4969D1] p-[10px]" onClick={()=>setIsOpen((prev)=>!prev)}>
             Create Test Series
           </button>
-          {isOpen && <CreateTestSeriesPopup setIsOpen={setIsOpen}/>}
+          {isOpen && <CreateTestSeriesPopup setIsOpen={setIsOpen} setSuccess={setSuccess}/>}
         </div>
 
         <div className="bg-white w-[90%] mx-auto pb-[40px] ">
@@ -85,7 +94,7 @@ const TestSeries = () => {
             </div>
 
             <div className="pb-[100px] w-[90%] mx-auto pt-[40px]">
-              <TestTable2 />
+              <TestTable2 success={success}/>
             </div>
           </div>
         </div>

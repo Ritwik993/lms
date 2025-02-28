@@ -27,8 +27,17 @@ import StudentTable from "./pages/StudentTable";
 import { ToastContainer} from 'react-toastify';
 import FreeVideos from "./pages/FreeVideos";
 import ViewDetails from "./pages/viewDetails";
+import VideoLinkCard from "./custom/video-link-card";
+import DocumentCard from "./custom/document-card";
 
 
+
+interface document{
+  name :string
+  link :string
+  description?: string
+  onDelete?: () => void
+}
 
 
 // interface Topic {
@@ -157,6 +166,16 @@ function App() {
     {
       path: "/demo",
       element: <LiveClassDetails />,
+    },{
+      path:"/videoCard",
+      element:<VideoLinkCard/>
+    },
+    {
+      path:"/documentCard",
+      element:<DocumentCard name={"Docs"}
+      link={"link"}
+      description={"description"}
+      onDelete={() => ("id")}/>
     }
   ]);
 

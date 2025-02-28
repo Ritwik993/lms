@@ -74,8 +74,8 @@ const AddTest = () => {
     setEditingTestName("");
   };
 
-  const deleteTestFn = (id: string) => {
-    dispatch(deleteTest({ testId: id, id }));
+  const deleteTestFn = (id1: string) => {
+    dispatch(deleteTest({ testId: id, id:id1 }));
   };
 
   const addTestFn = () => {

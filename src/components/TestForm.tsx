@@ -121,7 +121,7 @@ const TestForm = () => {
         testMaterial: response[0].testMaterial,
       });
       console.log("section="+JSON.stringify(response[0].testSections,null,2));
-      const updatedSections=response[0].testSections.map((s)=>({...s,isOptional:s.isOptional?1:0,isFixedTiming:s.isFixedTiming?1:0}))
+      const updatedSections=response[0].testSections.map((s:any)=>({...s,isOptional:s.isOptional?1:0,isFixedTiming:s.isFixedTiming?1:0}))
       // setSections(response[0].testSections);
       setSections(updatedSections);
     }catch(err){
@@ -357,7 +357,7 @@ const TestForm = () => {
                   />
                 </div>
 
-                <div className="flex-1 ">
+                {/* <div className="flex-1 ">
                   <label className="text-[#757678] font-semibold text-[13px] block">
                     Status
                   </label>
@@ -385,7 +385,7 @@ const TestForm = () => {
                       <p>Paid</p>
                     </label>
                   </div>
-                </div>
+                </div> */}
               </div>
 
               <p className="text-[#757678] font-semibold text-[13px] mt-2">
@@ -402,10 +402,10 @@ const TestForm = () => {
                   onChange={(e) => handleDescription(e.target.value)}
                 ></textarea>
               </label>
-              <p className="text-[#757678] font-semibold text-[13px] mt-2">
+              {/* <p className="text-[#757678] font-semibold text-[13px] mt-2">
                 Test Series *
-              </p>
-
+              </p> */}
+{/* 
               <div className="lg:w-[60%] w-full relative">
                 <input
                   id="test"
@@ -416,7 +416,7 @@ const TestForm = () => {
                   {" "}
                   <span>x</span> Test 2
                 </button>
-              </div>
+              </div> */}
 
               <div className="flex md:flex-row flex-col justify-between items-center flex-wrap gap-x-2 mt-4 border-b-[2px] border-opacity-10 border-b-[#6E7485] pb-[6px]">
                 <div className="w-full min-w-max flex-1">
