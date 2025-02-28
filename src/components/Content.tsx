@@ -1,37 +1,37 @@
 import Folder from "../assets/FolderNotchOpen.svg";
 import ThreeDots from "../assets/DotsThree.svg";
-import { X } from "lucide-react";
+// import { X } from "lucide-react";
 import { useParams } from "react-router-dom";
 import VideoLinkCard from "@/custom/video-link-card";
 import DocumentCard from "@/custom/document-card";
 
 type ContentProps = {
-  videoData: File[] | null;
+  videoData: string[] | null;
   videoCount: number;
-  setVideoData: React.Dispatch<React.SetStateAction<File[] | null>>;
+  setVideoData: React.Dispatch<React.SetStateAction<string[] | null>>;
   setVideoCount: React.Dispatch<React.SetStateAction<number>>;
 
-  notesData: File[] | null;
+  notesData: string[] | null;
   notesCount: number;
-  setNotesData: React.Dispatch<React.SetStateAction<File[] | null>>;
+  setNotesData: React.Dispatch<React.SetStateAction<string[] | null>>;
   setNotesCount: React.Dispatch<React.SetStateAction<number>>;
 
-  testData: File[] | null;
+  testData: string[] | null;
   testCount: number;
-  setTestData: React.Dispatch<React.SetStateAction<File[] | null>>;
+  setTestData: React.Dispatch<React.SetStateAction<string[] | null>>;
   setTestCount: React.Dispatch<React.SetStateAction<number>>;
 
-  dppData: File[] | null;
+  dppData: string[] | null;
   dppCount: number;
-  setDppData: React.Dispatch<React.SetStateAction<File[] | null>>;
+  setDppData: React.Dispatch<React.SetStateAction<string[] | null>>;
   setDppCount: React.Dispatch<React.SetStateAction<number>>;
 
-  assignmentData: File[] | null;
+  assignmentData: string[] | null;
   assignmentCount: number;
-  setAssignmentData: React.Dispatch<React.SetStateAction<File[] | null>>;
+  setAssignmentData: React.Dispatch<React.SetStateAction<string[] | null>>;
   setAssignmentCount: React.Dispatch<React.SetStateAction<number>>;
   editId: string | null;
-  flag:boolean;
+  flag: boolean;
 };
 
 const Content = ({
@@ -85,12 +85,12 @@ const Content = ({
 
       {!editId
         ? videoData &&
-          videoData.map((data, i) => (
+          videoData.map((link, i) => (
             <div
               className=" border border-gray-200 w-[50%]  p-2 mt-[20px]"
               key={`video-${i}`}
             >
-              <div className="flex justify-between ">
+              {/* <div className="flex justify-between ">
                 <p className=" ">{data?.name}</p>
                 <div
                   onClick={() => {
@@ -105,7 +105,11 @@ const Content = ({
                   <X className="text-red-600" />
                 </div>
               </div>
-              <p className="text-sm text-blue-500"> {data?.type}</p>
+              <p className="text-sm text-blue-500"> {data?.type}</p> */}
+              <VideoLinkCard
+                videoUrl={link}
+                videoName={chapterName + ` ${i + 1}`}
+              />
             </div>
           ))
         : videoData &&
@@ -121,12 +125,12 @@ const Content = ({
 
       {!editId
         ? notesData &&
-          notesData.map((data, i) => (
+          notesData.map((link, i) => (
             <div
               className=" border border-gray-200 w-[50%]  p-2 mt-[20px]"
               key={`notes-${i}`}
             >
-              <div className="flex justify-between ">
+              {/* <div className="flex justify-between ">
                 <p className=" ">{data?.name}</p>
                 <div
                   onClick={() => {
@@ -141,15 +145,21 @@ const Content = ({
                   <X className="text-red-600" />
                 </div>
               </div>
-              <p className="text-sm text-blue-500"> {data?.type}</p>
+              <p className="text-sm text-blue-500"> {data?.type}</p> */}
+              <DocumentCard
+                name={chapterName + ` ${i + 1}`}
+                link={link}
+                description={"notes"}
+                onDelete={() => "id"}
+              />
             </div>
           ))
         : notesData &&
           notesData.map((link: any, i) => {
-            console.log("link of notes = "+link);
+            console.log("link of notes = " + link);
             return (
               <DocumentCard
-                name={chapterName+ ` ${i+1}`}
+                name={chapterName + ` ${i + 1}`}
                 link={link}
                 description={"notes"}
                 onDelete={() => "id"}
@@ -159,12 +169,12 @@ const Content = ({
 
       {!editId
         ? testData &&
-          testData.map((data, i) => (
+          testData.map((link, i) => (
             <div
               className=" border border-gray-200 w-[50%]  p-2 mt-[20px]"
               key={`test-${i}`}
             >
-              <div className="flex justify-between ">
+              {/* <div className="flex justify-between ">
                 <p className=" ">{data?.name}</p>
                 <div
                   onClick={() => {
@@ -179,30 +189,36 @@ const Content = ({
                   <X className="text-red-600" />
                 </div>
               </div>
-              <p className="text-sm text-blue-500"> {data?.type}</p>
+              <p className="text-sm text-blue-500"> {data?.type}</p> */}
+              <DocumentCard
+                name={chapterName + ` ${i + 1}`}
+                link={link}
+                description={"test"}
+                onDelete={() => "id"}
+              />
             </div>
           ))
-        : testData && (
-          testData.map((link:any,i)=>{
-            console.log("link of test = "+link);
-            return  <DocumentCard
-            name={chapterName+` ${i+1}`}
-            link={link}
-            description={"test"}
-            onDelete={() => "id"}
-          />
-          })
-           
-          )}
+        : testData &&
+          testData.map((link: any, i) => {
+            console.log("link of test = " + link);
+            return (
+              <DocumentCard
+                name={chapterName + ` ${i + 1}`}
+                link={link}
+                description={"test"}
+                onDelete={() => "id"}
+              />
+            );
+          })}
 
       {!editId
         ? dppData &&
-          dppData.map((data, i) => (
+          dppData.map((link, i) => (
             <div
               className=" border border-gray-200 w-[50%]  p-2 mt-[20px]"
               key={`dpp-${i}`}
             >
-              <div className="flex justify-between ">
+              {/* <div className="flex justify-between ">
                 <p className=" ">{data?.name}</p>
                 <div
                   onClick={() => {
@@ -217,30 +233,36 @@ const Content = ({
                   <X className="text-red-600" />
                 </div>
               </div>
-              <p className="text-sm text-blue-500"> {data?.type}</p>
+              <p className="text-sm text-blue-500"> {data?.type}</p> */}
+              <DocumentCard
+                name={chapterName + ` ${i + 1}`}
+                link={link}
+                description={"dpp"}
+                onDelete={() => "id"}
+              />
             </div>
           ))
-        : dppData && (
-          dppData.map((link:any,i)=>{
-            console.log("Link of dpp = "+link);
-            return <DocumentCard
-            name={chapterName +` ${i+1}`}
-            link={link}
-            description={"dpp"}
-            onDelete={() => "id"}
-          />
-          })
-           
-          )}
+        : dppData &&
+          dppData.map((link: any, i) => {
+            console.log("Link of dpp = " + link);
+            return (
+              <DocumentCard
+                name={chapterName + ` ${i + 1}`}
+                link={link}
+                description={"dpp"}
+                onDelete={() => "id"}
+              />
+            );
+          })}
 
       {!editId
         ? assignmentData &&
-          assignmentData.map((data, i) => (
+          assignmentData.map((link, i) => (
             <div
               className=" border border-gray-200 w-[50%]  p-2 mt-[20px]"
               key={`assignment-${i}`}
             >
-              <div className="flex justify-between ">
+              {/* <div className="flex justify-between ">
                 <p className=" ">{data?.name}</p>
                 <div
                   onClick={() => {
@@ -255,21 +277,28 @@ const Content = ({
                   <X className="text-red-600" />
                 </div>
               </div>
-              <p className="text-sm text-blue-500"> {data?.type}</p>
+              <p className="text-sm text-blue-500"> {data?.type}</p> */}
+
+              <DocumentCard
+                name={chapterName + ` ${i + 1}`}
+                link={link}
+                description={"assignment"}
+                onDelete={() => "id"}
+              />
             </div>
           ))
-        : assignmentData && (
-          assignmentData.map((link:any,i)=>{
-            console.log("link of assignment = "+link)
-            return  <DocumentCard
-            name={chapterName + ` ${i+1}`}
-            link={link}
-            description={"assignment"}
-            onDelete={() => "id"}
-          />
-          })
-           
-          )}
+        : assignmentData &&
+          assignmentData.map((link: any, i) => {
+            console.log("link of assignment = " + link);
+            return (
+              <DocumentCard
+                name={chapterName + ` ${i + 1}`}
+                link={link}
+                description={"assignment"}
+                onDelete={() => "id"}
+              />
+            );
+          })}
     </div>
   );
 };

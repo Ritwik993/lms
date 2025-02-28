@@ -11,8 +11,8 @@ import UploadTestModal from "../components/UploadTestModal";
 import UploadDppModal from "../components/UploadDppModal";
 import UploadAssignmentModal from "../components/UploadAssignmentModal";
 import { useDispatch, useSelector } from "react-redux";
-import uploadFiles from "../utils/helper";
-import videouploadFiles from "../utils/videohelper";
+// import uploadFiles from "../utils/helper";
+// import videouploadFiles from "../utils/videohelper";
 import { useNavigate, useParams } from "react-router-dom";
 import { RootState } from "../utils/store";
 // import { updateLecture } from "../utils/lectureSlice";
@@ -63,19 +63,19 @@ const ContentCourse = () => {
   // const notesUrl: File[] = [];
 
   const [isVideo, setIsVideo] = useState(false);
-  const [videoData, setVideoData] = useState<File[] | null>(null);
+  const [videoData, setVideoData] = useState<string[] | null>(null);
 
   const [isNotes, setIsNotes] = useState(false);
-  const [notesData, setNotesData] = useState<File[] | null>(null);
+  const [notesData, setNotesData] = useState<string[] | null>(null);
 
   const [isTest, setIsTest] = useState(false);
-  const [testData, setTestData] = useState<File[] | null>(null);
+  const [testData, setTestData] = useState<string[] | null>(null);
 
   const [isDpp, setIsDpp] = useState(false);
-  const [dppData, setDppData] = useState<File[] | null>(null);
+  const [dppData, setDppData] = useState<string[] | null>(null);
 
   const [isAssignment, setIsAssignment] = useState(false);
-  const [assignmentData, setAssignmentData] = useState<File[] | null>(null);
+  const [assignmentData, setAssignmentData] = useState<string[] | null>(null);
 
   const [videoCount, setVideoCount] = useState(0);
   const [notesCount, setNotesCount] = useState(0);
@@ -232,19 +232,19 @@ const ContentCourse = () => {
 
     try {
       // Upload files and get URLs
-      const notesUrls = await uploadFiles(notesData, token);
-      const videoUrls = await videouploadFiles(videoData, token);
-      const testUrls = await uploadFiles(testData, token);
-      const dppUrls = await uploadFiles(dppData, token);
-      const assignmentUrls = await uploadFiles(assignmentData, token);
+      // const notesUrls = await uploadFiles(notesData, token);
+      // const videoUrls = await videouploadFiles(videoData, token);
+      // const testUrls = await uploadFiles(testData, token);
+      // const dppUrls = await uploadFiles(dppData, token);
+      // const assignmentUrls = await uploadFiles(assignmentData, token);
 
       // Prepare the form state
       const formState = {
-        notes: notesUrls,
-        videos: videoUrls,
-        tests: testUrls,
-        dpp: dppUrls,
-        assignments: assignmentUrls,
+        notes: notesData,
+        videos: videoData,
+        tests: testData,
+        dpp: dppData,
+        assignments: assignmentData,
       };
 
       console.log("Form State with Uploaded URLs:", formState);

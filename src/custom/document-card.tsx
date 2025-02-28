@@ -23,7 +23,7 @@ export default function DocumentCard({
     <Card className="w-full mt-4 max-w-md overflow-hidden transition-all hover:shadow-md relative">
       <button
         onClick={onDelete}
-        className="absolute top-2 right-2 p-1 rounded-full hover:bg-muted transition-colors"
+        className="absolute top-2 right-2 p-1 rounded-full hover:bg-destructive hover:text-destructive-foreground transition-colors"
         aria-label="Remove document"
       >
         <X className="h-4 w-4 text-muted-foreground" />

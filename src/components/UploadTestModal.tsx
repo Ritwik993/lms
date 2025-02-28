@@ -1,9 +1,11 @@
+import { BASE_URL } from "@/constants/url";
+import axios from "axios";
 import { X } from "lucide-react";
 import { FC, useEffect } from "react";
 
 type UploadTestModalProps = {
   setIsTest: React.Dispatch<React.SetStateAction<boolean>>;
-  setTestData: React.Dispatch<React.SetStateAction<File[] | null>>;
+  setTestData: React.Dispatch<React.SetStateAction<string[] | null>>;
 };
 
 
@@ -18,10 +20,29 @@ const UploadTestModal: FC<UploadTestModalProps> = ({
     };
   }, []);
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const uploadImage = async (file: File | null) => {
+    if (!file) return null;
+    const token = localStorage.getItem("token");
+    const formData = new FormData();
+    formData.append("file", file);
+    const res = await axios.post(
+      `${BASE_URL}/api/v1/assets/upload/image`,
+      formData,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "multipart/form-data",
+        },
+      }
+    );
+    return res.data.fileUrl;
+  };
+
+  const handleFileChange = async(e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
       const file = e.target.files[0];
-      setTestData((prev) => [...(prev || []), file]);
+      const fileUrl=await uploadImage(file);
+      setTestData((prev) => [...(prev || []), fileUrl]);
     }
   };
 
