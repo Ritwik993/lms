@@ -44,6 +44,7 @@ interface Section {
   isOptional: number;
   isFixedTiming: number;
   questions: [];
+  edit:boolean;
 }
 
 const TestForm = () => {
@@ -74,6 +75,7 @@ const TestForm = () => {
     
   //   tests=tests.filter((t)=>t.testId===Number(test))
   // }
+
 
   // console.log(testData);
 
@@ -120,10 +122,11 @@ const TestForm = () => {
         endDate: response[0].endDate,
         testMaterial: response[0].testMaterial,
       });
-      console.log("section="+JSON.stringify(response[0].testSections,null,2));
-      const updatedSections=response[0].testSections.map((s:any)=>({...s,isOptional:s.isOptional?1:0,isFixedTiming:s.isFixedTiming?1:0}))
+      console.log("section ="+JSON.stringify(response[0].testSections,null,2));
+      const updatedSections=response[0].testSections.map((s:any)=>({...s,edit:editValue,isOptional:s.isOptional?1:0,isFixedTiming:s.isFixedTiming?1:0}))
       // setSections(response[0].testSections);
       setSections(updatedSections);
+      console.log(JSON.stringify(sections,null,2));
     }catch(err){
       console.log(err);
     }
@@ -138,6 +141,7 @@ const TestForm = () => {
       isOptional: 0,
       isFixedTiming: 0,
       questions: [],
+      edit:false,
     },
     // {
     //   title: "",

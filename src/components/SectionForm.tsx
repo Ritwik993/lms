@@ -1,5 +1,9 @@
 // import { useState } from "react";
 
+import QuizModal from "@/custom/quiz-modal";
+import { useSearchParams } from "react-router-dom";
+import { Button } from "./ui/button";
+
 // const SectionForm = () => {
 //   const [sections, setSections] = useState([
 //     { section: "", maxQuestions: -1, partTitle: "", cutoffScore: 0, isOptional: true, fixedTiming: false },
@@ -106,10 +110,11 @@ interface Section {
   title: string;
   marksPerQuestion: number | null;
   pdf: File | null;
-  negativeMarking: 1|0;
+  negativeMarking: 1 | 0;
   isOptional: number;
   isFixedTiming: number;
   questions: [];
+  edit: boolean;
 }
 
 type SectionProps = {
@@ -117,62 +122,10 @@ type SectionProps = {
   setSections: React.Dispatch<React.SetStateAction<Section[]>>;
 };
 
-// type Option = {
-//   name?: string;
-//   image?: string;
-// };
-
-// type QuestionsForm = {
-//   question: string;
-//   options: Option[];
-//   image: string;
-//   correctAns: string;
-// };
-
 const SectionForm: React.FC<SectionProps> = ({ sections, setSections }) => {
-  // const [sections, setSections] = useState<Section[]>([
-  //   {
-  //     title: "",
-  //     marksPerQuestion: -1,
-  //     pdf: "",
-  //     negativeMarking: 0,
-  //     isOptional: 1,
-  //     isFixedTiming: 0,
-  //   },
-  //   {
-  //     title: "",
-  //     marksPerQuestion: 10,
-  //     pdf: "",
-  //     negativeMarking: 50,
-  //     isOptional: 1,
-  //     isFixedTiming: 0,
-  //   },
-  //   {
-  //     title: "",
-  //     marksPerQuestion: 20,
-  //     pdf: "",
-  //     negativeMarking: 100,
-  //     isOptional: 1,
-  //     isFixedTiming: 0,
-  //   },
-  // ]);
+  const [searchParams] = useSearchParams();
+  const editValue = searchParams.get("edit") === "true";
 
-  // const [questions, Setquestions] = useState<QuestionsForm[]>([
-  //   {
-  //     question: "Testing Boss",
-  //     options: [
-  //       {
-  //         name: "A",
-  //         image: "ABCD",
-  //       },
-  //       {
-  //         name: "B",
-  //       },
-  //     ],
-  //     image: "xyz",
-  //     correctAns: "A",
-  //   },
-  // ]);
   const handleChange = (
     index: number,
     field: keyof Section,
@@ -209,6 +162,7 @@ const SectionForm: React.FC<SectionProps> = ({ sections, setSections }) => {
         isOptional: 1,
         isFixedTiming: 0,
         questions: [],
+        edit: false,
       },
     ]);
   };
@@ -227,6 +181,7 @@ const SectionForm: React.FC<SectionProps> = ({ sections, setSections }) => {
             <th className="border border-gray-300 text-[#6D6F71] p-2">
               Upload Pdf
             </th>
+
             <th className="border border-gray-300 text-[#6D6F71] p-2">
               Negative Marking
             </th>
@@ -236,104 +191,120 @@ const SectionForm: React.FC<SectionProps> = ({ sections, setSections }) => {
             <th className="border border-gray-300 text-[#6D6F71] p-2">
               Fixed Timing
             </th>
+            {editValue && (
+              <th className="border border-gray-300 text-[#6D6F71] p-2">
+                View Pdf
+              </th>
+            )}
           </tr>
         </thead>
         <tbody>
-          {sections.map((section, index) => (
-            <tr key={index}>
-              <td className="border border-gray-300 p-2">
-                <select
-                  value={section.title}
-                  onChange={(e) => handleChange(index, "title", e.target.value)}
-                  className="border border-gray-300 rounded w-full p-1 text-[#B4B4B4]"
-                >
-                  <option value="">Select Section</option>
-                  {
-                    sections.map((_,i)=>(
-                      <option value={`Section ${i+1}`}>Section {i+1}</option>
-                    ))
-                  }
-                  {/* <option value="Section 2">Section 2</option>
+          {sections.map((section, index) => {
+            console.log("sectionData= " + JSON.stringify(section, null, 2));
+            return (
+              <tr key={index}>
+                <td className="border border-gray-300 p-2">
+                  <select
+                    value={section.title}
+                    onChange={(e) =>
+                      handleChange(index, "title", e.target.value)
+                    }
+                    className="border border-gray-300 rounded w-full p-1 text-[#B4B4B4]"
+                  >
+                    <option value="">Select Section</option>
+                    {sections.map((_, i) => (
+                      <option value={`Section ${i + 1}`}>
+                        Section {i + 1}
+                      </option>
+                    ))}
+                    {/* <option value="Section 2">Section 2</option>
                   <option value="Section 3">Section 3</option> */}
-                </select>
-              </td>
-              <td className="border border-gray-300 p-2">
-                <input
-                  type="number"
-                  value={section.marksPerQuestion || ""}
-                  onChange={(e) =>
-                    handleChange(
-                      index,
-                      "marksPerQuestion",
-                      parseInt(e.target.value)
-                    )
-                  }
-                  className="border border-gray-300 rounded w-full p-1 text-[#B4B4B4]"
-                />
-              </td>
-              <td className="border border-gray-300 p-2">
-                {/* <input
-                  type="text"
-                  value={section.partTitle}
-                  onChange={(e) =>
-                    handleChange(index, "partTitle", e.target.value)
-                  }
-                  className="border border-gray-300 rounded w-full p-1 text-[#B4B4B4]"
-                /> */}
-
-                {/* <label
-                  htmlFor="title"
-                  className="text-[#757678] font-semibold text-[13px]"
-                >
-                  Attach PDF
-                </label> */}
-                <input
-                  id="title"
-                  type="file"
-                  placeholder="No file chosen"
-                  name="pdf"
-                  onChange={(e) => handleFileChange(index, e)}
-                  className="text-[#979DA2] font-semibold text-[12px] w-full p-2 outline-none border-[#CED4DA] border-2 border-opacity-50"
-                />
-              </td>
-              <td className="border border-gray-300 p-2">
-                <input
-                  type="number"
-                  value={section.negativeMarking }
-                  onChange={(e) =>
-                    handleChange(
-                      index,
-                      "negativeMarking",
-                      parseInt(e.target.value)
-                    )
-                  }
-                  className="border border-gray-300 rounded w-full p-1 text-[#B4B4B4]"
-                />
-              </td>
-              <td className="border border-gray-300 p-2 text-center">
-                <input
-                  type="checkbox"
-                  checked={section.isOptional === 1?true:false}
-                  onChange={(e) =>
-                    handleChange(index, "isOptional", e.target.checked ? 1 : 0)
-                  }
-                />
-              </td>
-              <td className="border border-gray-300 p-2 text-center">
-                <input
-                  type="checkbox"
-                  checked={section.isFixedTiming === 1 ? true : false}
-                  onChange={(e) =>
-                    handleChange(
-                      index,
-                      "isFixedTiming",
-                      e.target.checked ? 1 : 0
-                    )
-                  }
-                />
-              </td>
-            </tr>
-          ))}
+                  </select>
+                </td>
+                <td className="border border-gray-300 p-2">
+                  <input
+                    type="number"
+                    value={section.marksPerQuestion || ""}
+                    onChange={(e) =>
+                      handleChange(
+                        index,
+                        "marksPerQuestion",
+                        parseInt(e.target.value)
+                      )
+                    }
+                    className="border border-gray-300 rounded w-full p-1 text-[#B4B4B4]"
+                  />
+                </td>
+                <td className="border border-gray-300 p-2">
+                  <input
+                    id="title"
+                    type="file"
+                    placeholder="No file chosen"
+                    name="pdf"
+                    onChange={(e) => handleFileChange(index, e)}
+                    className="text-[#979DA2] font-semibold text-[12px] w-full p-2 outline-none border-[#CED4DA] border-2 border-opacity-50"
+                  />
+                </td>
+                <td className="border border-gray-300 p-2">
+                  <input
+                    type="number"
+                    value={section.negativeMarking}
+                    onChange={(e) =>
+                      handleChange(
+                        index,
+                        "negativeMarking",
+                        parseInt(e.target.value)
+                      )
+                    }
+                    className="border border-gray-300 rounded w-full p-1 text-[#B4B4B4]"
+                  />
+                </td>
+                <td className="border border-gray-300 p-2 text-center">
+                  <input
+                    type="checkbox"
+                    checked={section.isOptional === 1 ? true : false}
+                    onChange={(e) =>
+                      handleChange(
+                        index,
+                        "isOptional",
+                        e.target.checked ? 1 : 0
+                      )
+                    }
+                  />
+                </td>
+                <td className="border border-gray-300 p-2 text-center">
+                  <input
+                    type="checkbox"
+                    checked={section.isFixedTiming === 1 ? true : false}
+                    onChange={(e) =>
+                      handleChange(
+                        index,
+                        "isFixedTiming",
+                        e.target.checked ? 1 : 0
+                      )
+                    }
+                  />
+                </td>
+                {editValue && (
+                  <td className="border border-gray-300 p-2">
+                    {section.questions.length > 0 ? (
+                      <QuizModal questions={section.questions} />
+                    ) : (
+                  <div className="flex justify-center">
+                        <Button
+                        size="lg"
+                        className="font-medium bg-blue-500 hover:bg-blue-300"
+                        disabled={true}
+                      >
+                        No Pdf
+                      </Button>
+                  </div>
+                    )}
+                  </td>
+                )}
+              </tr>
+            );
+          })}
         </tbody>
       </table>
       <button

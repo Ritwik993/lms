@@ -20,6 +20,7 @@ import { updateSubject } from "../utils/subjectSlice";
 import { setActiveTab } from "../utils/activeTabSlice";
 import { BASE_URL } from "../constants/url";
 import axios from "axios";
+import { LoadingSpinner } from "@/custom/loading-spinner";
 
 // interface Topic {
 //   id: number;
@@ -56,6 +57,8 @@ const ContentCourse = () => {
   const numericId = Number(id);
   const lectures = useSelector((store: RootState) => store.lecture.lectures);
   const subjects = useSelector((store: RootState) => store.subject.subjects);
+  const [isLoading, setIsLoading] = useState(false);
+
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [isDisable, setIsDisable] = useState(false);
@@ -296,6 +299,7 @@ const ContentCourse = () => {
     <div className="flex-1 lg:ml-[250px] bg-[#F5F7FA] overflow-x-hidden">
       <Navbar />
       <div className="pt-[41px] bg-white lg:w-[90%] w-[95%] mx-auto mt-[56px]">
+      <LoadingSpinner isLoading={isLoading} />
         <div className="flex  justify-between items-center w-[90%] mx-auto gap-x-[20px]">
           <div className="searchbox bg-white lg:max-w-[600px]  w-[60%]">
             <div className="flex lg:px-[18px] px-[16px] lg:py-[12px] py-[10px] border-[#E9EAF0] border">
@@ -377,6 +381,7 @@ const ContentCourse = () => {
 
                   {isVideo && (
                     <UploadVideoModal
+                    setIsLoading={setIsLoading}
                       setIsVideo={setIsVideo}
                       setVideoData={setVideoData}
                     />

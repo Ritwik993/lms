@@ -44,12 +44,12 @@ const columns: Column<Data>[] = [
     accessor: "title",
   },
   {
-    Header: "Logo",
-    accessor: "logo",
+    Header: "Actual Price",
+    accessor: "actualPrice",
   },
   {
-    Header: "Price",
-    accessor: "actualPrice",
+    Header: "Discounted Price",
+    accessor: "discountedPrice",
   },
   {
     Header: "Sort By",

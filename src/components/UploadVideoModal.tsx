@@ -1,14 +1,16 @@
 import { BASE_URL } from "@/constants/url";
 import axios from "axios";
+// import { set } from "date-fns";
 import { X } from "lucide-react";
 import { FC, useEffect } from "react";
 
 type UploadVideoModalProps={
     setIsVideo:React.Dispatch<React.SetStateAction<boolean>>
     setVideoData: React.Dispatch<React.SetStateAction<string[] | null>>
+    setIsLoading: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const UploadVideoModal:FC<UploadVideoModalProps> = ({setIsVideo,setVideoData}) => {
+const UploadVideoModal:FC<UploadVideoModalProps> = ({setIsVideo,setVideoData,setIsLoading}) => {
   useEffect(() => {
     document.body.style.overflowY = "hidden";
     return () => {
@@ -18,20 +20,27 @@ const UploadVideoModal:FC<UploadVideoModalProps> = ({setIsVideo,setVideoData}) =
 
   const uploadVideo = async (file: File | null) => {
     if (!file) return;
-    const token = localStorage.getItem("token");
-    const formData = new FormData();
-    formData.append("file", file);
-    const res = await axios.post(
-      `${BASE_URL}/api/v1/assets/upload/video`,
-      formData,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "multipart/form-data",
-        },
-      }
-    );
-    return res.data.fileUrl;
+    try{
+      setIsLoading(true);
+      const token = localStorage.getItem("token");
+      const formData = new FormData();
+      formData.append("file", file);
+      const res = await axios.post(
+        `${BASE_URL}/api/v1/assets/upload/video`,
+        formData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+      return res.data.fileUrl;
+    }catch(err){
+      console.log(err);
+    }finally{
+      setIsLoading(false);
+    }
   };
 
 
