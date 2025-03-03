@@ -48,7 +48,7 @@ type FAQ={
 
 type AdvanceFormState = {
   courseThumbnail: File | null;
-  courseTrailer: File | null;
+  courseTrailer: string | null;
   courseDescription: string;
   learnings: string[];
   targetAudience: string[];

@@ -1,6 +1,6 @@
 import upload from "../assets/UploadSimple.svg";
 import left_icon from "../assets/left.svg";
-// import video from "../assets/Video.svg";
+import video from "../assets/Video.svg";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import { FC, useEffect, useState } from "react";
@@ -9,7 +9,6 @@ import axios from "axios";
 import { useDispatch } from "react-redux";
 import { setActiveTab } from "../utils/activeTabSlice";
 import { BASE_URL } from "../constants/url";
-import VideoUploader from "@/custom/video-uploader";
 
 // type Tab = "basic" | "advance" | "curriculum" | "publish";
 
@@ -28,7 +27,7 @@ type FAQ={
 
 type AdvanceFormState = {
   courseThumbnail: File | null;
-  courseTrailer: string | null;
+  courseTrailer: File | null;
   courseDescription: string;
   learnings: string[];
   targetAudience: string[];
@@ -36,7 +35,7 @@ type AdvanceFormState = {
 };
 
 const uniqueKeys = new Set();
-const AdvanceInformation: FC<AdvanceInformationProps> = ({
+const AdvanceInformationPrev: FC<AdvanceInformationProps> = ({
   setCount1,
   // setActiveTab
   // courseid,
@@ -51,7 +50,6 @@ const AdvanceInformation: FC<AdvanceInformationProps> = ({
   //   targetAudience: [""],
   //   requirements: [""],
   // });
-  const [videoUrl, setVideoUrl] = useState("");
 
   const dispatch = useDispatch();
   const { pathname } = useLocation();
@@ -180,23 +178,23 @@ const AdvanceInformation: FC<AdvanceInformationProps> = ({
     return res.data.fileUrl;
   };
 
-  // const uploadVideo = async (file: File | null) => {
-  //   if (!file) return;
-  //   const token = localStorage.getItem("token");
-  //   const formData = new FormData();
-  //   formData.append("file", file);
-  //   const res = await axios.post(
-  //     `${BASE_URL}/api/v1/assets/upload/video`,
-  //     formData,
-  //     {
-  //       headers: {
-  //         Authorization: `Bearer ${token}`,
-  //         "Content-Type": "multipart/form-data",
-  //       },
-  //     }
-  //   );
-  //   return res.data.fileUrl;
-  // };
+  const uploadVideo = async (file: File | null) => {
+    if (!file) return;
+    const token = localStorage.getItem("token");
+    const formData = new FormData();
+    formData.append("file", file);
+    const res = await axios.post(
+      `${BASE_URL}/api/v1/assets/upload/video`,
+      formData,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "multipart/form-data",
+        },
+      }
+    );
+    return res.data.fileUrl;
+  };
 
   const handleSubmit = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
@@ -206,9 +204,9 @@ const AdvanceInformation: FC<AdvanceInformationProps> = ({
     try {
       const token = localStorage.getItem("token");
       const courseUrl = await uploadImage(advanceInfo.courseThumbnail);
-      // const trailerUrl = await uploadVideo(advanceInfo.courseTrailer);
+      const trailerUrl = await uploadVideo(advanceInfo.courseTrailer);
       advanceInfo.courseThumbnail = courseUrl;
-      advanceInfo.courseTrailer = videoUrl;
+      advanceInfo.courseTrailer = trailerUrl;
       // Make the request with the token in the headers
       // const { courseThumbnail, courseTrailer, ...restFormState } = formState;
 
@@ -253,10 +251,10 @@ const AdvanceInformation: FC<AdvanceInformationProps> = ({
         </div>
       </div>
       <form className="mt-[32px] flex flex-col gap-y-[24px] ">
-        <div className="container flex flex-col justify-between items-start gap-4 w-[95%] mx-auto ">
+        <div className="container flex justify-between items-start gap-4 w-[95%] mx-auto ">
           {/* Course Thumbnail Section */}
           <div className="thumbnail-section flex-1 p-4">
-            <p className="section-title text-gray-800 text-lg font-semibold mb-2">
+            <p className="section-title text-gray-800 text-sm font-semibold mb-2">
               Course Thumbnail
             </p>
             <div className="content flex flex-col lg:flex-row gap-4">
@@ -280,11 +278,11 @@ const AdvanceInformation: FC<AdvanceInformationProps> = ({
                       : left_icon // Default fallback
                   }
                    alt="Course Thumbnail Placeholder"
-                  className="object-cover w-full aspect-video"
+                  className="object-cover w-full aspect-square"
                 />
               </div>
               <div className="details flex-1">
-                <p className="text-gray-600 text-lg leading-6 mb-4">
+                <p className="text-gray-600 text-sm leading-6 mb-4">
                   Upload your course Thumbnail here.{" "}
                   <span className="text-gray-800 font-semibold">
                     Important guidelines:
@@ -306,34 +304,39 @@ const AdvanceInformation: FC<AdvanceInformationProps> = ({
                   htmlFor="imgInput"
                   className="upload-btn bg-blue-100 text-blue-700 px-4 py-2 text-sm font-medium rounded flex items-center gap-2"
                 >
-                 <div className="flex justify-center items-center gap-2 w-full">
-                 <p className="text-center">Upload Image</p>
+                  <p>Upload Image</p>
                   <img
                     src={upload}
                     alt="Upload Icon"
                     className="w-5 h-5 object-contain"
                   />
-                 </div>
                 </label>
               </div>
             </div>
           </div>
-          
 
           {/* Course Trailer Section */}
           <div className="trailer-section flex-1  p-4">
-
-          <p className="section-title text-gray-800 text-lg font-semibold mb-2">
-              Course Trailer
-            </p>
-            {/* <p className="section-title text-gray-800 text-sm font-semibold mb-2">
+            <p className="section-title text-gray-800 text-sm font-semibold mb-2">
               Course Trailer
             </p>
             <div className="content flex flex-col lg:flex-row gap-4">
               <div className="image-container flex-1">
-                
+                {/* <img
+                  src={
+                    formState.trailer
+                      ? URL.createObjectURL(formState.trailer)
+                      : video
+                  }
+                  alt="Course Trailer Placeholder"
+                  className="object-cover w-full lg:h-48 h-40"
+                /> */}
                 {advanceInfo.courseTrailer ? (
-                
+                  // <video
+                  //   src={URL.createObjectURL(advanceInfo.courseTrailer)}
+                  //   controls
+                  //   className="object-cover w-full aspect-square"
+                  // />
                   <video
                     src={
                       typeof advanceInfo.courseTrailer === "string"
@@ -378,8 +381,7 @@ const AdvanceInformation: FC<AdvanceInformationProps> = ({
                   />
                 </label>
               </div>
-            </div> */}
-            <VideoUploader videoUrl={videoUrl} setVideoUrl={setVideoUrl} />
+            </div>
           </div>
         </div>
 
@@ -554,4 +556,4 @@ const AdvanceInformation: FC<AdvanceInformationProps> = ({
   );
 };
 
-export default AdvanceInformation;
+export default AdvanceInformationPrev;

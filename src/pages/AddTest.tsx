@@ -3,7 +3,7 @@ import menu from "../assets/FolderNotchOpen1.svg";
 import plus from "../assets/Plus.svg";
 import pencil from "../assets/PencilLine.svg";
 import trash from "../assets/Trash.svg";
-import { data, Link, useParams } from "react-router-dom";
+import {  Link, useParams } from "react-router-dom";
 import DownArrow from "../assets/Arrow - Down 2.svg";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../utils/store";

@@ -21,6 +21,7 @@ import { setActiveTab } from "../utils/activeTabSlice";
 import { BASE_URL } from "../constants/url";
 import axios from "axios";
 import { LoadingSpinner } from "@/custom/loading-spinner";
+import UploadVideoModal2 from "@/components/UploadVideoModal2";
 
 // interface Topic {
 //   id: number;
@@ -379,9 +380,17 @@ const ContentCourse = () => {
                     <p>Video</p>
                   </div>
 
-                  {isVideo && (
+
+                  {/* {isVideo && (
                     <UploadVideoModal
                     setIsLoading={setIsLoading}
+                      setIsVideo={setIsVideo}
+                      setVideoData={setVideoData}
+                    />
+                  )} */}
+
+                  {isVideo && (
+                    <UploadVideoModal2
                       setIsVideo={setIsVideo}
                       setVideoData={setVideoData}
                     />
