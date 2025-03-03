@@ -400,6 +400,7 @@ const ContentCourse = () => {
 
                   {isNotes && (
                     <UploadDocumentModal
+                    setIsLoading={setIsLoading}
                       setIsNotes={setIsNotes}
                       setNotesData={setNotesData}
                     />

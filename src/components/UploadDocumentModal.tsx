@@ -1,18 +1,22 @@
 import { BASE_URL } from "@/constants/url";
 import axios from "axios";
 import { X } from "lucide-react";
-import { FC, useEffect } from "react";
+import { FC, useEffect, useState } from "react";
 
 type UploadDocumentModalProps = {
   setIsNotes: React.Dispatch<React.SetStateAction<boolean>>;
   setNotesData: React.Dispatch<React.SetStateAction<string[] | null>>;
+  setIsLoading: React.Dispatch<React.SetStateAction<boolean>>;
+
 };
 
 
 const UploadDocumentModal: FC<UploadDocumentModalProps> = ({
     setIsNotes,
     setNotesData,
+    setIsLoading,
 }) => {
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
   useEffect(() => {
     document.body.style.overflowY = "hidden";
     return () => {
@@ -23,7 +27,9 @@ const UploadDocumentModal: FC<UploadDocumentModalProps> = ({
 
   const uploadImage = async (file: File | null) => {
     if (!file) return null;
-    const token = localStorage.getItem("token");
+    try{
+      setIsLoading(true);
+      const token = localStorage.getItem("token");
     const formData = new FormData();
     formData.append("file", file);
     const res = await axios.post(
@@ -37,15 +43,29 @@ const UploadDocumentModal: FC<UploadDocumentModalProps> = ({
       }
     );
     return res.data.fileUrl;
+    }catch(err){
+      console.log(err);
+    }finally{
+      setIsLoading(false);
+    }
   };
 
   const handleFileChange = async(e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
       const file = e.target.files[0];
-      const fileUrl=await uploadImage(file);
-      setNotesData((prev) => [...(prev || []), fileUrl]);
+      setSelectedFile(file);
     }
   };
+
+  const handleUpload=async()=>{
+    if(!selectedFile) return;
+    const fileUrl=await uploadImage(selectedFile);
+    if(fileUrl){
+      setNotesData((prev)=>[...(prev||[]),fileUrl]);
+    }
+    setIsNotes(false);
+  }
+
 
   return (
     <div className="fixed top-0 left-0 right-0 bottom-0 flex items-center justify-center bg-black bg-opacity-50 z-100">
@@ -71,7 +91,8 @@ const UploadDocumentModal: FC<UploadDocumentModalProps> = ({
         <div className="flex justify-end mt-6">
           <button
             className="px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 focus:ring-2 focus:ring-blue-400 focus:outline-none transition"
-            onClick={() => setIsNotes((prev) => !prev)}
+            onClick={handleUpload}
+            disabled={!selectedFile}
           >
             Upload
           </button>
