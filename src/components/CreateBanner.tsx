@@ -29,6 +29,8 @@ const CreateBanner = () => {
   const [isApp1, setIsApp1] = useState(false);
   const [isApp2, setIsApp2] = useState(false);
 
+  const [render,setRender]=useState(false);
+
   // useEffect(()=>{
   //   get
   // })
@@ -45,6 +47,11 @@ const CreateBanner = () => {
     }
   }, [imgURL, isPaused, isWebsite]);
 
+
+  useEffect(()=>{
+    setRender((prev)=>!prev);
+  },[imgURL,imgURLApp1,imgURLApp2]);
+
   useEffect(() => {
     if (!isPaused && isApp1 && imgURLApp1.length > 0) {
       const interval = setInterval(() => {
@@ -57,6 +64,8 @@ const CreateBanner = () => {
     }
   }, [imgURLApp1, isPaused, isApp1]);
 
+
+
   useEffect(() => {
     if (!isPaused && isApp2 && imgURLApp2.length > 0) {
       const interval = setInterval(() => {
@@ -68,6 +77,13 @@ const CreateBanner = () => {
       return () => clearInterval(interval);
     }
   }, [imgURLApp2, isPaused, isApp2]);
+
+
+  useEffect(() => {
+    console.log("Updated Image List:", imgURL);
+    setRender((prev)=>!prev);
+  }, [imgURL]);
+  
 
   const removeImageWeb = async (id: string, type: string) => {
     try {
@@ -85,6 +101,13 @@ const CreateBanner = () => {
       );
       console.log(res.data);
       if (type === "Website") {
+        // const idx=imgURL.findIndex((p) => p._id === id);
+        // console.log("Index:",idx);
+        
+
+          setCurrentIndex((prev)=>prev-1);
+        
+        
         setImgURL((prev) => {
           console.log("Previous State:", prev);
           return prev.filter((p) => {
@@ -92,7 +115,7 @@ const CreateBanner = () => {
             return p._id !== id;
           });
         });
-
+        
         console.log(JSON.stringify(imgURL, null, 2));
       }
       // setImgURL((prev) => prev.filter((p) => p._id !== id));
@@ -202,7 +225,7 @@ const CreateBanner = () => {
                               return prev;
                             })
                           }
-                          className="absolute h-[50px] w-[50px] top-1/2 text-white"
+                          className="absolute h-[50px] w-[50px] top-1/2 text-black"
                         />
                       )}
                       {imgURL.length > 1 && (
@@ -217,7 +240,7 @@ const CreateBanner = () => {
                               return prev;
                             })
                           }
-                          className="absolute h-[50px] w-[50px] top-1/2 right-0 text-white"
+                          className="absolute h-[50px] w-[50px] top-1/2 right-0 text-black"
                         />
                       )}
                     </div>
@@ -274,7 +297,7 @@ const CreateBanner = () => {
                               return prev;
                             })
                           }
-                          className="absolute h-[50px] w-[50px] top-1/2 text-white"
+                          className="absolute h-[50px] w-[50px] top-1/2 text-black"
                         />
                       )}
                       {imgURLApp1.length > 1 && (
@@ -289,7 +312,7 @@ const CreateBanner = () => {
                               return prev;
                             })
                           }
-                          className="absolute h-[50px] w-[50px] top-1/2 right-0 text-white"
+                          className="absolute h-[50px] w-[50px] top-1/2 right-0 text-black"
                         />
                       )}
                     </div>
@@ -347,7 +370,7 @@ const CreateBanner = () => {
                               return prev;
                             })
                           }
-                          className="absolute h-[50px] w-[50px] top-1/2 text-white"
+                          className="absolute h-[50px] w-[50px] top-1/2 text-black"
                         />
                       )}
                       {imgURLApp2.length > 1 && (
@@ -362,7 +385,7 @@ const CreateBanner = () => {
                               return prev;
                             })
                           }
-                          className="absolute h-[50px] w-[50px] top-1/2 right-0 text-white"
+                          className="absolute h-[50px] w-[50px] top-1/2 right-0 text-black"
                         />
                       )}
                     </div>
