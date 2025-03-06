@@ -29,7 +29,7 @@ const CreateBanner = () => {
   const [isApp1, setIsApp1] = useState(false);
   const [isApp2, setIsApp2] = useState(false);
 
-  const [render,setRender]=useState(false);
+  const [render, setRender] = useState(false);
 
   // useEffect(()=>{
   //   get
@@ -47,10 +47,9 @@ const CreateBanner = () => {
     }
   }, [imgURL, isPaused, isWebsite]);
 
-
-  useEffect(()=>{
-    setRender((prev)=>!prev);
-  },[imgURL,imgURLApp1,imgURLApp2]);
+  useEffect(() => {
+    setRender((prev) => !prev);
+  }, [imgURL, imgURLApp1, imgURLApp2]);
 
   useEffect(() => {
     if (!isPaused && isApp1 && imgURLApp1.length > 0) {
@@ -64,8 +63,6 @@ const CreateBanner = () => {
     }
   }, [imgURLApp1, isPaused, isApp1]);
 
-
-
   useEffect(() => {
     if (!isPaused && isApp2 && imgURLApp2.length > 0) {
       const interval = setInterval(() => {
@@ -78,12 +75,10 @@ const CreateBanner = () => {
     }
   }, [imgURLApp2, isPaused, isApp2]);
 
-
   useEffect(() => {
     console.log("Updated Image List:", imgURL);
-    setRender((prev)=>!prev);
+    setRender((prev) => !prev);
   }, [imgURL]);
-  
 
   const removeImageWeb = async (id: string, type: string) => {
     try {
@@ -103,11 +98,9 @@ const CreateBanner = () => {
       if (type === "Website") {
         // const idx=imgURL.findIndex((p) => p._id === id);
         // console.log("Index:",idx);
-        
 
-          setCurrentIndex((prev)=>prev-1);
-        
-        
+        setCurrentIndex((prev) => prev - 1);
+
         setImgURL((prev) => {
           console.log("Previous State:", prev);
           return prev.filter((p) => {
@@ -115,18 +108,24 @@ const CreateBanner = () => {
             return p._id !== id;
           });
         });
-        
+
         console.log(JSON.stringify(imgURL, null, 2));
       }
       // setImgURL((prev) => prev.filter((p) => p._id !== id));
-      else if (type === "App1")
+      else if (type === "App1") {
+        setCurrentIndex1((prev) => prev - 1);
         setImgURLApp1((prev) => prev.filter((p) => p._id !== id));
-      else if (type === "App2")
+      } else if (type === "App2") {
+        setCurrentIndex2((prev) => prev - 1);
         setImgURLApp2((prev) => prev.filter((p) => p._id !== id));
+      }
     } catch (err) {
       console.log(err);
     }
   };
+
+
+  
 
   // console.log(imgURL);
   return (
@@ -326,6 +325,43 @@ const CreateBanner = () => {
           )}
         </div>
       )}
+{/* 
+      {isApp2 && (
+        <div className="overflow-x-hidden middle flex-3">
+          {imgURLApp2.length > 0 ? (
+            <div
+              className="flex transition-transform duration-500 ease-in-out"
+              style={{
+                transform: `translateX(-${currentIndex2 * 100}%)`, // Move based on index
+              }}
+              onMouseEnter={() => setIsPaused(true)} // Pause on hover
+              onMouseLeave={() => setIsPaused(false)} // Resume after hover
+            >
+              {imgURLApp2.map((image, index) => {
+                console.log("Image url:", image.url);
+                console.log("Image status:", image.status);
+                console.log("Index:", index);
+  console.log("details = "+JSON.stringify(imgURLApp2, null, 2));
+
+                return (
+                  image.status === "ACTIVE" && (
+                    <img
+                      key={index}
+                      src={image.url}
+                      alt={`Slide ${index}`}
+                      className="w-full h-[300px] object-contain"
+                    />
+                  )
+                );
+              })}
+            </div>
+          ) : (
+            <div className="flex items-center justify-center bg-[#E5E5E5] h-[300px]">
+              <p className="text-[#999] text-[16px]">No Banners Available</p>
+            </div>
+          )}
+        </div>
+      )} */}
 
       {isApp2 && (
         <div className="overflow-x-hidden middle flex-3">

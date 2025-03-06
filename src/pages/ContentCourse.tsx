@@ -161,19 +161,19 @@ const ContentCourse = () => {
       console.log("ans1=" + JSON.stringify(ans1, null, 2));
 
       ans1.map((a: any) => {
-        setVideoData(a[0].video);
-        setVideoCount(a[0].video.length-1);
-        setNotesData(a[0].notes);
-        setNotesCount(a[0].notes.length-1);
-        setTestData(a[0].test);
-        setTestCount(a[0].test.length-1);
-        setAssignmentData(a[0].assignment);
-        setAssignmentCount(a[0].assignment.length-1);
-        setDppData(a[0].dpp);
-        setDppCount(a[0].dpp.length-1);
+        setVideoData(a[0]?.video);
+        setVideoCount(a[0]?.video?.length-1||0);
+        setNotesData(a[0]?.notes);
+        setNotesCount(a[0]?.notes?.length-1||0);
+        setTestData(a[0]?.test);
+        setTestCount(a[0]?.test?.length-1||0);
+        setAssignmentData(a[0]?.assignment);
+        setAssignmentCount(a[0]?.assignment?.length-1||0);
+        setDppData(a[0]?.dpp);
+        setDppCount(a[0]?.dpp?.length-1);
       });
 
-      console.log(JSON.stringify(videoData, null, 2));
+      // console.log(JSON.stringify(videoData, null, 2));
     } catch (err) {
       console.log(err);
     }

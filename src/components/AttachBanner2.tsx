@@ -43,7 +43,7 @@ const AttachFileModal2: React.FC<BannerProps> = ({
       try {
         const url = await uploadImage(file);
         if (url) {
-          setImgURLApp2((prev) => [...prev, url]);
+          setImgURLApp2((prev) => [...prev, { url: url, _id: "", status: "ACTIVE" }]);
           submitBanner(url);
         }
       } catch (err) {
