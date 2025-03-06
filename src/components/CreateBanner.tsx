@@ -6,6 +6,7 @@ import axios from "axios";
 // import { StepBack } from 'lucide-react';
 import { ArrowLeft } from 'lucide-react';
 import { ArrowRight } from 'lucide-react';
+import { BASE_URL } from "@/constants/url";
 
 type imgURLType = {
   url: string;
@@ -72,7 +73,7 @@ const CreateBanner = () => {
     try {
       const token = localStorage.getItem("token");
       const res = await axios.put(
-        `http://localhost:8080/api/v1/dashboard/updateBanner/${id}`,
+        `${BASE_URL}/api/v1/dashboard/updateBanner/${id}`,
         {
           status: "INACTIVE",
         },

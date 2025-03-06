@@ -30,9 +30,9 @@ type AdvanceFormState = {
   courseThumbnail: File | null;
   courseTrailer: string | null;
   courseDescription: string;
-  learnings: string[];
-  targetAudience: string[];
-  requirements: FAQ[];
+  schedule: string[];
+  whatYouWillGet: string[];
+  faq: FAQ[];
 };
 
 const uniqueKeys = new Set();
@@ -118,27 +118,27 @@ const AdvanceInformation: FC<AdvanceInformationProps> = ({
   };
 
   const handleTeachChange = (index: number, value: string) => {
-    if (!uniqueKeys.has("learnings")) {
-      uniqueKeys.add("learnings");
+    if (!uniqueKeys.has("schedule")) {
+      uniqueKeys.add("schedule");
       setCount1(uniqueKeys.size);
     }
-    const updatedlearnings = [...advanceInfo.learnings];
-    updatedlearnings[index] = value;
+    const updatedschedule = [...advanceInfo.schedule];
+    updatedschedule[index] = value;
     if (value.length <= 120)
-      setAdvanceInfo((prev) => ({ ...prev, learnings: updatedlearnings }));
+      setAdvanceInfo((prev) => ({ ...prev, schedule: updatedschedule }));
   };
 
   const handleAudienceChange = (index: number, value: string) => {
-    if (!uniqueKeys.has("targetAudience")) {
-      uniqueKeys.add("targetAudience");
+    if (!uniqueKeys.has("whatYouWillGet")) {
+      uniqueKeys.add("whatYouWillGet");
       setCount1(uniqueKeys.size);
     }
-    const updatedtargetAudience = [...advanceInfo.targetAudience];
-    updatedtargetAudience[index] = value;
+    const updatedwhatYouWillGet = [...advanceInfo.whatYouWillGet];
+    updatedwhatYouWillGet[index] = value;
     if (value.length <= 120)
       setAdvanceInfo((prev) => ({
         ...prev,
-        targetAudience: updatedtargetAudience,
+        whatYouWillGet: updatedwhatYouWillGet,
       }));
   };
 
@@ -148,7 +148,7 @@ const AdvanceInformation: FC<AdvanceInformationProps> = ({
   //     setCount1(uniqueKeys.size);
   //   }
     const handleRequirementChange = (index: number, field: "question" | "answer", value: string) => {
-      const updatedrequirements = [...advanceInfo.requirements];
+      const updatedrequirements = [...advanceInfo.faq];
       updatedrequirements[index] = { 
         ...updatedrequirements[index], 
         [field]: value 
@@ -157,7 +157,7 @@ const AdvanceInformation: FC<AdvanceInformationProps> = ({
       if (value.length <= 120) {
         setAdvanceInfo((prev) => ({
           ...prev,
-          requirements: updatedrequirements,
+          faq: updatedrequirements,
         }));
       }
     };
@@ -399,17 +399,17 @@ const AdvanceInformation: FC<AdvanceInformationProps> = ({
         {/* Teaching Points Section */}
         <div className="flex justify-between items-center lg:mt-[32px] mt-[40px] md:mb-[10px] mb-[24px] w-[90%] mx-auto">
           <p className="font-medium lg:text-[18px] text-[16px] text-[#1D2026] lg:leading-[24px] leading-[20px]">
-            What is your schedule in this course ({advanceInfo.learnings.length}
+            What is your schedule in this course ({advanceInfo.schedule.length}
             /8)
           </p>
           <button
             className="text-[#3A6BE4] lg:text-[14px] text-[12px] lg:leading-[20px] leading-[18px]"
             onClick={(e) => {
               e.preventDefault();
-              if (advanceInfo.learnings.length < 8) {
+              if (advanceInfo.schedule.length < 8) {
                 setAdvanceInfo((prev) => ({
                   ...prev,
-                  learnings: [...prev.learnings, ""],
+                  schedule: [...prev.schedule, ""],
                 }));
               }
             }}
@@ -417,7 +417,7 @@ const AdvanceInformation: FC<AdvanceInformationProps> = ({
             + Add New
           </button>
         </div>
-        {advanceInfo.learnings.map((item, index) => (
+        {advanceInfo.schedule.map((item, index) => (
           <div key={index} className="w-[90%] mx-auto mb-[24px]">
             <p className="text-[#1D2026] md:text-[14px] text-[12px] mb-[5px]">
               {index + 1}
@@ -439,16 +439,16 @@ const AdvanceInformation: FC<AdvanceInformationProps> = ({
 
         <div className="flex justify-between items-center lg:mt-[32px] mt-[40px] md:mb-[10px] mb-[24px] w-[90%] mx-auto">
           <p className="font-medium lg:text-[18px] text-[16px] text-[#1D2026] lg:leading-[24px] leading-[20px]">
-            What you will get ({advanceInfo.targetAudience.length}/8)
+            What you will get ({advanceInfo.whatYouWillGet.length}/8)
           </p>
           <button
             className="text-[#3A6BE4] lg:text-[14px] text-[12px] lg:leading-[20px] leading-[18px]"
             onClick={(e) => {
               e.preventDefault();
-              if (advanceInfo.targetAudience.length < 8) {
+              if (advanceInfo.whatYouWillGet.length < 8) {
                 setAdvanceInfo((prev) => ({
                   ...prev,
-                  targetAudience: [...prev.targetAudience, ""],
+                  whatYouWillGet: [...prev.whatYouWillGet, ""],
                 }));
               }
             }}
@@ -457,7 +457,7 @@ const AdvanceInformation: FC<AdvanceInformationProps> = ({
           </button>
         </div>
 
-        {advanceInfo.targetAudience.map((item, index) => (
+        {advanceInfo.whatYouWillGet.map((item, index) => (
           <div key={index} className="w-[90%] mx-auto mb-[24px]">
             <p className="text-[#1D2026] md:text-[14px] text-[12px] mb-[5px]">
               {index + 1}
@@ -479,16 +479,16 @@ const AdvanceInformation: FC<AdvanceInformationProps> = ({
 
         <div className="flex justify-between items-center lg:mt-[32px] mt-[40px] md:mb-[10px] mb-[24px] w-[90%] mx-auto">
           <p className="font-medium lg:text-[18px] text-[16px] text-[#1D2026] lg:leading-[24px] leading-[20px]">
-            FAQ ({advanceInfo.requirements.length}/8)
+            FAQ ({advanceInfo.faq.length}/8)
           </p>
           <button
             className="text-[#3A6BE4] lg:text-[14px] text-[12px] lg:leading-[20px] leading-[18px]"
             onClick={(e) => {
               e.preventDefault();
-              if (advanceInfo.requirements.length < 8) {
+              if (advanceInfo.faq.length < 8) {
                 setAdvanceInfo((prev) => ({
                   ...prev,
-                  requirements: [...prev.requirements, {question:"",answer:""}],
+                  faq: [...prev.faq, {question:"",answer:""}],
                 }));
               }
             }}
@@ -497,7 +497,7 @@ const AdvanceInformation: FC<AdvanceInformationProps> = ({
           </button>
         </div>
 
-        {advanceInfo.requirements.map((desc, index) => (
+        {advanceInfo.faq.map((desc, index) => (
           <div className="w-[90%] mx-auto mb-[24px]">
             <p className="text-[#1D2026] md:text-[14px] text-[12px] mb-[5px]">
               {index + 1}

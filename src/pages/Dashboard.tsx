@@ -15,6 +15,7 @@ import f6 from "../assets/f6.svg";
 import f7 from "../assets/f7.svg";
 import f8 from "../assets/f8.svg";
 import { DashItem } from "../types/type";
+import { BASE_URL } from "@/constants/url";
 
 type ResponseData = {
   instructors: number;
@@ -47,7 +48,7 @@ const Dashboard = () => {
     const token = localStorage.getItem("token");
     try {
       const res = await axios.get(
-        "http://localhost:8080/api/v1/dashboard/DashboardData",
+        `${BASE_URL}/api/v1/dashboard/DashboardData`,
         {
           headers: {
             Authorization: `Bearer ${token}`,

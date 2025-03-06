@@ -5,30 +5,36 @@ import { useParams } from "react-router-dom";
 import VideoLinkCard from "@/custom/video-link-card";
 import DocumentCard from "@/custom/document-card";
 
+
+type FormData={
+  name:string;
+  link:string;
+}
+
 type ContentProps = {
-  videoData: string[] | null;
+  videoData: FormData[] | null;
   videoCount: number;
-  setVideoData: React.Dispatch<React.SetStateAction<string[] | null>>;
+  setVideoData: React.Dispatch<React.SetStateAction<FormData[] | null>>;
   setVideoCount: React.Dispatch<React.SetStateAction<number>>;
 
-  notesData: string[] | null;
+  notesData: FormData[] | null;
   notesCount: number;
-  setNotesData: React.Dispatch<React.SetStateAction<string[] | null>>;
+  setNotesData: React.Dispatch<React.SetStateAction<FormData[] | null>>;
   setNotesCount: React.Dispatch<React.SetStateAction<number>>;
 
-  testData: string[] | null;
+  testData: FormData[] | null;
   testCount: number;
-  setTestData: React.Dispatch<React.SetStateAction<string[] | null>>;
+  setTestData: React.Dispatch<React.SetStateAction<FormData[] | null>>;
   setTestCount: React.Dispatch<React.SetStateAction<number>>;
 
-  dppData: string[] | null;
+  dppData: FormData[] | null;
   dppCount: number;
-  setDppData: React.Dispatch<React.SetStateAction<string[] | null>>;
+  setDppData: React.Dispatch<React.SetStateAction<FormData[] | null>>;
   setDppCount: React.Dispatch<React.SetStateAction<number>>;
 
-  assignmentData: string[] | null;
+  assignmentData: FormData[] | null;
   assignmentCount: number;
-  setAssignmentData: React.Dispatch<React.SetStateAction<string[] | null>>;
+  setAssignmentData: React.Dispatch<React.SetStateAction<FormData[] | null>>;
   setAssignmentCount: React.Dispatch<React.SetStateAction<number>>;
   editId: string | null;
   flag: boolean;
@@ -85,7 +91,7 @@ const Content = ({
 
       {!editId
         ? videoData &&
-          videoData.map((link, i) => (
+          videoData.map((l, i) => (
             <div
               className=" border border-gray-200 w-[50%]  p-2 mt-[20px]"
               key={`video-${i}`}
@@ -107,25 +113,28 @@ const Content = ({
               </div>
               <p className="text-sm text-blue-500"> {data?.type}</p> */}
               <VideoLinkCard
-                videoUrl={link}
-                videoName={chapterName + ` ${i + 1}`}
+                videoUrl={l.link}
+                key={i}
+                videoName={l.name}
               />
             </div>
           ))
         : videoData &&
-          videoData.map((link: any, i) => {
-            console.log("name of link = " + link);
+          videoData.map((l, i) => {
+            console.log("name of link = " + l.name);
             return (
               <VideoLinkCard
-                videoUrl={link}
-                videoName={chapterName + ` ${i + 1}`}
+                videoUrl={l.link}
+                key={i}
+                // videoName={chapterName + ` ${i + 1}`}
+                videoName={l.name}
               />
             );
           })}
 
       {!editId
         ? notesData &&
-          notesData.map((link, i) => (
+          notesData.map((l, i) => (
             <div
               className=" border border-gray-200 w-[50%]  p-2 mt-[20px]"
               key={`notes-${i}`}
@@ -147,20 +156,20 @@ const Content = ({
               </div>
               <p className="text-sm text-blue-500"> {data?.type}</p> */}
               <DocumentCard
-                name={chapterName + ` ${i + 1}`}
-                link={link}
+                name={l.name}
+                link={l.link}
                 description={"notes"}
                 onDelete={() => "id"}
               />
             </div>
           ))
         : notesData &&
-          notesData.map((link: any, i) => {
-            console.log("link of notes = " + link);
+          notesData.map((l, i) => {
+            // console.log("link of notes = " + link);
             return (
               <DocumentCard
-                name={chapterName + ` ${i + 1}`}
-                link={link}
+                name={l.name}
+                link={l.link}
                 description={"notes"}
                 onDelete={() => "id"}
               />
@@ -169,7 +178,7 @@ const Content = ({
 
       {!editId
         ? testData &&
-          testData.map((link, i) => (
+          testData.map((l, i) => (
             <div
               className=" border border-gray-200 w-[50%]  p-2 mt-[20px]"
               key={`test-${i}`}
@@ -191,20 +200,21 @@ const Content = ({
               </div>
               <p className="text-sm text-blue-500"> {data?.type}</p> */}
               <DocumentCard
-                name={chapterName + ` ${i + 1}`}
-                link={link}
+                name={l.name}
+                link={l.link}
                 description={"test"}
                 onDelete={() => "id"}
               />
             </div>
           ))
         : testData &&
-          testData.map((link: any, i) => {
-            console.log("link of test = " + link);
+          testData.map((l, i) => {
+            // console.log("link of test = " + link);
             return (
               <DocumentCard
-                name={chapterName + ` ${i + 1}`}
-                link={link}
+              key={i}
+                name={l.name}
+                link={l.link}
                 description={"test"}
                 onDelete={() => "id"}
               />
@@ -213,7 +223,7 @@ const Content = ({
 
       {!editId
         ? dppData &&
-          dppData.map((link, i) => (
+          dppData.map((l, i) => (
             <div
               className=" border border-gray-200 w-[50%]  p-2 mt-[20px]"
               key={`dpp-${i}`}
@@ -235,20 +245,20 @@ const Content = ({
               </div>
               <p className="text-sm text-blue-500"> {data?.type}</p> */}
               <DocumentCard
-                name={chapterName + ` ${i + 1}`}
-                link={link}
+                name={l.name}
+                link={l.link}
                 description={"dpp"}
                 onDelete={() => "id"}
               />
             </div>
           ))
         : dppData &&
-          dppData.map((link: any, i) => {
-            console.log("Link of dpp = " + link);
+          dppData.map((l, i) => {
+            // console.log("Link of dpp = " + link);
             return (
               <DocumentCard
-                name={chapterName + ` ${i + 1}`}
-                link={link}
+                name={l.name}
+                link={l.link}
                 description={"dpp"}
                 onDelete={() => "id"}
               />
@@ -257,7 +267,7 @@ const Content = ({
 
       {!editId
         ? assignmentData &&
-          assignmentData.map((link, i) => (
+          assignmentData.map((l, i) => (
             <div
               className=" border border-gray-200 w-[50%]  p-2 mt-[20px]"
               key={`assignment-${i}`}
@@ -280,20 +290,23 @@ const Content = ({
               <p className="text-sm text-blue-500"> {data?.type}</p> */}
 
               <DocumentCard
-                name={chapterName + ` ${i + 1}`}
-                link={link}
+              key={i}
+                name={l.name}
+                link={l.link}
                 description={"assignment"}
                 onDelete={() => "id"}
               />
             </div>
           ))
         : assignmentData &&
-          assignmentData.map((link: any, i) => {
-            console.log("link of assignment = " + link);
+          assignmentData.map((l, i) => {
+            // console.log("link of assignment = " + link);
             return (
+
               <DocumentCard
-                name={chapterName + ` ${i + 1}`}
-                link={link}
+              key={i}
+                name={l.name}
+                link={l.link}
                 description={"assignment"}
                 onDelete={() => "id"}
               />

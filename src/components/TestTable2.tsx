@@ -104,7 +104,7 @@ const TestTable2:FC<TableProps> = ({success}) => {
   const getTableData=async()=>{
     try{
       const token=localStorage.getItem("token");
-      const res=await axios.get(`${BASE_URL}/api/v1/testSeries/getTestSeries`,{
+      const res=await axios.get(`${BASE_URL}/api/v1/testSeries/getHomeTestSeries`,{
         headers:{
           Authorization:`Bearer ${token}`
         }

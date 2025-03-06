@@ -23,6 +23,12 @@ import axios from "axios";
 import { LoadingSpinner } from "@/custom/loading-spinner";
 import UploadVideoModal2 from "@/components/UploadVideoModal2";
 
+
+type FormData={
+  name:string;
+  link:string;
+}
+
 // interface Topic {
 //   id: number;
 //   name: string;
@@ -67,19 +73,19 @@ const ContentCourse = () => {
   // const notesUrl: File[] = [];
 
   const [isVideo, setIsVideo] = useState(false);
-  const [videoData, setVideoData] = useState<string[] | null>(null);
+  const [videoData, setVideoData] = useState<FormData[] | null>(null);
 
   const [isNotes, setIsNotes] = useState(false);
-  const [notesData, setNotesData] = useState<string[] | null>(null);
+  const [notesData, setNotesData] = useState<FormData[] | null>(null);
 
   const [isTest, setIsTest] = useState(false);
-  const [testData, setTestData] = useState<string[] | null>(null);
+  const [testData, setTestData] = useState<FormData[] | null>(null);
 
   const [isDpp, setIsDpp] = useState(false);
-  const [dppData, setDppData] = useState<string[] | null>(null);
+  const [dppData, setDppData] = useState<FormData[] | null>(null);
 
   const [isAssignment, setIsAssignment] = useState(false);
-  const [assignmentData, setAssignmentData] = useState<string[] | null>(null);
+  const [assignmentData, setAssignmentData] = useState<FormData[] | null>(null);
 
   const [videoCount, setVideoCount] = useState(0);
   const [notesCount, setNotesCount] = useState(0);
@@ -430,6 +436,7 @@ const ContentCourse = () => {
                     <UploadTestModal
                       setIsTest={setIsTest}
                       setTestData={setTestData}
+                      setIsLoading={setIsLoading}
                     />
                   )}
 
@@ -448,6 +455,7 @@ const ContentCourse = () => {
                     <UploadDppModal
                       setIsDpp={setIsDpp}
                       setDppData={setDppData}
+                      setIsLoading={setIsLoading}
                     />
                   )}
 
@@ -466,6 +474,7 @@ const ContentCourse = () => {
                     <UploadAssignmentModal
                       setIsAssignment={setIsAssignment}
                       setAssignmentData={setAssignmentData}
+                      setIsLoading={setIsLoading}
                     />
                   )}
                 </div>

@@ -1,3 +1,4 @@
+import { BASE_URL } from "@/constants/url";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 
@@ -24,7 +25,7 @@ const AttachFileModal: React.FC<BannerProps> = ({
     const formData = new FormData();
     formData.append("file", file);
     const res = await axios.post(
-      "http://localhost:8080/api/v1/assets/upload/image",
+      `${BASE_URL}/api/v1/assets/upload/image`,
       formData,
       {
         headers: {
@@ -61,7 +62,7 @@ const AttachFileModal: React.FC<BannerProps> = ({
     const token = localStorage.getItem("token");
     try {
       const res = await axios.post(
-        "http://localhost:8080/api/v1/dashboard/addBanner",
+        `${BASE_URL}/api/v1/dashboard/addBanner`,
         {
           file: url,
           type: "Website",

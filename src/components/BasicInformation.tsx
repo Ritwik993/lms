@@ -22,10 +22,11 @@ type BasicFormState = {
   instructor3?: string;
   instructor4?: string;
   courseId?: string;
-  paid: boolean;
+  isPaid: boolean;
   startDate: Date;
   endDate: Date;
-  price: number | null;
+  actualPrice: number | null;
+  discountedPrice: number | null;
   instructor?: string[];
   featured: boolean;
 };
@@ -547,8 +548,8 @@ const BasicInformation: FC<BasicInformationProps> = ({
             </p>
             <select
               className="border-[#E9EAF0] text-[#8C94A3] w-full  border-[2px] py-[10px] px-[10px]  outline-none"
-              name="paid"
-              value={basicInfo.paid?.toString() || ""}
+              name="isPaid"
+              value={basicInfo.isPaid?.toString() || ""}
               onChange={handleSelectChange}
             >
               <option value="" disabled>
@@ -598,13 +599,27 @@ const BasicInformation: FC<BasicInformationProps> = ({
 
           <div className="flex-1 min-w-max">
             <p className="text-[#1D2026] lg:text-[14px] text-[12px] md:leading-[22px] leading-[20px]">
-              Price
+              Actual Price
             </p>
             <input
               className=" placeholder:text-[#8C94A3]  border-[#E9EAF0] text-[#8C94A3] w-full h-full border-[2px] py-[10px] px-[10px]  outline-none"
               type="text"
-              name="price"
-              value={basicInfo.price?.toString()}
+              name="actualPrice"
+              value={basicInfo.actualPrice?.toString()}
+              onChange={handleInputChange}
+            />
+          </div>
+
+
+          <div className=" min-w-max">
+            <p className="text-[#1D2026] lg:text-[14px] text-[12px] md:leading-[22px] leading-[20px]">
+              Discounted Price
+            </p>
+            <input
+              className=" placeholder:text-[#8C94A3]  border-[#E9EAF0] text-[#8C94A3] w-full h-full border-[2px] py-[10px] px-[10px]  outline-none"
+              type="text"
+              name="discountedPrice"
+              value={basicInfo.discountedPrice?.toString()}
               onChange={handleInputChange}
             />
           </div>

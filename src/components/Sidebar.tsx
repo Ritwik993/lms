@@ -10,7 +10,7 @@ import { ChevronDown } from "lucide-react";
 import { ChevronUp } from "lucide-react";
 import { TvMinimalPlay } from "lucide-react";
 import { BadgeIndianRupee } from "lucide-react";
-import { Facebook } from 'lucide-react';
+import { Facebook } from "lucide-react";
 
 import { useState } from "react";
 import { Link } from "react-router-dom";
@@ -21,6 +21,7 @@ import { toggleMenu } from "../utils/appSlice";
 import { setActiveTab } from "../utils/activeTabSlice";
 import { addEditId } from "../utils/editSlice";
 import { emptySection } from "../utils/sectionSlice";
+import { deleteSubject } from "@/utils/subjectSlice";
 
 const Sidebar = () => {
   const [active, setActive] = useState(false);
@@ -39,7 +40,13 @@ const Sidebar = () => {
         </div>
         <div className="listContainer">
           <Link to="/dashboard">
-            <div className="flex gap-[12px] text-[#8C94A3]  hover:bg-[#3A6BE4] hover:text-white px-[24px] py-[12px] items-center cursor-pointer group" onClick={()=>dispatch(emptySection())}>
+            <div
+              className="flex gap-[12px] text-[#8C94A3]  hover:bg-[#3A6BE4] hover:text-white px-[24px] py-[12px] items-center cursor-pointer group"
+              onClick={() => {
+                dispatch(emptySection());
+                dispatch(deleteSubject());
+              }}
+            >
               <img
                 src={chartBar}
                 className="object-contain group-hover:filter group-hover:brightness-0 group-hover:invert"
@@ -91,7 +98,8 @@ const Sidebar = () => {
                     onClick={() => {
                       dispatch(setActiveTab("basic"));
                       dispatch(addEditId(null));
-                      // dispatch(emptySection());
+                      dispatch(emptySection());
+                      dispatch(deleteSubject());
                     }}
                   >
                     <img
@@ -107,8 +115,13 @@ const Sidebar = () => {
 
                 <Link to="/course">
                   {" "}
-                     
-                  <div className="flex gap-[10px] text-[#8C94A3] hover:bg-[#3A6BE4] hover:text-white pl-[50px] py-[12px] items-center cursor-pointer group" onClick={()=>dispatch(emptySection())}>
+                  <div
+                    className="flex gap-[10px] text-[#8C94A3] hover:bg-[#3A6BE4] hover:text-white pl-[50px] py-[12px] items-center cursor-pointer group"
+                    onClick={() => {
+                      dispatch(emptySection());
+                      dispatch(deleteSubject());
+                    }}
+                  >
                     <Book
                       size={24}
                       strokeWidth={2}
@@ -122,7 +135,13 @@ const Sidebar = () => {
 
                 <Link to="/scheduleClass">
                   {" "}
-                  <div className="flex gap-[10px] text-[#8C94A3] hover:bg-[#3A6BE4] hover:text-white pl-[50px] py-[12px] items-center cursor-pointer group" onClick={()=>dispatch(emptySection())}>
+                  <div
+                    className="flex gap-[10px] text-[#8C94A3] hover:bg-[#3A6BE4] hover:text-white pl-[50px] py-[12px] items-center cursor-pointer group"
+                    onClick={() => {
+                      dispatch(emptySection());
+                      dispatch(deleteSubject());
+                    }}
+                  >
                     <TvMinimalPlay
                       size={24}
                       strokeWidth={2}
@@ -134,10 +153,15 @@ const Sidebar = () => {
                   </div>
                 </Link>
 
-
                 <Link to="/free">
                   {" "}
-                  <div className="flex gap-[10px] text-[#8C94A3] hover:bg-[#3A6BE4] hover:text-white pl-[50px] py-[12px] items-center cursor-pointer group" onClick={()=>dispatch(emptySection())}>
+                  <div
+                    className="flex gap-[10px] text-[#8C94A3] hover:bg-[#3A6BE4] hover:text-white pl-[50px] py-[12px] items-center cursor-pointer group"
+                    onClick={() => {
+                      dispatch(emptySection());
+                      dispatch(deleteSubject());
+                    }}
+                  >
                     <Facebook
                       size={24}
                       strokeWidth={2}
@@ -177,7 +201,13 @@ const Sidebar = () => {
         </div> */}
 
           <Link to="/testseries">
-            <div className="flex gap-[12px] text-[#8C94A3]  hover:bg-[#3A6BE4] hover:text-white px-[24px] py-[12px] items-center cursor-pointer group" onClick={()=>dispatch(emptySection())}>
+            <div
+              className="flex gap-[12px] text-[#8C94A3]  hover:bg-[#3A6BE4] hover:text-white px-[24px] py-[12px] items-center cursor-pointer group"
+              onClick={() => {
+                dispatch(emptySection());
+                dispatch(deleteSubject());
+              }}
+            >
               <img
                 src={stack}
                 className="object-contain group-hover:filter group-hover:brightness-0 group-hover:invert"
@@ -196,7 +226,13 @@ const Sidebar = () => {
         </div> */}
 
           <Link to="/query">
-            <div className="flex gap-[12px] text-[#8C94A3]  hover:bg-[#3A6BE4] hover:text-white px-[24px] py-[12px] items-center cursor-pointer group" onClick={()=>dispatch(emptySection())}>
+            <div
+              className="flex gap-[12px] text-[#8C94A3]  hover:bg-[#3A6BE4] hover:text-white px-[24px] py-[12px] items-center cursor-pointer group"
+              onClick={() => {
+                dispatch(emptySection());
+                dispatch(deleteSubject());
+              }}
+            >
               <img
                 src={chat}
                 className="object-contain group-hover:filter group-hover:brightness-0 group-hover:invert "
@@ -208,7 +244,13 @@ const Sidebar = () => {
           </Link>
 
           <Link to="/review">
-            <div className="flex gap-[12px] text-[#8C94A3]  hover:bg-[#3A6BE4] hover:text-white px-[24px] py-[12px] items-center  cursor-pointer group" onClick={()=>dispatch(emptySection())}>
+            <div
+              className="flex gap-[12px] text-[#8C94A3]  hover:bg-[#3A6BE4] hover:text-white px-[24px] py-[12px] items-center  cursor-pointer group"
+              onClick={() => {
+                dispatch(emptySection());
+                dispatch(deleteSubject());
+              }}
+            >
               <img
                 src={chartBar}
                 className="object-contain group-hover:filter group-hover:brightness-0 group-hover:invert"
@@ -220,7 +262,13 @@ const Sidebar = () => {
           </Link>
 
           <Link to="/referal">
-            <div className="flex gap-[12px] text-[#8C94A3]  hover:bg-[#3A6BE4] hover:text-white px-[24px] py-[12px] items-center  cursor-pointer group" onClick={()=>dispatch(emptySection())}>
+            <div
+              className="flex gap-[12px] text-[#8C94A3]  hover:bg-[#3A6BE4] hover:text-white px-[24px] py-[12px] items-center  cursor-pointer group"
+              onClick={() => {
+                dispatch(emptySection());
+                dispatch(deleteSubject());
+              }}
+            >
               <BadgeIndianRupee
                 size={24}
                 strokeWidth={2}
@@ -233,7 +281,13 @@ const Sidebar = () => {
           </Link>
 
           <Link to="/setting">
-            <div className="flex gap-[12px] text-[#8C94A3]  hover:bg-[#3A6BE4] hover:text-white px-[24px] py-[12px] items-center  cursor-pointer group" onClick={()=>dispatch(emptySection())}>
+            <div
+              className="flex gap-[12px] text-[#8C94A3]  hover:bg-[#3A6BE4] hover:text-white px-[24px] py-[12px] items-center  cursor-pointer group"
+              onClick={() => {
+                dispatch(emptySection());
+                dispatch(deleteSubject());
+              }}
+            >
               <img
                 src={setting}
                 className="object-contain group-hover:filter group-hover:brightness-0 group-hover:invert"
@@ -244,7 +298,13 @@ const Sidebar = () => {
             </div>
           </Link>
 
-          <div className="flex gap-[12px] text-[#8C94A3]  hover:bg-[#3A6BE4] hover:text-white px-[24px] py-[12px] items-center  cursor-pointer mt-auto group" onClick={()=>dispatch(emptySection())}>
+          <div
+            className="flex gap-[12px] text-[#8C94A3]  hover:bg-[#3A6BE4] hover:text-white px-[24px] py-[12px] items-center  cursor-pointer mt-auto group"
+            onClick={() => {
+              dispatch(emptySection());
+              dispatch(deleteSubject());
+            }}
+          >
             <img
               src={signOut}
               className="object-contain group-hover:filter group-hover:brightness-0 group-hover:invert"
@@ -272,7 +332,13 @@ const Sidebar = () => {
           </div>
           <div className="listContainer">
             <Link to="/dashboard">
-              <div className="flex gap-[12px] text-[#8C94A3]  hover:bg-[#3A6BE4] hover:text-white px-[24px] py-[12px] items-center cursor-pointer group">
+              <div
+                className="flex gap-[12px] text-[#8C94A3]  hover:bg-[#3A6BE4] hover:text-white px-[24px] py-[12px] items-center cursor-pointer group"
+                onClick={() => {
+                  dispatch(emptySection());
+                  dispatch(deleteSubject());
+                }}
+              >
                 <img
                   src={chartBar}
                   className="object-contain group-hover:filter group-hover:brightness-0 group-hover:invert"
@@ -316,7 +382,15 @@ const Sidebar = () => {
               {active && (
                 <>
                   <Link to="/createcourse">
-                    <div className="flex gap-[10px] text-[#8C94A3] hover:bg-[#3A6BE4] hover:text-white pl-[50px] py-[12px] items-center cursor-pointer group">
+                    <div
+                      className="flex gap-[10px] text-[#8C94A3] hover:bg-[#3A6BE4] hover:text-white pl-[50px] py-[12px] items-center cursor-pointer group"
+                      onClick={() => {
+                        dispatch(setActiveTab("basic"));
+                        dispatch(addEditId(null));
+                        dispatch(emptySection());
+                        dispatch(deleteSubject());
+                      }}
+                    >
                       <img
                         src={plusCircle}
                         className="object-contain group-hover:filter group-hover:brightness-0 group-hover:invert"
@@ -330,7 +404,13 @@ const Sidebar = () => {
 
                   <Link to="/course">
                     {" "}
-                    <div className="flex gap-[10px] text-[#8C94A3] hover:bg-[#3A6BE4] hover:text-white pl-[50px] py-[12px] items-center cursor-pointer group">
+                    <div
+                      className="flex gap-[10px] text-[#8C94A3] hover:bg-[#3A6BE4] hover:text-white pl-[50px] py-[12px] items-center cursor-pointer group"
+                      onClick={() => {
+                        dispatch(emptySection());
+                        dispatch(deleteSubject());
+                      }}
+                    >
                       <Book
                         size={24}
                         strokeWidth={2}
@@ -344,7 +424,13 @@ const Sidebar = () => {
 
                   <Link to="/scheduleClass">
                     {" "}
-                    <div className="flex gap-[10px] text-[#8C94A3] hover:bg-[#3A6BE4] hover:text-white pl-[50px] py-[12px] items-center cursor-pointer group">
+                    <div
+                      className="flex gap-[10px] text-[#8C94A3] hover:bg-[#3A6BE4] hover:text-white pl-[50px] py-[12px] items-center cursor-pointer group"
+                      onClick={() => {
+                        dispatch(emptySection());
+                        dispatch(deleteSubject());
+                      }}
+                    >
                       <TvMinimalPlay
                         size={24}
                         strokeWidth={2}
@@ -352,6 +438,26 @@ const Sidebar = () => {
                       />
                       <p className="font-medium md:text-[14px] text-[12px] leading-[20px]">
                         Live Class
+                      </p>
+                    </div>
+                  </Link>
+
+                  <Link to="/free">
+                    {" "}
+                    <div
+                      className="flex gap-[10px] text-[#8C94A3] hover:bg-[#3A6BE4] hover:text-white pl-[50px] py-[12px] items-center cursor-pointer group"
+                      onClick={() => {
+                        dispatch(emptySection());
+                        dispatch(deleteSubject());
+                      }}
+                    >
+                      <Facebook
+                        size={24}
+                        strokeWidth={2}
+                        className="object-contain group-hover:filter group-hover:brightness-0 group-hover:invert"
+                      />
+                      <p className="font-medium md:text-[14px] text-[12px] leading-[20px]">
+                        Free Videos
                       </p>
                     </div>
                   </Link>
@@ -384,7 +490,13 @@ const Sidebar = () => {
         </div> */}
 
             <Link to="/testseries">
-              <div className="flex gap-[12px] text-[#8C94A3]  hover:bg-[#3A6BE4] hover:text-white px-[24px] py-[12px] items-center cursor-pointer group">
+              <div
+                className="flex gap-[12px] text-[#8C94A3]  hover:bg-[#3A6BE4] hover:text-white px-[24px] py-[12px] items-center cursor-pointer group"
+                onClick={() => {
+                  dispatch(emptySection());
+                  dispatch(deleteSubject());
+                }}
+              >
                 <img
                   src={stack}
                   className="object-contain group-hover:filter group-hover:brightness-0 group-hover:invert"
@@ -403,7 +515,13 @@ const Sidebar = () => {
         </div> */}
 
             <Link to="/query">
-              <div className="flex gap-[12px] text-[#8C94A3]  hover:bg-[#3A6BE4] hover:text-white px-[24px] py-[12px] items-center cursor-pointer group">
+              <div
+                className="flex gap-[12px] text-[#8C94A3]  hover:bg-[#3A6BE4] hover:text-white px-[24px] py-[12px] items-center cursor-pointer group"
+                onClick={() => {
+                  dispatch(emptySection());
+                  dispatch(deleteSubject());
+                }}
+              >
                 <img
                   src={chat}
                   className="object-contain group-hover:filter group-hover:brightness-0 group-hover:invert "
@@ -415,7 +533,13 @@ const Sidebar = () => {
             </Link>
 
             <Link to="/review">
-              <div className="flex gap-[12px] text-[#8C94A3]  hover:bg-[#3A6BE4] hover:text-white px-[24px] py-[12px] items-center  cursor-pointer group">
+              <div
+                className="flex gap-[12px] text-[#8C94A3]  hover:bg-[#3A6BE4] hover:text-white px-[24px] py-[12px] items-center  cursor-pointer group"
+                onClick={() => {
+                  dispatch(emptySection());
+                  dispatch(deleteSubject());
+                }}
+              >
                 <img
                   src={chartBar}
                   className="object-contain group-hover:filter group-hover:brightness-0 group-hover:invert"
@@ -427,7 +551,13 @@ const Sidebar = () => {
             </Link>
 
             <Link to="/referal">
-              <div className="flex gap-[12px] text-[#8C94A3]  hover:bg-[#3A6BE4] hover:text-white px-[24px] py-[12px] items-center  cursor-pointer group">
+              <div
+                className="flex gap-[12px] text-[#8C94A3]  hover:bg-[#3A6BE4] hover:text-white px-[24px] py-[12px] items-center  cursor-pointer group"
+                onClick={() => {
+                  dispatch(emptySection());
+                  dispatch(deleteSubject());
+                }}
+              >
                 <BadgeIndianRupee
                   size={24}
                   strokeWidth={2}
@@ -440,7 +570,13 @@ const Sidebar = () => {
             </Link>
 
             <Link to="/setting">
-              <div className="flex gap-[12px] text-[#8C94A3]  hover:bg-[#3A6BE4] hover:text-white px-[24px] py-[12px] items-center  cursor-pointer group">
+              <div
+                className="flex gap-[12px] text-[#8C94A3]  hover:bg-[#3A6BE4] hover:text-white px-[24px] py-[12px] items-center  cursor-pointer group"
+                onClick={() => {
+                  dispatch(emptySection());
+                  dispatch(deleteSubject());
+                }}
+              >
                 <img
                   src={setting}
                   className="object-contain group-hover:filter group-hover:brightness-0 group-hover:invert"
@@ -451,7 +587,13 @@ const Sidebar = () => {
               </div>
             </Link>
 
-            <div className="flex gap-[12px] text-[#8C94A3]  hover:bg-[#3A6BE4] hover:text-white px-[24px] py-[12px] items-center  cursor-pointer mt-auto group">
+            <div
+              className="flex gap-[12px] text-[#8C94A3]  hover:bg-[#3A6BE4] hover:text-white px-[24px] py-[12px] items-center  cursor-pointer mt-auto group"
+              onClick={() => {
+                dispatch(emptySection());
+                dispatch(deleteSubject());
+              }}
+            >
               <img
                 src={signOut}
                 className="object-contain group-hover:filter group-hover:brightness-0 group-hover:invert"

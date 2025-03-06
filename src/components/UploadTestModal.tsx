@@ -1,18 +1,33 @@
 import { BASE_URL } from "@/constants/url";
 import axios from "axios";
 import { X } from "lucide-react";
-import { FC, useEffect } from "react";
+import { FC, useEffect, useState } from "react";
+
+
+type FormData = {
+  name: string;
+  link: string;
+};
+
+
 
 type UploadTestModalProps = {
   setIsTest: React.Dispatch<React.SetStateAction<boolean>>;
-  setTestData: React.Dispatch<React.SetStateAction<string[] | null>>;
+  setTestData: React.Dispatch<React.SetStateAction<FormData[] | null>>;
+  setIsLoading: React.Dispatch<React.SetStateAction<boolean>>;
+  
 };
+
+
 
 
 const UploadTestModal: FC<UploadTestModalProps> = ({
     setIsTest,
     setTestData,
+    setIsLoading,
 }) => {
+  const [selectedFile,setSelectedFile]=useState<File | null>(null);
+  const [formData, setFormData] = useState<FormData>({ name: "", link: "" }); 
   useEffect(() => {
     document.body.style.overflowY = "hidden";
     return () => {
@@ -22,29 +37,46 @@ const UploadTestModal: FC<UploadTestModalProps> = ({
 
   const uploadImage = async (file: File | null) => {
     if (!file) return null;
-    const token = localStorage.getItem("token");
-    const formData = new FormData();
-    formData.append("file", file);
-    const res = await axios.post(
-      `${BASE_URL}/api/v1/assets/upload/image`,
-      formData,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "multipart/form-data",
-        },
-      }
-    );
-    return res.data.fileUrl;
+    try {
+      setIsLoading(true);
+      const token = localStorage.getItem("token");
+      const formData = new FormData();
+      formData.append("file", file);
+      const res = await axios.post(
+        `${BASE_URL}/api/v1/assets/upload/image`,
+        formData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+      return res.data.fileUrl;
+    } catch (err) {
+      console.log(err);
+    } finally {
+      setIsLoading(false);
+    }
   };
+
 
   const handleFileChange = async(e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
       const file = e.target.files[0];
-      const fileUrl=await uploadImage(file);
-      setTestData((prev) => [...(prev || []), fileUrl]);
+      setSelectedFile(file);
     }
   };
+
+  const handleUpload = async () => {
+    if (!selectedFile) return;
+    const fileUrl = await uploadImage(selectedFile);
+    if (fileUrl) {
+      setTestData((prev) => [...(prev || []), {link:fileUrl,name:formData.name}]);
+    }
+    setIsTest(false);
+  };
+
 
   return (
     <div className="fixed top-0 left-0 right-0 bottom-0 flex items-center justify-center bg-black bg-opacity-50 z-100">
@@ -59,6 +91,22 @@ const UploadTestModal: FC<UploadTestModalProps> = ({
           />
         </div>
         <p className="text-sm text-gray-600 mb-4">
+          Enter the name
+        </p>
+        <input
+          type="text"
+          name="name"
+          value={formData.name || "" } 
+          className="block w-full px-3 py-2 text-sm text-gray-800 border border-gray-300 rounded-lg bg-gray-50 hover:bg-gray-100  transition"
+          onChange={(e)=>{
+            const {name,value}=e.target;
+            setFormData((prev)=>({
+              ...prev,
+              [name]:value
+            }))
+          }}
+        />
+        <p className="text-sm text-gray-600 mb-4">
           Choose a file to upload as a document.
         </p>
         <input
@@ -68,9 +116,10 @@ const UploadTestModal: FC<UploadTestModalProps> = ({
           onChange={handleFileChange}
         />
         <div className="flex justify-end mt-6">
-          <button
+        <button
             className="px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 focus:ring-2 focus:ring-blue-400 focus:outline-none transition"
-            onClick={() => setIsTest((prev) => !prev)}
+            onClick={handleUpload}
+            disabled={!selectedFile}
           >
             Upload
           </button>

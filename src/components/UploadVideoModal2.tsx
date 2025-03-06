@@ -1,16 +1,27 @@
 
 // import { set } from "date-fns";
 import { X } from "lucide-react";
-import { FC, useEffect,  } from "react";
+import { FC, useEffect, useState,  } from "react";
+
+type FormData={
+  name:string;
+  link:string;
+}
 
 type UploadVideoModalProps={
     setIsVideo:React.Dispatch<React.SetStateAction<boolean>>
-    setVideoData: React.Dispatch<React.SetStateAction<string[] | null>>
+    setVideoData: React.Dispatch<React.SetStateAction<FormData[] | null>>
 }
+
+
 
 const UploadVideoModal2:FC<UploadVideoModalProps> = ({setIsVideo,setVideoData}) => {
 
-//   const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  // const [selectedFile, setSelectedFile] = useState<string | null>(null);
+  const [formData,setFormData]=useState<FormData>({
+    name:"",
+    link:"" ,
+  });
 
   useEffect(() => {
     document.body.style.overflowY = "hidden";
@@ -49,15 +60,22 @@ const UploadVideoModal2:FC<UploadVideoModalProps> = ({setIsVideo,setVideoData}) 
 
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setVideoData((prev) => [...(prev || []), e.target.value]);
+    const {name,value}=e.target;
+
+    setFormData((prev)=>({
+      ...prev,
+      [name]:value
+    })) 
+
+    // setVideoData((prev) => [...(prev || []), e.target.value]);
   };
 
   const handleUpload = async () => {
-    // if (!selectedFile) return;
+    if (!formData.link)return;
     
     // const fileUrl = await uploadVideo(selectedFile);
     // if (fileUrl) {
-    //   setVideoData((prev) => [...(prev || []), fileUrl]);
+      setVideoData((prev) => [...(prev || []), formData]);
     // }
 
     setIsVideo(false);
@@ -69,11 +87,26 @@ const UploadVideoModal2:FC<UploadVideoModalProps> = ({setIsVideo,setVideoData}) 
           <h1 className="text-xl font-semibold  text-gray-800">Upload Video</h1>
           <X  className="cursor-pointer" onClick={()=>setIsVideo((prev)=>!prev)}/>
         </div>
+
+        <p className="text-sm text-gray-600 mb-4">
+          Enter the name
+        </p>
+        <input
+          type="text"
+          name="name"
+          value={formData.name || "" } 
+          className="block w-full px-3 py-2 text-sm text-gray-800 border border-gray-300 rounded-lg bg-gray-50 hover:bg-gray-100  transition"
+          onChange={handleInputChange}
+        />
+
+
         <p className="text-sm text-gray-600 mb-4">
           Enter the video url
         </p>
         <input
           type="text"
+          name="link"
+          value={formData.link || "" } 
           className="block w-full px-3 py-2 text-sm text-gray-800 border border-gray-300 rounded-lg bg-gray-50 hover:bg-gray-100  transition"
           onChange={handleInputChange}
         />

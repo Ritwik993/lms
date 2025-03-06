@@ -35,8 +35,9 @@ type BasicFormState = {
   instructor?: string[];
   startDate:Date;
   endDate:Date;
-  price:number|null;
-  paid:boolean;
+  actualPrice:number|null;
+  discountedPrice:number|null;
+  isPaid:boolean;
   featured: boolean;
 };
 
@@ -50,9 +51,9 @@ type AdvanceFormState = {
   courseThumbnail: File | null;
   courseTrailer: string | null;
   courseDescription: string;
-  learnings: string[];
-  targetAudience: string[];
-  requirements: FAQ[];
+  schedule: string[];
+  whatYouWillGet: string[];
+  faq: FAQ[];
 };
 
 type PublishFormState = {
@@ -129,10 +130,11 @@ const CreateCourse = () => {
           instructor3: result[0].instructor3,
           instructor4: result[0].instructor4,
           instructor: result[0].instructor,
-          paid:result[0].paid,
+          isPaid:result[0].isPaid,
           startDate:result[0].startDate||new Date(),
           endDate:result[0].endDate||new Date(),
-          price:result[0].price,
+          actualPrice:result[0].actualPrice,
+          discountedPrice:result[0].discountedPrice,
           featured: false,
           courseId: result[0].courseId,
         }
@@ -142,9 +144,9 @@ const CreateCourse = () => {
           courseThumbnail: result[0].courseThumbnail,
           courseTrailer: result[0].courseTrailer,
           courseDescription: result[0]. courseDescription,
-          learnings: result[0].learnings,
-          targetAudience:result[0].targetAudience,
-          requirements: result[0].requirements,
+          schedule: result[0].schedule,
+          whatYouWillGet:result[0].whatYouWillGet,
+          faq: result[0].faq,
         }
 
         setAdvanceInfo(advanceData);
@@ -177,8 +179,9 @@ const CreateCourse = () => {
     instructor3: "",
     instructor4: "",
     instructor: [],
-    paid:false,
-    price:null,
+    isPaid:false,
+    actualPrice:null,
+    discountedPrice:null,
     startDate:new Date(),
     endDate:new Date(),
     featured: false,
@@ -194,9 +197,9 @@ const CreateCourse = () => {
     courseThumbnail: null,
     courseTrailer: null,
     courseDescription: "",
-    learnings: [""],
-    targetAudience: [""],
-    requirements: [{question:"",answer:""}],
+    schedule: [""],
+    whatYouWillGet: [""],
+    faq: [{question:"",answer:""}],
   });
 
   // const [activeTab, setActiveTab] = useState<Tab>("basic");

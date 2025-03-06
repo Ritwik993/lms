@@ -29,6 +29,7 @@ const subjectSlice = createSlice({
   name: "subject",
   initialState,
   reducers: {
+
     addSubject: (state, action) => {
       state.subjects.push(action.payload);
     },
@@ -44,8 +45,11 @@ const subjectSlice = createSlice({
         return subject;
       });
     },
+    deleteSubject:(state)=>{
+      state.subjects=[];
+    }
   },
 });
 
-export const { addSubject,updateSubject } = subjectSlice.actions;
+export const { addSubject,updateSubject,deleteSubject } = subjectSlice.actions;
 export default subjectSlice.reducer;
