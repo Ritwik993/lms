@@ -4,8 +4,8 @@ import AttachFileModal1 from "./AttachBanner1";
 import AttachFileModal2 from "./AttachBanner2";
 import axios from "axios";
 // import { StepBack } from 'lucide-react';
-import { ArrowLeft } from 'lucide-react';
-import { ArrowRight } from 'lucide-react';
+import { ArrowLeft } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import { BASE_URL } from "@/constants/url";
 
 type imgURLType = {
@@ -17,8 +17,8 @@ type imgURLType = {
 const CreateBanner = () => {
   const [isBannerOpen, setIsBannerOpen] = useState(false);
   const [imgURL, setImgURL] = useState<imgURLType[]>([]);
-  const [imgURLApp1, setImgURLApp1] = useState<string[]>([]);
-  const [imgURLApp2, setImgURLApp2] = useState<string[]>([]);
+  const [imgURLApp1, setImgURLApp1] = useState<imgURLType[]>([]);
+  const [imgURLApp2, setImgURLApp2] = useState<imgURLType[]>([]);
 
   const [currentIndex, setCurrentIndex] = useState(0);
   const [currentIndex1, setCurrentIndex1] = useState(0);
@@ -69,7 +69,7 @@ const CreateBanner = () => {
     }
   }, [imgURLApp2, isPaused, isApp2]);
 
-  const removeImageWeb = async (id: string) => {
+  const removeImageWeb = async (id: string, type: string) => {
     try {
       const token = localStorage.getItem("token");
       const res = await axios.put(
@@ -84,7 +84,22 @@ const CreateBanner = () => {
         }
       );
       console.log(res.data);
-      setImgURL((prev)=>prev.filter((p)=>p._id!==id));
+      if (type === "Website") {
+        setImgURL((prev) => {
+          console.log("Previous State:", prev);
+          return prev.filter((p) => {
+            console.log("Checking ID:", p._id, "against", id);
+            return p._id !== id;
+          });
+        });
+
+        console.log(JSON.stringify(imgURL, null, 2));
+      }
+      // setImgURL((prev) => prev.filter((p) => p._id !== id));
+      else if (type === "App1")
+        setImgURLApp1((prev) => prev.filter((p) => p._id !== id));
+      else if (type === "App2")
+        setImgURLApp2((prev) => prev.filter((p) => p._id !== id));
     } catch (err) {
       console.log(err);
     }
@@ -171,33 +186,49 @@ const CreateBanner = () => {
                       {/* Close button */}
                       <button
                         className="absolute top-4 right-2 bg-red-600 text-white px-2 py-1 rounded-full text-sm"
-                        onClick={() => removeImageWeb(image._id)}
+                        onClick={() => removeImageWeb(image._id, "Website")}
                       >
                         X
                       </button>
-                      {imgURL.length>1 && <ArrowLeft onClick={()=>setCurrentIndex((prev)=>{
-                        if(prev==0){
-                          prev=0;
-                        }else{
-                          prev=prev-1;
-                        }
-                        return prev;
-                    })} className="absolute h-[50px] w-[50px] top-1/2 text-white"/>}
-                    {imgURL.length>1 && <ArrowRight onClick={()=>setCurrentIndex((prev)=>{
-                        if(prev<imgURL.length-1){
-                          prev=prev+1;
-                        }else{
-                          prev=prev;
-                        }
-                        return prev;
-                    })} className="absolute h-[50px] w-[50px] top-1/2 right-0 text-white"/>}
+                      {imgURL.length > 1 && (
+                        <ArrowLeft
+                          onClick={() =>
+                            setCurrentIndex((prev) => {
+                              if (prev == 0) {
+                                prev = 0;
+                              } else {
+                                prev = prev - 1;
+                              }
+                              return prev;
+                            })
+                          }
+                          className="absolute h-[50px] w-[50px] top-1/2 text-white"
+                        />
+                      )}
+                      {imgURL.length > 1 && (
+                        <ArrowRight
+                          onClick={() =>
+                            setCurrentIndex((prev) => {
+                              if (prev < imgURL.length - 1) {
+                                prev = prev + 1;
+                              } else {
+                                prev = prev;
+                              }
+                              return prev;
+                            })
+                          }
+                          className="absolute h-[50px] w-[50px] top-1/2 right-0 text-white"
+                        />
+                      )}
                     </div>
                   )
               )}
             </div>
-          ) : (<div className="flex items-center justify-center bg-[#E5E5E5] h-[300px]">
-            <p className="text-[#999] text-[16px]">No Banners Available</p>
-          </div>)}
+          ) : (
+            <div className="flex items-center justify-center bg-[#E5E5E5] h-[300px]">
+              <p className="text-[#999] text-[16px]">No Banners Available</p>
+            </div>
+          )}
         </div>
       )}
 
@@ -212,14 +243,58 @@ const CreateBanner = () => {
               onMouseEnter={() => setIsPaused(true)} // Pause on hover
               onMouseLeave={() => setIsPaused(false)} // Resume after hover
             >
-              {imgURLApp1.map((image, index) => (
-                <img
-                  key={index}
-                  src={image}
-                  alt={`Slide ${index}`}
-                  className="w-full h-[300px] object-contain"
-                />
-              ))}
+              {imgURLApp1.map(
+                (image, index) =>
+                  image.status === "ACTIVE" && (
+                    <div
+                      key={index}
+                      className="relative w-full h-[300px] flex-shrink-0"
+                    >
+                      <img
+                        key={index}
+                        src={image.url}
+                        alt={`Slide ${index}`}
+                        className="w-full h-[300px] object-contain"
+                      />
+                      <button
+                        className="absolute top-4 right-2 bg-red-600 text-white px-2 py-1 rounded-full text-sm"
+                        onClick={() => removeImageWeb(image._id, "App1")}
+                      >
+                        X
+                      </button>
+                      {imgURLApp1.length > 1 && (
+                        <ArrowLeft
+                          onClick={() =>
+                            setCurrentIndex1((prev) => {
+                              if (prev == 0) {
+                                prev = 0;
+                              } else {
+                                prev = prev - 1;
+                              }
+                              return prev;
+                            })
+                          }
+                          className="absolute h-[50px] w-[50px] top-1/2 text-white"
+                        />
+                      )}
+                      {imgURLApp1.length > 1 && (
+                        <ArrowRight
+                          onClick={() =>
+                            setCurrentIndex1((prev) => {
+                              if (prev < imgURLApp1.length - 1) {
+                                prev = prev + 1;
+                              } else {
+                                prev = prev;
+                              }
+                              return prev;
+                            })
+                          }
+                          className="absolute h-[50px] w-[50px] top-1/2 right-0 text-white"
+                        />
+                      )}
+                    </div>
+                  )
+              )}
             </div>
           ) : (
             <div className="flex items-center justify-center bg-[#E5E5E5] h-[300px]">
@@ -240,14 +315,59 @@ const CreateBanner = () => {
               onMouseEnter={() => setIsPaused(true)} // Pause on hover
               onMouseLeave={() => setIsPaused(false)} // Resume after hover
             >
-              {imgURLApp2.map((image, index) => (
-                <img
-                  key={index}
-                  src={image}
-                  alt={`Slide ${index}`}
-                  className="w-full h-[300px] object-contain"
-                />
-              ))}
+              {imgURLApp2.map(
+                (image, index) =>
+                  image.status === "ACTIVE" && (
+                    <div
+                      key={index}
+                      className="relative w-full h-[300px] flex-shrink-0"
+                    >
+                      <img
+                        key={index}
+                        src={image.url}
+                        alt={`Slide ${index}`}
+                        className="w-full h-[300px] object-contain"
+                      />
+                      <button
+                        className="absolute top-4 right-2 bg-red-600 text-white px-2 py-1 rounded-full text-sm"
+                        onClick={() => removeImageWeb(image._id, "App2")}
+                      >
+                        X
+                      </button>
+
+                      {imgURLApp2.length > 1 && (
+                        <ArrowLeft
+                          onClick={() =>
+                            setCurrentIndex2((prev) => {
+                              if (prev == 0) {
+                                prev = 0;
+                              } else {
+                                prev = prev - 1;
+                              }
+                              return prev;
+                            })
+                          }
+                          className="absolute h-[50px] w-[50px] top-1/2 text-white"
+                        />
+                      )}
+                      {imgURLApp2.length > 1 && (
+                        <ArrowRight
+                          onClick={() =>
+                            setCurrentIndex2((prev) => {
+                              if (prev < imgURLApp2.length - 1) {
+                                prev = prev + 1;
+                              } else {
+                                prev = prev;
+                              }
+                              return prev;
+                            })
+                          }
+                          className="absolute h-[50px] w-[50px] top-1/2 right-0 text-white"
+                        />
+                      )}
+                    </div>
+                  )
+              )}
             </div>
           ) : (
             <div className="flex items-center justify-center bg-[#E5E5E5] h-[300px]">

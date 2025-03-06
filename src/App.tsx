@@ -32,12 +32,12 @@ import DocumentCard from "./custom/document-card";
 
 
 
-interface document{
-  name :string
-  link :string
-  description?: string
-  onDelete?: () => void
-}
+// interface document{
+//   name :string
+//   link :string
+//   description?: string
+//   onDelete?: () => void
+// }
 
 
 // interface Topic {

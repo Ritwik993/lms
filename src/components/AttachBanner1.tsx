@@ -1,9 +1,18 @@
+import { BASE_URL } from "@/constants/url";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 
+
+type imgURLType={
+  url:string;
+  _id:string;
+  status:string;
+}
+
+
 type BannerProps = {
   setIsBannerOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  setImgURLApp1: React.Dispatch<React.SetStateAction<string[]>>;
+  setImgURLApp1: React.Dispatch<React.SetStateAction<imgURLType[]>>;
 };
 
 const AttachFileModal1: React.FC<BannerProps> = ({
@@ -18,7 +27,7 @@ const AttachFileModal1: React.FC<BannerProps> = ({
     const formData = new FormData();
     formData.append("file", file);
     const res = await axios.post(
-      "http://localhost:8080/api/v1/assets/upload/image",
+      `${BASE_URL}/api/v1/assets/upload/image`,
       formData,
       {
         headers: {
@@ -35,7 +44,7 @@ const AttachFileModal1: React.FC<BannerProps> = ({
       try {
         const url = await uploadImage(file);
         if (url) {
-          setImgURLApp1((prev) => [...prev, url]);
+          setImgURLApp1((prev) => [...prev, {url:url,_id:"",status:"ACTIVE"}]);
           submitBanner(url);
         }
       } catch (err) {
@@ -55,7 +64,7 @@ const AttachFileModal1: React.FC<BannerProps> = ({
     const token = localStorage.getItem("token");
     try {
       const res = await axios.post(
-        "http://localhost:8080/api/v1/dashboard/addBanner",
+        `${BASE_URL}/api/v1/dashboard/addBanner`,
         {
           file: url,
           type: "App1",
@@ -68,6 +77,8 @@ const AttachFileModal1: React.FC<BannerProps> = ({
         }
       );
       console.log(res.data);
+      setImgURLApp1((prev) => prev.map((p)=>p.url===url?{url:url,_id:res.data.data._id,status:"ACTIVE"}:p));
+
     } catch (err) {
       console.log(err);
     }
