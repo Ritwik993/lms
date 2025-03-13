@@ -5,7 +5,7 @@ import Content from "../components/Content";
 import Camera from "../assets/Camera.svg";
 import Notepad2 from "../assets/Notepad2.svg";
 import { useEffect, useState } from "react";
-import UploadVideoModal from "../components/UploadVideoModal";
+// import UploadVideoModal from "../components/UploadVideoModal";
 import UploadDocumentModal from "../components/UploadDocumentModal";
 import UploadTestModal from "../components/UploadTestModal";
 import UploadDppModal from "../components/UploadDppModal";
@@ -23,11 +23,10 @@ import axios from "axios";
 import { LoadingSpinner } from "@/custom/loading-spinner";
 import UploadVideoModal2 from "@/components/UploadVideoModal2";
 
-
-type FormData={
-  name:string;
-  link:string;
-}
+type FormData = {
+  name: string;
+  link: string;
+};
 
 // interface Topic {
 //   id: number;
@@ -78,6 +77,7 @@ const ContentCourse = () => {
   const [isNotes, setIsNotes] = useState(false);
   const [notesData, setNotesData] = useState<FormData[] | null>(null);
 
+
   const [isTest, setIsTest] = useState(false);
   const [testData, setTestData] = useState<FormData[] | null>(null);
 
@@ -93,6 +93,29 @@ const ContentCourse = () => {
   const [dppCount, setDppCount] = useState(0);
   const [assignmentCount, setAssignmentCount] = useState(0);
   const editId = useSelector((store: RootState) => store.edit.editId);
+
+  useEffect(() => {
+    subjects.forEach((subject: any) => {
+      if (subject.id === id) {
+        // Assuming numericId corresponds to the subject ID
+        const lect = subject.lectures.find(
+          (lecture: any) => lecture.lectureTitle === decodedChapterName
+        );
+        console.log("lect=", lect);
+       
+        setVideoData(lect?.video);
+        setVideoCount(lect?.video?.length - 1 || 0);
+        setNotesData(lect?.notes);
+        setNotesCount(lect?.notes?.length - 1 || 0);
+        setTestData(lect?.test);
+        setTestCount(lect?.test?.length - 1 || 0);
+        setAssignmentData(lect?.assignment);
+        setAssignmentCount(lect?.assignment?.length - 1 || 0);
+        setDppData(lect?.dpp);
+        setDppCount(lect?.dpp?.length - 1 || 0);
+      }
+    });
+  }, []);
 
   useEffect(() => {
     if (!editId) return;
@@ -145,7 +168,8 @@ const ContentCourse = () => {
         }
       );
       const result = res.data.data;
-      console.log(result[0]);
+      console.log("result of edit api is "+result)
+      console.log("result of api is "+result[0]);
       // const idArray: number[] = [];
 
       const ans = result[0].subjects.filter(
@@ -162,15 +186,15 @@ const ContentCourse = () => {
 
       ans1.map((a: any) => {
         setVideoData(a[0]?.video);
-        setVideoCount(a[0]?.video?.length-1||0);
+        setVideoCount(a[0]?.video?.length - 1 || 0);
         setNotesData(a[0]?.notes);
-        setNotesCount(a[0]?.notes?.length-1||0);
+        setNotesCount(a[0]?.notes?.length - 1 || 0);
         setTestData(a[0]?.test);
-        setTestCount(a[0]?.test?.length-1||0);
+        setTestCount(a[0]?.test?.length - 1 || 0);
         setAssignmentData(a[0]?.assignment);
-        setAssignmentCount(a[0]?.assignment?.length-1||0);
+        setAssignmentCount(a[0]?.assignment?.length - 1 || 0);
         setDppData(a[0]?.dpp);
-        setDppCount(a[0]?.dpp?.length-1);
+        setDppCount(a[0]?.dpp?.length - 1 || 0);
       });
 
       // console.log(JSON.stringify(videoData, null, 2));
@@ -249,6 +273,19 @@ const ContentCourse = () => {
       // const assignmentUrls = await uploadFiles(assignmentData, token);
 
       // Prepare the form state
+      // setNotesData1(notesData);
+      // const data=notesData;
+
+      // setVideoData(null);
+      // setNotesData(null);
+      // setTestData(null);
+      // setAssignmentData(null);
+      // setDppData(null);
+      // setVideoCount(0);
+      // setNotesCount(0);
+      // setTestCount(0);
+      // setDppCount(0);
+      // setAssignmentCount(0);
       const formState = {
         notes: notesData,
         videos: videoData,
@@ -258,6 +295,8 @@ const ContentCourse = () => {
       };
 
       console.log("Form State with Uploaded URLs:", formState);
+
+
 
       // Update the lecture in the Redux store
       // await dispatch(
@@ -269,13 +308,33 @@ const ContentCourse = () => {
 
       // Find the corresponding subject and update its lectures
       // const lectureTitle=lectures.
+
       subjects.forEach((subject: any) => {
-        if (subject.id === numericId) {
+        if (subject.id === id) {
           // Assuming numericId corresponds to the subject ID
+          // const lect = subject.lectures.find(
+          //   (lecture: any) => lecture.lectureTitle === decodedChapterName
+          // );
+          // console.log("lect=", lect);
+          // if (lect) {
+          //   if (formState.videos) {
+          //     console.log("formState.videos=", formState.videos);
+          //     lect.video.push(formState.videos[0]);
+          //   }
+          //   if (formState.assignments) {
+          //     lect.assignment.push(formState.assignments);
+          //   }
+          //   if (formState.tests) {
+          //     lect.test.push(formState.tests);
+          //   }
+          //   if (formState.dpp) {
+          //     lect.dpp.push(formState.dpp);
+          //   }
+          // } else {
           const updatedLecture = {
             // ...subject,
-            lectureTitle: lectures.lectureTitle,
-            id: Number(id),
+            lectureTitle: decodedChapterName,
+            id,
             notes: formState.notes,
             dpp: formState.dpp,
             video: formState.videos,
@@ -287,6 +346,8 @@ const ContentCourse = () => {
           dispatch(
             updateSubject({
               id: subject.id,
+              cname: decodedChapterName,
+              sname: decodedSubjectName,
               data: updatedLecture,
             })
           );
@@ -306,7 +367,7 @@ const ContentCourse = () => {
     <div className="flex-1 lg:ml-[250px] bg-[#F5F7FA] overflow-x-hidden">
       <Navbar />
       <div className="pt-[41px] bg-white lg:w-[90%] w-[95%] mx-auto mt-[56px]">
-      <LoadingSpinner isLoading={isLoading} />
+        <LoadingSpinner isLoading={isLoading} />
         <div className="flex  justify-between items-center w-[90%] mx-auto gap-x-[20px]">
           <div className="searchbox bg-white lg:max-w-[600px]  w-[60%]">
             <div className="flex lg:px-[18px] px-[16px] lg:py-[12px] py-[10px] border-[#E9EAF0] border">
@@ -386,7 +447,6 @@ const ContentCourse = () => {
                     <p>Video</p>
                   </div>
 
-
                   {/* {isVideo && (
                     <UploadVideoModal
                     setIsLoading={setIsLoading}
@@ -415,7 +475,7 @@ const ContentCourse = () => {
 
                   {isNotes && (
                     <UploadDocumentModal
-                    setIsLoading={setIsLoading}
+                      setIsLoading={setIsLoading}
                       setIsNotes={setIsNotes}
                       setNotesData={setNotesData}
                     />

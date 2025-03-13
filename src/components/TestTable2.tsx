@@ -16,23 +16,20 @@ import axios from "axios";
 import { BASE_URL } from "../constants/url";
 
 interface Data {
-  _id:string;
+  _id: string;
   serialNo: number;
   title: string;
   logo: string;
   price: number;
-  actualPrice:number;
-  discountedPrice:number;
+  actualPrice: number;
+  discountedPrice: number;
   sortBy: number;
-  isEnabled:boolean;
+  isEnabled: boolean;
 }
 
-type TableProps={
+type TableProps = {
   success: boolean;
-}
-
-
-
+};
 
 const columns: Column<Data>[] = [
   {
@@ -63,10 +60,12 @@ const columns: Column<Data>[] = [
   {
     Header: "Actions",
     Cell: ({ row }: { row: { original: Data } }) => {
-      const dispatch=useDispatch();
-      const handleTest=()=>{
-        dispatch(addTestSubject({id:row.original._id,name:row.original.title}))
-      }
+      const dispatch = useDispatch();
+      const handleTest = () => {
+        dispatch(
+          addTestSubject({ id: row.original._id, name: row.original.title })
+        );
+      };
       return (
         <div className="flex space-x-4 items-center ">
           <Link to={`/createtest/${row.original._id}`}>
@@ -77,7 +76,7 @@ const columns: Column<Data>[] = [
               View Tests
             </button>
           </Link>
-          <ToggleSwitch isEnabled={row.original.isEnabled}/>
+          <ToggleSwitch isEnabled={row.original.isEnabled} />
           {/* <label className="inline-flex items-center">
           <input type="checkbox" className="toggle-checkbox hidden" />
           <span className="toggle-label block w-10 h-6 bg-gray-300 rounded-full"></span>
@@ -89,34 +88,38 @@ const columns: Column<Data>[] = [
   },
 ];
 
-const TestTable2:FC<TableProps> = ({success}) => {
+const TestTable2: FC<TableProps> = ({ success }) => {
   // const table=useTable({ columns, data },
   //   useSortBy,
   //   usePagination);
-  const [data,setData]=useState<Data[]>([]);
+  const [data, setData] = useState<Data[]>([]);
 
-
-
-  useEffect(()=>{
+  useEffect(() => {
     getTableData();
-  },[success]);
+  }, [success]);
 
-  const getTableData=async()=>{
-    try{
-      const token=localStorage.getItem("token");
-      const res=await axios.get(`${BASE_URL}/api/v1/testSeries/getHomeTestSeries`,{
-        headers:{
-          Authorization:`Bearer ${token}`
+  const getTableData = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      const res = await axios.get(
+        `${BASE_URL}/api/v1/testSeries/getHomeTestSeries`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
         }
-      })
+      );
       // console.log(res.data.data);
-      const response=res.data.data;
-      const formattedData=response.map((r:any,i:number)=>({...r,serialNo:i+1}))
+      const response = res.data.data;
+      const formattedData = response.map((r: any, i: number) => ({
+        ...r,
+        serialNo: i + 1,
+      }));
       setData(formattedData);
-    }catch(err){
+    } catch (err) {
       console.log(err);
     }
-  }
+  };
   const {
     getTableProps,
     getTableBodyProps,
@@ -137,56 +140,58 @@ const TestTable2:FC<TableProps> = ({success}) => {
 
   return (
     <div>
-      <table
-        {...getTableProps()}
-        className="table-auto border-collapse border border-gray-200 w-full"
-      >
-        <thead>
-          {headerGroups.map(
-            (headerGroup: {
-              getHeaderGroupProps: () => JSX.IntrinsicAttributes &
-                React.ClassAttributes<HTMLTableRowElement> &
-                React.HTMLAttributes<HTMLTableRowElement>;
-              headers: any[];
-            }) => (
-              <tr
-                {...headerGroup.getHeaderGroupProps()}
-                className="bg-gray-100 "
-              >
-                {headerGroup.headers.map((column: any) => (
-                  <th
-                    {...column.getHeaderProps(
-                      column.getSortByToggleProps() // Correct function call
-                    )}
-                    className="p-2 border"
-                  >
-                    <div className="flex items-center justify-center gap-x-4">
-                      {column.render("Header")}
-                      <span>
-                        <img src={arrow} />
-                      </span>
-                    </div>
-                  </th>
-                ))}
-              </tr>
-            )
-          )}
-        </thead>
-        <tbody {...getTableBodyProps()}>
-          {page.map((row: any) => {
-            prepareRow(row);
-            return (
-              <tr {...row.getRowProps()} className="border">
-                {row.cells.map((cell: any) => (
-                  <td {...cell.getCellProps()} className="p-2 border">
-                    {cell.render("Cell")}
-                  </td>
-                ))}
-              </tr>
-            );
-          })}
-        </tbody>
-      </table>
+      <div className="border border-black overflow-x-auto scrollbar-hidden">
+        <table
+          {...getTableProps()}
+          className="table-auto border-collapse border border-gray-200 w-full "
+        >
+          <thead>
+            {headerGroups.map(
+              (headerGroup: {
+                getHeaderGroupProps: () => JSX.IntrinsicAttributes &
+                  React.ClassAttributes<HTMLTableRowElement> &
+                  React.HTMLAttributes<HTMLTableRowElement>;
+                headers: any[];
+              }) => (
+                <tr
+                  {...headerGroup.getHeaderGroupProps()}
+                  className="bg-gray-100 "
+                >
+                  {headerGroup.headers.map((column: any) => (
+                    <th
+                      {...column.getHeaderProps(
+                        column.getSortByToggleProps() // Correct function call
+                      )}
+                      className="p-2 border"
+                    >
+                      <div className="flex items-center justify-center gap-x-4">
+                        {column.render("Header")}
+                        <span>
+                          <img src={arrow} />
+                        </span>
+                      </div>
+                    </th>
+                  ))}
+                </tr>
+              )
+            )}
+          </thead>
+          <tbody {...getTableBodyProps()}>
+            {page.map((row: any) => {
+              prepareRow(row);
+              return (
+                <tr {...row.getRowProps()} className="border">
+                  {row.cells.map((cell: any) => (
+                    <td {...cell.getCellProps()} className="p-2 border">
+                      {cell.render("Cell")}
+                    </td>
+                  ))}
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+      </div>
       <div className="flex justify-between mt-[40px] items-center">
         <p className="text-[#92959A] lg:text-[16px] text-[14px] font-semibold">
           Showing {pageIndex + 1} of {pageCount} enteries

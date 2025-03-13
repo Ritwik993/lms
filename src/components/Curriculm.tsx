@@ -6,8 +6,8 @@ import { Link, useLocation } from "react-router-dom";
 import DownArrow from "../assets/CaretDown.svg";
 import { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { addLecture } from "../utils/lectureSlice";
-import { addSubject } from "../utils/subjectSlice";
+// import { addLecture } from "../utils/lectureSlice";
+import { addLectureById, addSubject, deleteLectureById, deleteSubjectById, updateLectureTitle, updateSubjectName } from "../utils/subjectSlice";
 import { RootState } from "../utils/store";
 import axios from "axios";
 import {
@@ -22,6 +22,7 @@ import {
 import { setActiveTab } from "../utils/activeTabSlice";
 import { BASE_URL } from "../constants/url";
 import { generateUniqueNumber } from "../utils/generateUniqueNumber";
+import { nanoid } from "@reduxjs/toolkit";
 
 // type Tab = "basic" | "advance" | "curriculum" | "publish";
 
@@ -40,13 +41,18 @@ interface Topic {
 //   topics: Topic[];
 // }
 
+type FormData = {
+  name: string;
+  link: string;
+};
+
 interface LectureData {
   lectureTitle: string;
-  notes: string[];
-  dpp: string[];
-  video: string[];
-  assignment: string[];
-  test: string[];
+  notes: FormData[];
+  dpp: FormData[];
+  video: FormData[];
+  assignment: FormData[];
+  test: FormData[];
 }
 
 type ResponseData = {
@@ -64,7 +70,7 @@ const Curriculm = () => {
   const editId = useSelector((store: RootState) => store.edit.editId);
 
   useEffect(() => {
-    if (!editId) return; 
+    if (!editId) return;
     dispatch(emptySection());
     getCourseData(editId);
   }, [editId]);
@@ -73,13 +79,14 @@ const Curriculm = () => {
   //   { id: 1, name: "Section Name", topics: [{ id: 1, name: "Chapter Name" }] },
   // ]);s
 
-  const sections = useSelector((store: RootState) => store.section.sections);
+  // const sections = useSelector((store: RootState) => store.section.sections);
+  // const subjects = useSelector((store: RootState) => store.subject.subjects);
   const [isDisable, setIsDisable] = useState(false);
 
   const [newSectionName, setNewSectionName] = useState("");
-  const [editingSectionId, setEditingSectionId] = useState<number | null>(null);
+  const [editingSubjectId, setEditingSectionId] = useState<string | null>(null);
   const [editingSectionName, setEditingSectionName] = useState("");
-  const [editingTopicId, setEditingTopicId] = useState<number | null>(null);
+  const [editingTopicId, setEditingTopicId] = useState<string | null>(null);
   const [editingTopicName, setEditingTopicName] = useState<string>("");
 
   const getCourseData = async (editId: string | null) => {
@@ -113,8 +120,6 @@ const Curriculm = () => {
         dispatch(addSectionRedux({ id, name: re.subjectTitle }));
       });
 
-      
-
       result[0].subjects.map((s: any, i: number) => {
         // console.log("u are "+JSON.stringify(s.lectures,null,2));
         s.lectures.map((le: any) => {
@@ -124,7 +129,6 @@ const Curriculm = () => {
             name: le.lectureTitle,
           };
 
-          
           dispatch(addTopicRedux({ sectionId: idArray[i], topic }));
         });
       });
@@ -135,23 +139,31 @@ const Curriculm = () => {
 
   const addSection = (newSectionName: string) => {
     if (newSectionName.trim()) {
-      const id = Date.now();
-      // setSections((prev) => [
-      //   ...prev,
-      //   { id, name: newSectionName.trim(), topics: [] },
-      // ]);
-      dispatch(addSectionRedux({ id, name: newSectionName }));
+      // const id = Date.now();
+      // // setSections((prev) => [
+      // //   ...prev,
+      // //   { id, name: newSectionName.trim(), topics: [] },
+      // // ]);
+      // dispatch(addSectionRedux({ id, name: newSectionName }));
+      dispatch(
+        addSubject({
+          id: nanoid(),
+          subjectTitle: newSectionName.trim(),
+          lectures: [],
+        })
+      );
       setNewSectionName("");
     }
   };
 
-  const deleteSection = (id: number) => {
+  const deleteSection = (id: string) => {
     // setSections((prev) => prev.filter((section) => section.id !== id));
-    dispatch(deleteSectionRedux(id));
+    // dispatch(deleteSectionRedux(id));
+    dispatch(deleteSubjectById(id));
   };
 
   const updateSectionName = () => {
-    if (editingSectionId !== null && editingSectionName.trim()) {
+    if (editingSubjectId !== null && editingSectionName.trim()) {
       // setSections((prev) =>
       //   prev.map((section) =>
       //     section.id === editingSectionId
@@ -159,25 +171,28 @@ const Curriculm = () => {
       //       : section
       //   )
       // );
-      dispatch(
-        updateSectionNameRedux({
-          id: editingSectionId,
-          name: editingSectionName,
-        })
-      );
-      dispatch(
-        addSubject({
-          id: editingSectionId,
-          subjectTitle: editingSectionName,
-          lectures: [],
-        })
-      );
+      // dispatch(
+      //   updateSectionNameRedux({
+      //     id: editingSubjectId,
+      //     name: editingSectionName,
+      //   })
+      // );
+
+      dispatch(updateSubjectName({ subjectId: editingSubjectId, subjectName: editingSectionName }));
+      
+      // dispatch(
+      //   addSubject({
+      //     id: editingSubjectId,
+      //     subjectTitle: editingSectionName,
+      //     lectures: [],
+      //   })
+      // );
     }
     setEditingSectionId(null);
     setEditingSectionName("");
   };
 
-  const addTopic = (sectionId: number, topicName: string) => {
+  const addTopic = (sectionId: string, topicName: string) => {
     // setSections((prev) =>
     //   prev.map((section) =>
     //     section.id === sectionId
@@ -188,11 +203,15 @@ const Curriculm = () => {
     //       : section
     //   )
     // );
-    const topic: Topic = { id: Date.now(), name: topicName };
-    dispatch(addTopicRedux({ sectionId, topic }));
+    // const topic: Topic = { id: Date.now(), name: topicName };
+    // dispatch(addTopicRedux({ sectionId, topic }));
+    console.log("sectionId=" + sectionId);
+    console.log("topicName=" + topicName);
+
+    dispatch(addLectureById({ subjectId: sectionId, lecture: topicName }));
   };
 
-  const deleteTopic = (sectionId: number, topicId: number) => {
+  const deleteTopic = (sectionId: string, topicId: string) => {
     // setSections((prev) =>
     //   prev.map((section) =>
     //     section.id === sectionId
@@ -204,10 +223,11 @@ const Curriculm = () => {
     //   )
     // );
 
-    dispatch(deleteTopicRedux({ sectionId, topicId }));
+    // dispatch(deleteTopicRedux({ sectionId, topicId }));
+    dispatch(deleteLectureById({ sectionId, topicId }));
   };
 
-  const editTopicName = (sectionId: number) => {
+  const editTopicName = (sectionId: string) => {
     if (
       editingTopicId != null &&
       sectionId != null &&
@@ -227,8 +247,15 @@ const Curriculm = () => {
       //       : section
       //   )
       // );
+      // dispatch(
+      //   updateTopicNameRedux({
+      //     sectionId,
+      //     topicId: editingTopicId,
+      //     name: editingTopicName,
+      //   })
+      // );
       dispatch(
-        updateTopicNameRedux({
+        updateLectureTitle({
           sectionId,
           topicId: editingTopicId,
           name: editingTopicName,
@@ -236,13 +263,13 @@ const Curriculm = () => {
       );
     }
 
-    dispatch(
-      addLecture({
-        id: editingTopicId,
-        subjectId: sectionId,
-        lectureTitle: editingTopicName,
-      })
-    );
+    // dispatch(
+    //   addLecture({
+    //     id: editingTopicId,
+    //     subjectId: sectionId,
+    //     lectureTitle: editingTopicName,
+    //   })
+    // );
     // subjects.map((subject)=>subject.id===sectionId?subject.lectures.push({id:editingTopicId,lectureTitle:editingTopicName}))
 
     setEditingTopicId(null);
@@ -264,7 +291,7 @@ const Curriculm = () => {
     });
     const courseId = localStorage.getItem("courseId");
     const data: ResponseData[] = filteredSubjects;
-    console.log("this is "+JSON.stringify(data,null,2));
+    console.log("this is " + JSON.stringify(data, null, 2));
     try {
       // const {id,lectureTitle,...restform}=subjects
       const res = await axios.post(
@@ -319,7 +346,7 @@ const Curriculm = () => {
       </div>
 
       {/*  */}
-      {sections.map((section, i) => (
+      {subjects.map((subject, i) => (
         <div
           className="contentBox  mt-[16px] w-[90%] mx-auto min-h-[312px] pb-8 bg-[#F5F7FA]"
           key={i}
@@ -327,7 +354,7 @@ const Curriculm = () => {
           <div className="flex justify-between items-center">
             <div className="flex gap-x-2 lg:p-[24px] p-[12px]">
               <img src={menu} />
-              {editingSectionId === section.id ? (
+              {editingSubjectId === subject.id ? (
                 <input
                   ref={inputRef}
                   type="text"
@@ -344,11 +371,11 @@ const Curriculm = () => {
                 <p
                   className="text-[#1D2026] font-medium text-[16px] cursor-pointer"
                   onClick={() => {
-                    setEditingSectionId(section.id);
-                    setEditingSectionName(section.name);
+                    setEditingSectionId(subject.id);
+                    setEditingSectionName(subject.subjectTitle);
                   }}
                 >
-                  {section.name}
+                  {subject.subjectTitle}
                 </p>
               )}
             </div>
@@ -358,15 +385,17 @@ const Curriculm = () => {
                 src={plus}
                 alt=""
                 className="object-contain pointer"
-                onClick={() => addTopic(section.id, "Chapter Name")}
+                onClick={() => {
+                  addTopic(subject.id, "Chapter Name");
+                }}
               />
               <img
                 src={pencil}
                 alt=""
                 className="object-contain"
                 onClick={() => {
-                  setEditingSectionId(section.id);
-                  setEditingSectionName(section.name);
+                  setEditingSectionId(subject.id);
+                  setEditingSectionName(subject.subjectTitle);
                   inputRef.current?.focus();
                 }}
               />
@@ -374,11 +403,11 @@ const Curriculm = () => {
                 src={trash}
                 alt=""
                 className="object-contain cursor-pointer"
-                onClick={() => deleteSection(section.id)}
+                onClick={() => deleteSection(subject.id)}
               />
             </div>
           </div>
-          {section.topics.map((topic) => (
+          {subject.lectures.map((topic) => (
             <div className="innerContent bg-white w-[95%] mx-auto mb-4">
               <div className="flex justify-between items-center">
                 <div className="flex gap-x-2 lg:p-[24px] p-[12px]">
@@ -389,9 +418,9 @@ const Curriculm = () => {
                       type="text"
                       value={editingTopicName}
                       onChange={(e) => setEditingTopicName(e.target.value)}
-                      onBlur={() => editTopicName(section.id)}
+                      onBlur={() => editTopicName(subject.id)}
                       onKeyDown={(e) => {
-                        if (e.key === "Enter") editTopicName(section.id);
+                        if (e.key === "Enter") editTopicName(subject.id);
                       }}
                       className="bg-[#F5F7FA] border-b border-gray-400 focus:outline-none"
                       autoFocus
@@ -401,16 +430,18 @@ const Curriculm = () => {
                       className="text-[#1D2026] font-medium text-[16px] cursor-pointer"
                       onClick={() => {
                         setEditingTopicId(topic.id);
-                        setEditingTopicName(topic.name);
+                        setEditingTopicName(topic.lectureTitle);
                       }}
                     >
-                      {topic.name}
+                      {topic.lectureTitle}
                     </p>
                   )}
                 </div>
 
                 <div className="flex gap-2 lg:p-[24px] p-[12px]">
-                  <Link to={`/contentcourse/${section.name}/${topic.name}/${section.id}`}>
+                  <Link
+                    to={`/contentcourse/${subject.subjectTitle}/${topic.lectureTitle}/${subject.id}`}
+                  >
                     <div className="flex bg-[#3D70F5] bg-opacity-25 lg:px-[16px] px-[10px]  gap-x-[4px]">
                       <p className=" text-[#3A6BE4] font-semibold lg:text-[14px] text-[12px] lg:leading-[40px] leading-[35px]  ">
                         Contents
@@ -425,7 +456,7 @@ const Curriculm = () => {
                     className="object-contain pointer"
                     onClick={() => {
                       setEditingTopicId(topic.id);
-                      setEditingTopicName(topic.name);
+                      setEditingTopicName(topic.lectureTitle);
                       inputRef2.current?.focus();
                     }}
                   />
@@ -433,7 +464,7 @@ const Curriculm = () => {
                     src={trash}
                     alt=""
                     className="object-contain pointer"
-                    onClick={() => deleteTopic(section.id, topic.id)}
+                    onClick={() => deleteTopic(subject.id, topic.id)}
                   />
                 </div>
               </div>
