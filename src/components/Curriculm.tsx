@@ -7,7 +7,7 @@ import DownArrow from "../assets/CaretDown.svg";
 import { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 // import { addLecture } from "../utils/lectureSlice";
-import { addLectureById, addSubject, deleteLectureById, deleteSubjectById, updateLectureTitle, updateSubjectName } from "../utils/subjectSlice";
+import { addLectureById, addSubject, deleteLectureById, deleteSubject, deleteSubjectById, updateLectureTitle, updateSubjectName } from "../utils/subjectSlice";
 import { RootState } from "../utils/store";
 import axios from "axios";
 import {
@@ -71,7 +71,9 @@ const Curriculm = () => {
 
   useEffect(() => {
     if (!editId) return;
-    dispatch(emptySection());
+    dispatch(deleteSubject());
+    console.log("editId = "+editId);
+    console.log("useEffect called !!!");
     getCourseData(editId);
   }, [editId]);
 
@@ -103,33 +105,37 @@ const Curriculm = () => {
           },
         }
       );
+      console.log("called!!!");
       const result = res.data.data;
-      console.log(result[0]);
-      const idArray: number[] = [];
+      // console.log("data = "+JSON.stringify(result[0],null,2));
+      const idArray: string[] = [];
+
+      // console.log("data of subjects= "+JSON.stringify(result[0].subjects,null,2));
+
 
       result[0].subjects.map((re: any) => {
         if (re.lectures.length === 0) {
           return;
         }
 
-        const id = generateUniqueNumber();
+        // const id = generateUniqueNumber();
         // const id = Date.now() + index;
-        idArray.push(id);
+        idArray.push(re.id);
 
         // console.log("called !!!");
-        dispatch(addSectionRedux({ id, name: re.subjectTitle }));
+        dispatch(addSubject({ id:re.id, subjectTitle: re.subjectTitle,lectures:[] }));
       });
 
       result[0].subjects.map((s: any, i: number) => {
         // console.log("u are "+JSON.stringify(s.lectures,null,2));
         s.lectures.map((le: any) => {
           // console.log(le.lectureTitle)
-          const topic = {
-            id: generateUniqueNumber(),
-            name: le.lectureTitle,
-          };
+          // const topic = {
+          //   id: generateUniqueNumber(),
+          //   name: le.lectureTitle,
+          // };
 
-          dispatch(addTopicRedux({ sectionId: idArray[i], topic }));
+          dispatch(addLectureById({ subjectId: idArray[i],lecture:le.lectureTitle }));
         });
       });
     } catch (err) {
@@ -440,7 +446,7 @@ const Curriculm = () => {
 
                 <div className="flex gap-2 lg:p-[24px] p-[12px]">
                   <Link
-                    to={`/contentcourse/${subject.subjectTitle}/${topic.lectureTitle}/${subject.id}`}
+                    to={`/contentcourse/${subject.subjectTitle}/${topic.lectureTitle}/${subject.id}/${topic.id}`}
                   >
                     <div className="flex bg-[#3D70F5] bg-opacity-25 lg:px-[16px] px-[10px]  gap-x-[4px]">
                       <p className=" text-[#3A6BE4] font-semibold lg:text-[14px] text-[12px] lg:leading-[40px] leading-[35px]  ">

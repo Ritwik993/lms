@@ -114,7 +114,7 @@ function App() {
           element: <Setting />,
         },
         {
-          path: "/contentcourse/:subject/:chapter/:id",
+          path: "/contentcourse/:subject/:chapter/:id/:lectureId",
           element: <ContentCourse />,
         },
         {

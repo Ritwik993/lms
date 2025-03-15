@@ -1,5 +1,5 @@
 import { createSlice, nanoid, PayloadAction } from "@reduxjs/toolkit";
-import { act } from "react";
+// import { act } from "react";
 
 type FormData = {
   name: string;

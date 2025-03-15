@@ -55,7 +55,7 @@ type FormData = {
 // }
 
 const ContentCourse = () => {
-  const { subject, chapter, id } = useParams();
+  const { subject, chapter, id,lectureId } = useParams();
   const decodedChapterName = decodeURIComponent(chapter || "");
   const decodedSubjectName = decodeURIComponent(subject || "");
   console.log(decodedChapterName);
@@ -120,6 +120,7 @@ const ContentCourse = () => {
   useEffect(() => {
     if (!editId) return;
     // dispatch(emptySection());
+    console.log("useEffect called in content course")
     getCourseData(editId);
   }, [editId]);
 
@@ -168,21 +169,21 @@ const ContentCourse = () => {
         }
       );
       const result = res.data.data;
-      console.log("result of edit api is "+result)
-      console.log("result of api is "+result[0]);
+      // console.log("result of edit api is "+result)
+      // console.log("result of api is "+result[0]);
       // const idArray: number[] = [];
 
       const ans = result[0].subjects.filter(
         (s: any) => s.subjectTitle === decodedSubjectName
       );
-      console.log("ans=" + JSON.stringify(ans, null, 2));
+      // console.log("ans=" + JSON.stringify(ans, null, 2));
 
       // const ans1=ans.lectures?.filter((l:any)=>l.lectureTitle===decodedChapterName);
       // const ans1=ans.lectures;
       const ans1 = ans.map((a: any) =>
         a.lectures?.filter((l: any) => l.lectureTitle === decodedChapterName)
       );
-      console.log("ans1=" + JSON.stringify(ans1, null, 2));
+      // console.log("ans1=" + JSON.stringify(ans1, null, 2));
 
       ans1.map((a: any) => {
         setVideoData(a[0]?.video);
@@ -262,6 +263,30 @@ const ContentCourse = () => {
     if (!token) {
       console.error("No token found");
       return;
+    }
+    console.log("hi");
+
+    if(editId){
+      console.log("Inside handle Save")
+      try{
+        const token=localStorage.getItem("token");
+        const res=await axios.put(`${BASE_URL}/api/v1/curriculum/editLectures/${lectureId}`,{
+          title:decodedChapterName,
+          notes:notesData,
+          dpp:dppData,
+          video:videoData,
+          assignment:assignmentData,
+          test:testData
+        },{
+          headers:{
+            Authorization:`Bearer ${token}`
+          }
+        })
+        console.log("lectures = "+res.data);
+      }
+      catch(err){
+        console.log(err);
+      }
     }
 
     try {
