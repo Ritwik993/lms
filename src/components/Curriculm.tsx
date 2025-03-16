@@ -135,7 +135,7 @@ const Curriculm = () => {
           //   name: le.lectureTitle,
           // };
 
-          dispatch(addLectureById({ subjectId: idArray[i],lecture:le.lectureTitle }));
+          dispatch(addLectureById({ subjectId: idArray[i],topicId:le.id,lecture:le.lectureTitle }));
         });
       });
     } catch (err) {
@@ -214,7 +214,7 @@ const Curriculm = () => {
     console.log("sectionId=" + sectionId);
     console.log("topicName=" + topicName);
 
-    dispatch(addLectureById({ subjectId: sectionId, lecture: topicName }));
+    dispatch(addLectureById({ subjectId: sectionId,topicId:nanoid(), lecture: topicName }));
   };
 
   const deleteTopic = (sectionId: string, topicId: string) => {
@@ -287,6 +287,15 @@ const Curriculm = () => {
   }, [pathname]);
 
   const handleSubmit = async () => {
+    // if(editId){
+    // const token = localStorage.getItem("token");
+    //   try{
+    //     const res=await axios.put(`${BASE_URL}/api/v1/course/updateCourse/${editId}`,{})
+    //   }catch(err){
+    //     console.log(err);
+    //   }
+    //   return;
+    // }
     const token = localStorage.getItem("token");
     setIsDisable(true);
     console.log({ ...subjects });

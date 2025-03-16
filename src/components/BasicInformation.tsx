@@ -1,11 +1,12 @@
 import axios from "axios";
 import { FC, useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Link, useLocation } from "react-router-dom";
 import { setActiveTab } from "../utils/activeTabSlice";
 import { BASE_URL } from "../constants/url";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import { RootState } from "../utils/store";
 
 type BasicFormState = {
   title: string;
@@ -16,7 +17,7 @@ type BasicFormState = {
   language: string;
   subtitleLanguage?: string;
   courseLevels: string;
-  courseDurations: number|null;
+  courseDurations: number | null;
   instructor1: string;
   instructor2: string;
   instructor3?: string;
@@ -84,8 +85,7 @@ const BasicInformation: FC<BasicInformationProps> = ({
   const [isDisable, setIsDisable] = useState(false);
 
   const { pathname } = useLocation();
-
-  
+  const editId = useSelector((store: RootState) => store.edit.editId);
 
   // console.log(pathname);
 
@@ -142,17 +142,17 @@ const BasicInformation: FC<BasicInformationProps> = ({
       uniqueKeys.add(name);
       setCount(uniqueKeys.size);
     }
-    if(name==="price"){
-      setBasicInfo((prev)=>{
-        return {...prev,[name]:Number(value)}
-      })
-      return
+    if (name === "price") {
+      setBasicInfo((prev) => {
+        return { ...prev, [name]: Number(value) };
+      });
+      return;
     }
-    if(name==="courseDurations"){
-      setBasicInfo((prev)=>{
-        return {...prev,[name]:Number(value)}
-      })
-      return
+    if (name === "courseDurations") {
+      setBasicInfo((prev) => {
+        return { ...prev, [name]: Number(value) };
+      });
+      return;
     }
     if (value.length <= 80) {
       setBasicInfo((prev) => {
@@ -173,7 +173,7 @@ const BasicInformation: FC<BasicInformationProps> = ({
       });
       return;
     }
-    
+
     setBasicInfo((prev) => {
       return { ...prev, [name]: value };
     });
@@ -223,19 +223,34 @@ const BasicInformation: FC<BasicInformationProps> = ({
       console.log(token);
 
       // Make the request with the token in the headers
-      const res = await axios.post(
-        `${BASE_URL}/api/v1/course/addCourse`,
-        restFormState,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      if (editId) {
+        console.log("Inside Edit api")
+        console.log("editId = "+editId);
+        const res = await axios.put(
+          `${BASE_URL}/api/v1/course/updateCourse/${editId}`,
+          restFormState,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        console.log("data after edit is "+JSON.stringify(res.data,null,2));
+      } else {
+        const res = await axios.post(
+          `${BASE_URL}/api/v1/course/addCourse`,
+          restFormState,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
 
-      localStorage.setItem("courseId", res.data.data._id);
+        localStorage.setItem("courseId", res.data.data._id);
 
-      console.log(res.data);
+        console.log(res.data);
+      }
 
       // setActiveTab("advance");
       dispatch(setActiveTab("advance"));
@@ -566,7 +581,7 @@ const BasicInformation: FC<BasicInformationProps> = ({
             </p>
             <DatePicker
               selected={basicInfo.startDate}
-              dateFormat='dd/MM/yyyy'
+              dateFormat="dd/MM/yyyy"
               showYearDropdown
               scrollableMonthYearDropdown
               minDate={new Date()}
@@ -584,7 +599,7 @@ const BasicInformation: FC<BasicInformationProps> = ({
             </p>
             <DatePicker
               selected={basicInfo.endDate}
-              dateFormat='dd/MM/yyyy'
+              dateFormat="dd/MM/yyyy"
               showYearDropdown
               scrollableMonthYearDropdown
               minDate={new Date()}
@@ -609,7 +624,6 @@ const BasicInformation: FC<BasicInformationProps> = ({
               onChange={handleInputChange}
             />
           </div>
-
 
           <div className=" min-w-max">
             <p className="text-[#1D2026] lg:text-[14px] text-[12px] md:leading-[22px] leading-[20px]">

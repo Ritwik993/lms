@@ -4,12 +4,12 @@ import ThreeDots from "../assets/DotsThree.svg";
 import { useParams } from "react-router-dom";
 import VideoLinkCard from "@/custom/video-link-card";
 import DocumentCard from "@/custom/document-card";
+import { __DO_NOT_USE__ActionTypes } from "@reduxjs/toolkit";
 
-
-type FormData={
-  name:string;
-  link:string;
-}
+type FormData = {
+  name: string;
+  link: string;
+};
 
 type ContentProps = {
   videoData: FormData[] | null;
@@ -70,6 +70,36 @@ const Content = ({
   const { chapter } = useParams();
   const chapterName = decodeURIComponent(chapter || "");
   console.log("video= " + JSON.stringify(videoData, null, 2));
+
+  const removeVideo = (videoName: string) => {
+    setVideoData((prev) =>
+      prev ? prev.filter((v) => v.name !== videoName) : []
+    );
+    setVideoCount((prev) => prev - 2);
+  };
+
+  const removeNotes = (name: string) => {
+    setNotesData((prev) => prev && prev?.filter((v) => v.name !== name));
+    setNotesCount((prev) => prev - 2);
+  };
+
+  const removeTests = (name: string) => {
+    setTestData((prev) => (prev ? prev.filter((v) => v.name !== name) : []));
+    setTestCount((prev) => prev - 2);
+  };
+
+  const removeDpp = (name: string) => {
+    setDppData((prev) => (prev ? prev.filter((v) => v.name !== name) : []));
+    setDppCount((prev) => prev - 2);
+  };
+
+  const removeAssignment = (name: string) => {
+    setAssignmentData((prev) =>
+      prev ? prev.filter((v) => v.name !== name) : []
+    );
+    setAssignmentCount((prev) => prev - 2);
+  };
+
   return (
     <div className="bg-white p-[20px] flex flex-col w-[80%] max-h-min ">
       <div className="flex justify-between">
@@ -94,7 +124,7 @@ const Content = ({
           videoData.map((l, i) => (
             <div
               className=" border border-gray-200 w-[50%]  p-2 mt-[20px]"
-              key={`video-${i}`}
+              key={`video-${l.name}-${i}`}
             >
               {/* <div className="flex justify-between ">
                 <p className=" ">{data?.name}</p>
@@ -114,8 +144,8 @@ const Content = ({
               <p className="text-sm text-blue-500"> {data?.type}</p> */}
               <VideoLinkCard
                 videoUrl={l.link}
-                key={i}
                 videoName={l.name}
+                onRemove={removeVideo}
               />
             </div>
           ))
@@ -125,9 +155,10 @@ const Content = ({
             return (
               <VideoLinkCard
                 videoUrl={l.link}
-                key={i}
+                key={`video-${l.name}-${i}`}
                 // videoName={chapterName + ` ${i + 1}`}
                 videoName={l.name}
+                onRemove={removeVideo}
               />
             );
           })}
@@ -159,7 +190,7 @@ const Content = ({
                 name={l.name}
                 link={l.link}
                 description={"notes"}
-                onDelete={() => "id"}
+                onDelete={removeNotes}
               />
             </div>
           ))
@@ -170,8 +201,9 @@ const Content = ({
               <DocumentCard
                 name={l.name}
                 link={l.link}
+                key={`notes-${l.name}-${i}`}
                 description={"notes"}
-                onDelete={() => "id"}
+                onDelete={removeNotes}
               />
             );
           })}
@@ -181,7 +213,7 @@ const Content = ({
           testData.map((l, i) => (
             <div
               className=" border border-gray-200 w-[50%]  p-2 mt-[20px]"
-              key={`test-${i}`}
+              key={`test-${l.name}-${i}`}
             >
               {/* <div className="flex justify-between ">
                 <p className=" ">{data?.name}</p>
@@ -203,7 +235,7 @@ const Content = ({
                 name={l.name}
                 link={l.link}
                 description={"test"}
-                onDelete={() => "id"}
+                onDelete={removeTests}
               />
             </div>
           ))
@@ -212,11 +244,11 @@ const Content = ({
             // console.log("link of test = " + link);
             return (
               <DocumentCard
-              key={i}
                 name={l.name}
                 link={l.link}
+                key={`test-${l.name}-${i}`}
                 description={"test"}
-                onDelete={() => "id"}
+                onDelete={removeTests}
               />
             );
           })}
@@ -226,7 +258,7 @@ const Content = ({
           dppData.map((l, i) => (
             <div
               className=" border border-gray-200 w-[50%]  p-2 mt-[20px]"
-              key={`dpp-${i}`}
+              key={`dpp-${l.name}-${i}`}
             >
               {/* <div className="flex justify-between ">
                 <p className=" ">{data?.name}</p>
@@ -248,7 +280,7 @@ const Content = ({
                 name={l.name}
                 link={l.link}
                 description={"dpp"}
-                onDelete={() => "id"}
+                onDelete={removeDpp}
               />
             </div>
           ))
@@ -260,7 +292,8 @@ const Content = ({
                 name={l.name}
                 link={l.link}
                 description={"dpp"}
-                onDelete={() => "id"}
+                key={`dpp-${l.name}-${i}`}
+                onDelete={removeDpp}
               />
             );
           })}
@@ -270,7 +303,7 @@ const Content = ({
           assignmentData.map((l, i) => (
             <div
               className=" border border-gray-200 w-[50%]  p-2 mt-[20px]"
-              key={`assignment-${i}`}
+              key={`assignment-${l.name}-${i}`}
             >
               {/* <div className="flex justify-between ">
                 <p className=" ">{data?.name}</p>
@@ -290,11 +323,10 @@ const Content = ({
               <p className="text-sm text-blue-500"> {data?.type}</p> */}
 
               <DocumentCard
-              key={i}
                 name={l.name}
                 link={l.link}
                 description={"assignment"}
-                onDelete={() => "id"}
+                onDelete={removeAssignment}
               />
             </div>
           ))
@@ -302,13 +334,12 @@ const Content = ({
           assignmentData.map((l, i) => {
             // console.log("link of assignment = " + link);
             return (
-
               <DocumentCard
-              key={i}
                 name={l.name}
                 link={l.link}
                 description={"assignment"}
-                onDelete={() => "id"}
+                key={`assignment-${l.name}-${i}`}
+                onDelete={removeAssignment}
               />
             );
           })}

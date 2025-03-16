@@ -1,4 +1,4 @@
-import { createSlice, nanoid, PayloadAction } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 // import { act } from "react";
 
 type FormData = {
@@ -56,17 +56,17 @@ const subjectSlice = createSlice({
     },
     addLectureById: (
       state,
-      action: PayloadAction<{ subjectId: string; lecture: string }>
+      action: PayloadAction<{ subjectId: string,topicId:string, lecture: string }>
     ) => {
       console.log("addLecture");
-      const { subjectId, lecture } = action.payload;
+      const { subjectId, topicId,lecture } = action.payload;
       const sectionIndex = state.subjects.findIndex(
         (subject) => subject.id === subjectId
       );
       console.log("sectionIndex=" + sectionIndex);
       if (sectionIndex !== -1) {
         state.subjects[sectionIndex].lectures.push({
-          id: nanoid(),
+          id: topicId,
           subjectId: subjectId,
           lectureTitle: lecture,
           notes: [],

@@ -34,7 +34,9 @@ const UploadAssignmentModal: FC<UploadAssignmentModalProps> = ({
 
   const uploadImage = async (file: File | null) => {
     if (!file) return null;
-    const token = localStorage.getItem("token");
+    try{
+      setIsLoading(true);
+      const token = localStorage.getItem("token");
     const formData = new FormData();
     formData.append("file", file);
     const res = await axios.post(
@@ -48,6 +50,11 @@ const UploadAssignmentModal: FC<UploadAssignmentModalProps> = ({
       }
     );
     return res.data.fileUrl;
+    }catch(err){
+      console.log(err);
+    }finally{
+      setIsLoading(false);
+    }
   };
 
   const handleFileChange = async(e: React.ChangeEvent<HTMLInputElement>) => {

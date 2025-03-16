@@ -4,25 +4,38 @@ import { FileText, ExternalLink, X } from "lucide-react"
 import { Card, CardContent, CardFooter } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Link } from "react-router-dom"
+import { useState } from "react"
 // import Link from "next/link"
 
 interface DocumentCardProps {
   name: string
   link: string
   description?: string
-  onDelete?: () => void
+  onDelete?: (name:string) => void
 }
 
 export default function DocumentCard({
   name = "Project Proposal",
   link = "https://example.com/documents/project-proposal.pdf",
   description = "Project overview and timeline details",
-  onDelete = () => {},
+  onDelete,
 }: DocumentCardProps) {
+  const [isVisible,setIsVisible]=useState(true);
+
+  const handleRemove=(e:React.MouseEvent<HTMLButtonElement>)=>{
+    setIsVisible(false);
+    onDelete?.(name);
+  }
+
+  if (!isVisible) {
+    return null
+  }
+
+
   return (
     <Card className="w-full mt-4 max-w-md overflow-hidden transition-all hover:shadow-md relative">
       <button
-        onClick={onDelete}
+        onClick={handleRemove}
         className="absolute top-2 right-2 p-1 rounded-full hover:bg-destructive hover:text-destructive-foreground transition-colors"
         aria-label="Remove document"
       >

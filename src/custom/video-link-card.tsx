@@ -7,10 +7,15 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { PlayCircle, LinkIcon, Copy, Check, X } from "lucide-react"
 
+
+
+
+
+
 interface VideoLinkCardProps {
   videoName?: string
   videoUrl?: string
-  onRemove?: () => void
+  onRemove?: (videoName:string) => void
 }
 
 export default function VideoLinkCard({
@@ -27,12 +32,15 @@ export default function VideoLinkCard({
     setTimeout(() => setCopied(false), 2000)
   }
 
-  const handleRemove = () => {
+  const handleRemove = (e:React.MouseEvent<HTMLButtonElement> ) => {
     setIsVisible(false)
     // Call the parent's onRemove after animation
+    // e.stopPropagation();
+    
     setTimeout(() => {
-      onRemove?.()
+      onRemove?.(videoName);
     }, 300) // Match this with the CSS transition duration
+    // videoData=videoData.filter((video)=>video.name!=videoName);
   }
 
   if (!isVisible) {
