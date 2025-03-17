@@ -89,7 +89,7 @@ const TestForm = () => {
     try {
       const token = localStorage.getItem("token");
       const res = await axios.get(
-        `${BASE_URL}/api/v1/testSeries/getTestSeries?id=${id}`,
+        `${BASE_URL}/api/v1/testSeries/getSingleTest?id=${editId}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -97,40 +97,42 @@ const TestForm = () => {
         }
       );
 
-      console.log(
-        "Test data = " + JSON.stringify(res.data.data[0].tests, null, 2)
-      );
-      const testData = res.data.data[0].tests;
+      console.log("data isss = "+JSON.stringify(res.data.data[0]))
+
+      // console.log(
+      //   "Test data = " + JSON.stringify(res.data[0].tests, null, 2)
+      // );
+      const testData = res.data.data[0];
       console.log("final=" + JSON.stringify(testData, null, 2));
       // console.log("editId="+editId);
       // console.log("edit Value ="+editValue);
-      const response = testData.filter((t: any) => t._id === editId);
+      // const response = testData.filter((t: any) => t._id === editId);
 
-      console.log("Final = " + JSON.stringify(response[0], null, 2));
-      console.log("sortingOrder=" + response[0].sortingOrder);
+      // console.log("Final = " + JSON.stringify(response[0], null, 2));
+      // console.log("sortingOrder=" + response[0].sortingOrder);
 
       setFormState({
-        title: response[0].testTitle,
-        testDescription: response[0].testDescription,
-        instructions: response[0].instructions,
-        testStatus: response[0].status,
-        status: response[0].status,
-        testSeriesId: response[0].testSeriesId,
-        noOfQuestions: response[0].noOfQuestions,
-        totalMarks: response[0].totalMarks,
-        totalDuration: response[0].totalDuration,
-        sortingOrder: response[0].sortingOrder ? 1 : 0,
-        allowPdfMaterialDownload: response[0].allowPdfMaterialDownload,
-        startDate: response[0].startDate,
-        endDate: response[0].endDate,
-        testMaterial: response[0].testMaterial,
+        title: testData.title,
+        testDescription: testData.testDescription,
+        instructions: testData.instructions,
+        testStatus: testData.status,
+        status: testData.status,
+        testSeriesId: testData.testSeriesId,
+        noOfQuestions: testData.noOfQuestions,
+        totalMarks: testData.totalMarks,
+        totalDuration: testData.totalDuration,
+        sortingOrder: testData.sortingOrder ? 1 : 0,
+        allowPdfMaterialDownload: testData.allowPdfMaterialDownload,
+        startDate: testData.startDate,
+        endDate: testData.endDate,
+        testMaterial: testData.testMaterial,
       });
 
-      console.log("instructions=" + JSON.stringify(response[0].instructions, null, 2));
+      console.log("instructions=" + JSON.stringify(testData.instructions, null, 2));
       console.log(
-        "section =" + JSON.stringify(response[0].testSections, null, 2)
+        "section =" + JSON.stringify(testData.testsections, null, 2)
       );
-      const updatedSections = response[0].testSections.map((s: any) => ({
+      const updatedSections = testData.testsections.map((s: any) => ({
         ...s,
         edit: editValue,
         isOptional: s.isOptional ? 1 : 0,
@@ -191,6 +193,22 @@ const TestForm = () => {
   //     correctAns: "A",
   //   },
   // ]);
+
+
+  // useEffect(()=>{
+  //   editSectionData();
+  // },[sections]);
+
+  // const editSectionData=async()=>{
+  //   if(!editId) return;
+  //   const token=localStorage.getItem("token");
+  //   const res =await axios.put(`${BASE_URL}/api/v1/testSeries/updateTestSections/${editId}`,{...sections},{
+  //     headers:{
+  //       Authorization:`Bearer ${token}`
+  //     }
+  //   })
+  //   console.log(res.data);
+  // }
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
@@ -292,21 +310,39 @@ const TestForm = () => {
 
     const token = localStorage.getItem("token");
     try {
-      const res = await axios.post(
-        `${BASE_URL}/api/v1/testSeries/addTests`,
-        {
+      if(editId){
+        const res=await axios.put(`${BASE_URL}/api/v1/testSeries/updateTests/${editId}`,{
           ...formState,
           testSeriesId: id,
           status: "ACTIVE",
           sections: updatedSection,
         },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+      {
+        headers:{
+          Authorization:`Bearer ${token}`
         }
-      );
+      })
       console.log(res.data);
+
+      }else{
+
+        const res = await axios.post(
+          `${BASE_URL}/api/v1/testSeries/addTests`,
+          {
+            ...formState,
+            testSeriesId: id,
+            status: "ACTIVE",
+            sections: updatedSection,
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        console.log(res.data);
+      }
+      // console.log(res.data);
       toast.success("Test Created", {
         position: "top-right",
         autoClose: 5000,
@@ -434,7 +470,7 @@ const TestForm = () => {
                   htmlFor="instructions"
                   className=" text-sm font-medium mb-1 flex justify-between"
                 >
-                  <p className="font-medium lg:text-[18px] text-[16px] text-[#1D2026] lg:leading-[24px] leading-[20px]">
+                  <p className="font-medium lg:text-[18px] text-[16px] text-[#757678] lg:leading-[24px] leading-[20px]">
                     Terms and Conditions ({formState.instructions?.length}/8)
                   </p>
                   <button
@@ -461,7 +497,7 @@ const TestForm = () => {
                       <input
                         type="text"
                         placeholder="Terms and Conditions for the test..."
-                        className="placeholder-text-[#8C94A3] border-[#E9EAF0] border w-full outline-none py-[5px] pl-[10px] pr-[80px]"
+                        className="placeholder-text-[#8C94A3] border-[#E9EAF0] border text-[#757678] w-full outline-none py-[5px] pl-[10px] pr-[80px]"
                         value={item}
                         onChange={(e) =>
                           handleInstructionChange(index, e.target.value)

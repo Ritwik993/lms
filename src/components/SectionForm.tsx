@@ -3,6 +3,8 @@
 import QuizModal from "@/custom/quiz-modal";
 import { useSearchParams } from "react-router-dom";
 import { Button } from "./ui/button";
+import { BASE_URL } from "@/constants/url";
+import axios from "axios";
 
 // const SectionForm = () => {
 //   const [sections, setSections] = useState([
@@ -125,8 +127,10 @@ type SectionProps = {
 const SectionForm: React.FC<SectionProps> = ({ sections, setSections }) => {
   const [searchParams] = useSearchParams();
   const editValue = searchParams.get("edit") === "true";
+  const editId = searchParams.get("editId");
 
-  const handleChange = (
+
+  const handleChange = async(
     index: number,
     field: keyof Section,
     value: string | number | boolean
@@ -135,6 +139,15 @@ const SectionForm: React.FC<SectionProps> = ({ sections, setSections }) => {
       i === index ? { ...section, [field]: value } : section
     );
     setSections(updatedSections);
+    if(editId) {
+    const token=localStorage.getItem("token");
+    const res =await axios.put(`${BASE_URL}/api/v1/testSeries/updateTestSections/${editId}`,{...sections},{
+      headers:{
+        Authorization:`Bearer ${token}`
+      }
+    })
+    console.log(res.data);
+  }
   };
 
   const handleFileChange = (
