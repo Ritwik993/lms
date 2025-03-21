@@ -182,7 +182,7 @@ const SectionForm: React.FC<SectionProps> = ({ sections, setSections }) => {
 
   return (
     <div className="py-6">
-      <table className="w-full border-collapse border border-gray-300">
+      <table className="w-full border-collapse border border-gray-300 overflow-x-scroll">
         <thead>
           <tr className="bg-gray-100">
             <th className="border border-gray-300 text-[#6D6F71] p-2 ">

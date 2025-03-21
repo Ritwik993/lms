@@ -98,7 +98,7 @@ const Courses = () => {
       </div>
 
       <div className=" w-[96%] mx-auto  mt-[80px] pt-[20px]">
-        <div className="w-[96%] mx-auto grid xl:grid-cols-4 lg:grid-cols-3 grid-cols-2   gap-6">
+        <div className="w-[96%] mx-auto grid xl:grid-cols-3 lg:grid-cols-3 grid-cols-2   gap-y-4">
           {/* {[1, 2, 3, 4, 5, 6, 7].map((id) => (
             <VideoCard
               key={id}

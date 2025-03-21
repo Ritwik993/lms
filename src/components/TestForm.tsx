@@ -355,7 +355,7 @@ const TestForm = () => {
 
         console.log("Before Sections = "+JSON.stringify(sections,null,2));
         await Promise.all(
-          updatedSection.map(async (s: any) => {
+          sections.map(async (s: any) => {
             if (s.pdf instanceof File) {
               console.log("hi")
               s = await handleSinglePdf(s); 

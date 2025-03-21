@@ -96,16 +96,16 @@ const Dashboard = () => {
         <p className="text-center text-red-500">{error}</p>
       ) : (
         <div>
-          <div className="md:px-[160px] px-[40px] py-[24px] grid gap-[24px] xl:grid-cols-3 sm:grid-cols-2 grid-cols-1">
+          <div className=" px-[40px] py-[24px] grid gap-[24px] xl:grid-cols-3 sm:grid-cols-2 grid-cols-1">
             {dashItems.map((item) => (
               <InformationBox key={item.id} {...item} />
             ))}
           </div>
-          <div className="mt-[24px] md:px-[175px] px-[50px] flex lg:flex-row flex-col gap-[25px]">
+          <div className="mt-[24px] px-[50px] flex lg:flex-row flex-col gap-[25px]">
             <Notification />
             <CreateBanner />
           </div>
-          <div className="mt-[24px] md:px-[175px] px-[50px] flex lg:flex-row flex-col gap-[25px]">
+          <div className="mt-[24px]  px-[50px] flex lg:flex-row flex-col gap-[25px]">
             <Rating />
             <Revenue />
           </div>
