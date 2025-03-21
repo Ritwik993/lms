@@ -32,7 +32,7 @@ export default function VideoLinkCard({
     setTimeout(() => setCopied(false), 2000)
   }
 
-  const handleRemove = (e:React.MouseEvent<HTMLButtonElement> ) => {
+  const handleRemove = () => {
     setIsVisible(false)
     // Call the parent's onRemove after animation
     // e.stopPropagation();

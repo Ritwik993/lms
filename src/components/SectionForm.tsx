@@ -3,8 +3,8 @@
 import QuizModal from "@/custom/quiz-modal";
 import { useSearchParams } from "react-router-dom";
 import { Button } from "./ui/button";
-import { BASE_URL } from "@/constants/url";
-import axios from "axios";
+// import { BASE_URL } from "@/constants/url";
+// import axios from "axios";
 
 // const SectionForm = () => {
 //   const [sections, setSections] = useState([
@@ -127,7 +127,7 @@ type SectionProps = {
 const SectionForm: React.FC<SectionProps> = ({ sections, setSections }) => {
   const [searchParams] = useSearchParams();
   const editValue = searchParams.get("edit") === "true";
-  const editId = searchParams.get("editId");
+  // const editId = searchParams.get("editId");
 
 
   const handleChange = async(

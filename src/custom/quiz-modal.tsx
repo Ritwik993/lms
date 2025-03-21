@@ -252,7 +252,7 @@ export default function QuizModal({questions}: {questions: []}) {
 //     ],
 //   }
 
-  const currentQuestion = quizData.questions[currentQuestionIndex]
+  const currentQuestion:any = quizData.questions[currentQuestionIndex]
   const totalQuestions = quizData.questions.length
 
   const goToNextQuestion = () => {
@@ -280,7 +280,7 @@ export default function QuizModal({questions}: {questions: []}) {
             <DialogTitle className="text-xl">{currentQuestion?.question}</DialogTitle>
           </DialogHeader>
           <div className="mt-4 space-y-3">
-            {currentQuestion?.options.map((option) => (
+            {currentQuestion?.options.map((option:any) => (
               <div
                 key={option._id}
                 className={`p-3 rounded-lg border ${

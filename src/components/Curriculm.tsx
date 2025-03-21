@@ -10,18 +10,18 @@ import { useDispatch, useSelector } from "react-redux";
 import { addLectureById, addSubject, deleteLectureById, deleteSubject, deleteSubjectById, updateLectureTitle, updateSubjectName } from "../utils/subjectSlice";
 import { RootState } from "../utils/store";
 import axios from "axios";
-import {
-  addSectionRedux,
-  addTopicRedux,
-  deleteSectionRedux,
-  deleteTopicRedux,
-  emptySection,
-  updateSectionNameRedux,
-  updateTopicNameRedux,
-} from "../utils/sectionSlice";
+// import {
+//   addSectionRedux,
+//   addTopicRedux,
+//   deleteSectionRedux,
+//   deleteTopicRedux,
+//   emptySection,
+//   updateSectionNameRedux,
+//   updateTopicNameRedux,
+// } from "../utils/sectionSlice";
 import { setActiveTab } from "../utils/activeTabSlice";
 import { BASE_URL } from "../constants/url";
-import { generateUniqueNumber } from "../utils/generateUniqueNumber";
+// import { generateUniqueNumber } from "../utils/generateUniqueNumber";
 import { nanoid } from "@reduxjs/toolkit";
 
 // type Tab = "basic" | "advance" | "curriculum" | "publish";
@@ -30,10 +30,10 @@ import { nanoid } from "@reduxjs/toolkit";
 //   setActiveTab: React.Dispatch<React.SetStateAction<Tab>>;
 // };
 
-interface Topic {
-  id: number;
-  name: string;
-}
+// interface Topic {
+//   id: number;
+//   name: string;
+// }
 
 // interface Section {
 //   id: number;

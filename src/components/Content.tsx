@@ -5,7 +5,7 @@ import { useParams } from "react-router-dom";
 import VideoLinkCard from "@/custom/video-link-card";
 import DocumentCard from "@/custom/document-card";
 import { __DO_NOT_USE__ActionTypes } from "@reduxjs/toolkit";
-import { useState } from "react";
+// import { useState } from "react";
 
 type FormData = {
   name: string;
@@ -66,7 +66,7 @@ const Content = ({
   setAssignmentData,
   setAssignmentCount,
   editId,
-  flag,
+  // flag,
 }: ContentProps) => {
   const { chapter } = useParams();
   const chapterName = decodeURIComponent(chapter || "");

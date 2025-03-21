@@ -43,7 +43,7 @@ const AddCartItemModal: React.FC<ModalProps> = ({
             }
         })
         console.log(res.data.data);
-        setSuccess(prev=>!prev);
+        setSuccess(!success);
         onClose();
           toast.success('Free video added', {
                 position: "top-right",

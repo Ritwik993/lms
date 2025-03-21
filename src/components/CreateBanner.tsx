@@ -48,7 +48,8 @@ const CreateBanner = () => {
   }, [imgURL, isPaused, isWebsite]);
 
   useEffect(() => {
-    setRender((prev) => !prev);
+    // setRender((prev) => !prev);
+    setRender(!render);
   }, [imgURL, imgURLApp1, imgURLApp2]);
 
   useEffect(() => {
@@ -77,7 +78,8 @@ const CreateBanner = () => {
 
   useEffect(() => {
     console.log("Updated Image List:", imgURL);
-    setRender((prev) => !prev);
+    // setRender((prev) => !prev);
+    setRender(!render);
   }, [imgURL]);
 
   const removeImageWeb = async (id: string, type: string) => {

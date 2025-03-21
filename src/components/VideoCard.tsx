@@ -163,7 +163,7 @@ import { useDispatch } from "react-redux"
 import { setActiveTab } from "../utils/activeTabSlice"
 import { addEditId } from "../utils/editSlice"
 import DOMPurify from "dompurify"
-import { MoreHorizontal, Star, Users, Eye, Edit, GraduationCap, MoreVertical } from "lucide-react"
+import {  Star, Users, Eye, Edit, GraduationCap, MoreVertical } from "lucide-react"
 import {
   DropdownMenu,
   DropdownMenuContent,

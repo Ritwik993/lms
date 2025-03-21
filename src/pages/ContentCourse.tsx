@@ -60,8 +60,8 @@ const ContentCourse = () => {
   const decodedSubjectName = decodeURIComponent(subject || "");
   console.log(decodedChapterName);
   console.log(decodedSubjectName);
-  const numericId = Number(id);
-  const lectures = useSelector((store: RootState) => store.lecture.lectures);
+  // const numericId = Number(id);
+  // const lectures = useSelector((store: RootState) => store.lecture.lectures);
   const subjects = useSelector((store: RootState) => store.subject.subjects);
   const [isLoading, setIsLoading] = useState(false);
 

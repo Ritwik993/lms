@@ -22,7 +22,7 @@ export default function DocumentCard({
 }: DocumentCardProps) {
   const [isVisible,setIsVisible]=useState(true);
 
-  const handleRemove=(e:React.MouseEvent<HTMLButtonElement>)=>{
+  const handleRemove=()=>{
     setIsVisible(false);
     onDelete?.(name);
   }

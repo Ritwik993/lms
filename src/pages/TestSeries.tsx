@@ -2,7 +2,7 @@ import Navbar from "../components/Navbar";
 import MagnifyingGlass from "../assets/MagnifyingGlass.svg";
 import TestTable2 from "../components/TestTable2";
 import CreateTestSeriesPopup from "../components/CreateTestSeriesPopup";
-import { useEffect, useState } from "react";
+import {  useState } from "react";
 
 const TestSeries = () => {
   const [isOpen,setIsOpen]=useState(false);
