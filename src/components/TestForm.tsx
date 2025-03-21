@@ -68,6 +68,7 @@ const TestForm = () => {
   console.log("searchParams = " + searchParams.toString());
   const editValue = searchParams.get("edit") === "true"; //converting to boolean
   const editId = searchParams.get("editId");
+  // const edit =searchParams.get("edit");
 
   const { id } = useParams();
   // const tests = useSelector((store: RootState) => store.test.tests);
@@ -97,7 +98,10 @@ const TestForm = () => {
         }
       );
 
-      console.log("data isss = "+JSON.stringify(res.data.data[0]))
+      console.log(
+        "data isss = " +
+          JSON.stringify("For section data = " + res.data.data[0])
+      );
 
       // console.log(
       //   "Test data = " + JSON.stringify(res.data[0].tests, null, 2)
@@ -128,13 +132,14 @@ const TestForm = () => {
         testMaterial: testData.testMaterial,
       });
 
-      console.log("instructions=" + JSON.stringify(testData.instructions, null, 2));
       console.log(
-        "section =" + JSON.stringify(testData.testsections, null, 2)
+        "instructions=" + JSON.stringify(testData.instructions, null, 2)
       );
+      console.log("section =" + JSON.stringify(testData.testsections, null, 2));
       const updatedSections = testData.testsections.map((s: any) => ({
         ...s,
         edit: editValue,
+        negativeMarking:s.negativeMarking?1:0,
         isOptional: s.isOptional ? 1 : 0,
         isFixedTiming: s.isFixedTiming ? 1 : 0,
       }));
@@ -194,7 +199,6 @@ const TestForm = () => {
   //   },
   // ]);
 
-
   // useEffect(()=>{
   //   editSectionData();
   // },[sections]);
@@ -229,15 +233,15 @@ const TestForm = () => {
     }
   };
 
-  const handleInstructionChange=(index:number,value:string)=>{
+  const handleInstructionChange = (index: number, value: string) => {
     // console.log(
     //   "index="+index
     // )
     // console.log("value "+value)
-    const updatedInstructions=[...formState.instructions];
-    updatedInstructions[index]=value;
-    setFormState((prev)=>({...prev,instructions:updatedInstructions}))
-  }
+    const updatedInstructions = [...formState.instructions];
+    updatedInstructions[index] = value;
+    setFormState((prev) => ({ ...prev, instructions: updatedInstructions }));
+  };
 
   const handleDescription = (value: string) => {
     setFormState((prev) => ({ ...prev, testDescription: value }));
@@ -303,6 +307,41 @@ const TestForm = () => {
     }
   };
 
+  const handleSinglePdf = async (section: any) => {
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        throw new Error("No authentication token found");
+      }
+  
+      if (!section.pdf) {
+        throw new Error("No PDF file found in section");
+      }
+  
+      const pdfUrl = await uploadToCloudinary(section.pdf); // Upload PDF
+      if (!pdfUrl) {
+        throw new Error("PDF upload failed");
+      }
+  
+      const res = await axios.post(
+        "https://pw-railway-parser-production.up.railway.app/parse-pdf",
+        { pdfUrl },
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+  
+      console.log("After parsing of pdf:", res.data.data);
+  
+      return { ...section, questions: res.data.data }; // Return updated section
+    } catch (error) {
+      console.error("Error in handleSinglePdf:", error);
+      return section; // Return unchanged section in case of failure
+    }
+  };
+  
+ 
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     console.log(sections);
@@ -310,22 +349,42 @@ const TestForm = () => {
 
     const token = localStorage.getItem("token");
     try {
-      if(editId){
-        const res=await axios.put(`${BASE_URL}/api/v1/testSeries/updateTests/${editId}`,{
-          ...formState,
-          testSeriesId: id,
-          status: "ACTIVE",
-          sections: updatedSection,
-        },
-      {
-        headers:{
-          Authorization:`Bearer ${token}`
-        }
-      })
-      console.log(res.data);
+      if (editValue) {
+        console.log("sections inn edit = " + JSON.stringify(updatedSection, null, 2));
+        // Use Promise.all to execute all section updates in parallel
 
-      }else{
+        console.log("Before Sections = "+JSON.stringify(sections,null,2));
+        await Promise.all(
+          updatedSection.map(async (s: any) => {
+            if (s.pdf instanceof File) {
+              console.log("hi")
+              s = await handleSinglePdf(s); 
+            }
+    
+            return axios.put(`${BASE_URL}/api/v1/testSeries/updateTestSections/${s._id}`, s, {
+              headers: { Authorization: `Bearer ${token}` },
+            });
+          })
+        );
 
+        console.log("After sections = "+JSON.stringify(updatedSection,null,2));
+
+        const res = await axios.put(
+          `${BASE_URL}/api/v1/testSeries/updateTests/${editId}`,
+          {
+            ...formState,
+            testSeriesId: id,
+            status: "ACTIVE",
+            sections: updatedSection,
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        console.log(res.data);
+      } else {
         const res = await axios.post(
           `${BASE_URL}/api/v1/testSeries/addTests`,
           {

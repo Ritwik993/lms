@@ -139,15 +139,15 @@ const SectionForm: React.FC<SectionProps> = ({ sections, setSections }) => {
       i === index ? { ...section, [field]: value } : section
     );
     setSections(updatedSections);
-    if(editId) {
-    const token=localStorage.getItem("token");
-    const res =await axios.put(`${BASE_URL}/api/v1/testSeries/updateTestSections/${editId}`,{...sections},{
-      headers:{
-        Authorization:`Bearer ${token}`
-      }
-    })
-    console.log(res.data);
-  }
+  //   if(editId) {
+  //   const token=localStorage.getItem("token");
+  //   const res =await axios.put(`${BASE_URL}/api/v1/testSeries/updateTestSections/${editId}`,{...sections},{
+  //     headers:{
+  //       Authorization:`Bearer ${token}`
+  //     }
+  //   })
+  //   console.log(res.data);
+  // }
   };
 
   const handleFileChange = (

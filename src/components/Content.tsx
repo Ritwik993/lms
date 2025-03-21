@@ -5,6 +5,7 @@ import { useParams } from "react-router-dom";
 import VideoLinkCard from "@/custom/video-link-card";
 import DocumentCard from "@/custom/document-card";
 import { __DO_NOT_USE__ActionTypes } from "@reduxjs/toolkit";
+import { useState } from "react";
 
 type FormData = {
   name: string;
@@ -99,6 +100,8 @@ const Content = ({
     );
     setAssignmentCount((prev) => prev - 2);
   };
+
+  //  const [displayVideo,setDisplayVideo]=useState(false);
 
   return (
     <div className="bg-white p-[20px] flex flex-col w-[80%] max-h-min ">
