@@ -4,6 +4,7 @@ import NotificationBoxModal from "./NotificationBox";
 import axios from "axios";
 import messageIcon from "../assets/message.svg";
 import moment from 'moment';
+import { BASE_URL } from "@/constants/url";
 
 type NotificationType = {
   _id: string;
@@ -27,7 +28,7 @@ const Notification = () => {
     try {
       const token = localStorage.getItem("token");
       const res = await axios.get(
-        "http://localhost:8080/api/v1/dashboard/getNotification",
+        `${BASE_URL}/api/v1/dashboard/getNotification`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -56,7 +57,7 @@ const Notification = () => {
     try {
       const token = localStorage.getItem("token");
       const res = await axios.get(
-        `http://localhost:8080/api/v1/auth/getUsers?userId=${name}`,
+        `${BASE_URL}/api/v1/auth/getUsers?userId=${name}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,

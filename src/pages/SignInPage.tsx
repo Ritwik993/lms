@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import signIn from "../assets/signIn.svg";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
+import { BASE_URL } from "@/constants/url";
 
 type formState = {
   email: string;
@@ -24,7 +25,7 @@ const SignInPage: React.FC = () => {
     e.preventDefault();
     try {
       const res = await axios.post(
-        "http://localhost:8080/api/v1/auth/login",
+        `${BASE_URL}/api/v1/auth/login`,
         formState, // Request body
         {
           headers: {

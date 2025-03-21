@@ -178,6 +178,7 @@ import React, { useState, useEffect } from "react";
 import { useTable, Column } from "react-table";
 import axios from "axios";
 import QueryModal from "./QueryModal";
+import { BASE_URL } from "@/constants/url";
 
 interface RowData {
   _id: string;
@@ -194,7 +195,7 @@ const DataTable: React.FC = () => {
 
   useEffect(() => {
     axios
-      .get("http://localhost:8080/api/v1/dashboard/getQueries")
+      .get(`${BASE_URL}/api/v1/dashboard/getQueries`)
       .then((response) => {
         if (response.data.success) {
           setData(response.data.data);

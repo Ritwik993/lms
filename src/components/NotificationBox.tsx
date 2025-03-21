@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import X from "../assets/X1.svg";
 import axios from "axios";
 import {  toast } from 'react-toastify';
+import { BASE_URL } from "@/constants/url";
 
 type NotificationType = {
   _id: string;
@@ -38,7 +39,7 @@ const NotificationBoxModal: React.FC<NotificationBoxModalProps> = ({setNotificat
     const userId = localStorage.getItem("userId");
     try {
       const res = await axios.post(
-        "http://localhost:8080/api/v1/dashboard/addNotification",
+        `${BASE_URL}/api/v1/dashboard/addNotification`,
         { ...formData, createdBy: userId },
         {
           headers: {
@@ -80,7 +81,7 @@ const NotificationBoxModal: React.FC<NotificationBoxModalProps> = ({setNotificat
     try {
       const token = localStorage.getItem("token");
       const res = await axios.get(
-        `http://localhost:8080/api/v1/auth/getUsers?userId=${name}`,
+        `${BASE_URL}/api/v1/auth/getUsers?userId=${name}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,

@@ -1,6 +1,7 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { format } from "date-fns";
+import { BASE_URL } from "@/constants/url";
 
 type ResponseData = {
   _id: string;
@@ -27,7 +28,7 @@ const ReferralCodes: React.FC<Component> = ({ refresh, setRefresh }) => {
     try {
       const token = localStorage.getItem("token");
       const res = await axios.get(
-        "http://localhost:8080/api/v1/coupan/getCoupan",
+        `${BASE_URL}/api/v1/coupan/getCoupan`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -65,7 +66,7 @@ const ReferralCodes: React.FC<Component> = ({ refresh, setRefresh }) => {
     try {
       const token = localStorage.getItem("token");
       await axios.put(
-        `http://localhost:8080/api/v1/coupan/updateCoupan/${id}`,
+        `${BASE_URL}/api/v1/coupan/updateCoupan/${id}`,
         {
           status: "INACTIVE",
           endedAt:Date.now,

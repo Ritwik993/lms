@@ -1,3 +1,4 @@
+import { BASE_URL } from "@/constants/url";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 
@@ -69,7 +70,7 @@ const LiveClassModal: React.FC<LiveClassModalProps> = ({ setIsOpen }) => {
     const token = localStorage.getItem("token");
     try {
       const res = await axios.get(
-        "http://localhost:8080/api/v1/course/getCourses",
+        `${BASE_URL}/api/v1/course/getCourses`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -106,7 +107,7 @@ const LiveClassModal: React.FC<LiveClassModalProps> = ({ setIsOpen }) => {
     try {
       const token = localStorage.getItem("token");
       const res = await axios.get(
-        "http://localhost:8080/api/v1/course/getSubjects",
+        `${BASE_URL}/api/v1/course/getSubjects`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -130,7 +131,7 @@ const LiveClassModal: React.FC<LiveClassModalProps> = ({ setIsOpen }) => {
     try {
       const token = localStorage.getItem("token");
       const res = await axios.get(
-        `http://localhost:8080/api/v1/course/getCourses?id=${cid}`,
+        `${BASE_URL}/api/v1/course/getCourses?id=${cid}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -149,7 +150,7 @@ const LiveClassModal: React.FC<LiveClassModalProps> = ({ setIsOpen }) => {
       const token = localStorage.getItem("token");
       const userId = localStorage.getItem("userId");
       const res = await axios.post(
-        "http://localhost:8080/api/v1/course/getGoogleMeetLink",
+        `${BASE_URL}/api/v1/course/getGoogleMeetLink`,
         { ...formData, createdBy: userId },
         {
           headers: {

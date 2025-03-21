@@ -1,3 +1,4 @@
+import { BASE_URL } from "@/constants/url";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 
@@ -37,7 +38,7 @@ const CreateCouponForm: React.FC<Coupon> = ({ setRefresh }) => {
     const token = localStorage.getItem("token");
     try {
       const res = await axios.get(
-        "http://localhost:8080/api/v1/course/getCourses",
+        `${BASE_URL}/api/v1/course/getCourses`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -72,7 +73,7 @@ const CreateCouponForm: React.FC<Coupon> = ({ setRefresh }) => {
 
     try {
       const res = await axios.post(
-        "http://localhost:8080/api/v1/coupan/addCoupan",
+        `${BASE_URL}/api/v1/coupan/addCoupan`,
         { ...formData, createdBy: userId },
         {
           headers: {

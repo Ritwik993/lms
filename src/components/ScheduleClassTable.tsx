@@ -4,6 +4,7 @@ import img1 from "../assets/Course image1.svg";
 // import img2 from '../assets/Course image 2.svg';
 // import img3 from '../assets/Course image 3.svg';
 import axios from "axios";
+import { BASE_URL } from "@/constants/url";
 // import { Link } from "react-router-dom";
 
 interface TableData {
@@ -51,7 +52,7 @@ const ScheduleClassTable: React.FC<ScheduleClassTableProps> = ({data,setData,isO
     try {
       const token = localStorage.getItem("token");
       const res = await axios.get(
-        "http://localhost:8080/api/v1/course/getLiveClasses",
+        `${BASE_URL}/api/v1/course/getLiveClasses`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -68,7 +69,7 @@ const ScheduleClassTable: React.FC<ScheduleClassTableProps> = ({data,setData,isO
       const instructorPromises = liveClasses.map(async (item: any) => {
         try {
           const instructorRes = await axios.get(
-            `http://localhost:8080/api/v1/auth/getUsers?userId=${item.createdBy}`,
+            `${BASE_URL}/api/v1/auth/getUsers?userId=${item.createdBy}`,
             {
               headers: {
                 Authorization: `Bearer ${token}`,
@@ -115,7 +116,7 @@ const ScheduleClassTable: React.FC<ScheduleClassTableProps> = ({data,setData,isO
     try {
       const token = localStorage.getItem("token");
       const res = await axios.put(
-        `http://localhost:8080/api/v1/course/updateLiveClass/${id}?status=CLOSED`,
+        `${BASE_URL}/api/v1/course/updateLiveClass/${id}?status=CLOSED`,
         {
           headers: {
             Authorization: `Bearer ${token}`,

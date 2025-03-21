@@ -1,3 +1,4 @@
+import { BASE_URL } from '@/constants/url';
 import axios from 'axios'
 
 const uploadFiles = async (files: File[] | null, token: string): Promise<string[]> => {
@@ -10,7 +11,7 @@ const uploadFiles = async (files: File[] | null, token: string): Promise<string[
       formData.append("file", file);
   
       const res = await axios.post(
-        "http://localhost:8080/api/v1/assets/upload/image",
+        `${BASE_URL}/api/v1/assets/upload/image`,
         formData,
         {
           headers: {
