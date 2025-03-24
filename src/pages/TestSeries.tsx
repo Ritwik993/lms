@@ -43,7 +43,7 @@ const TestSeries = () => {
           </div>
 
           <div className="w-[90%] mx-auto shadow-md ">
-            <div className="flex lg:gap-x-[20px] gap-x-[10px] w-[90%] mx-auto py-[14px]">
+            {/* <div className="flex lg:gap-x-[20px] gap-x-[10px] w-[90%] mx-auto py-[14px]">
               <label className="text-[#8B8F94] lg:text-[16px] text-[14px] font-semibold block w-[40%] ">
                 Paid/Free
                 <select className="block outline-none  border-[#ECEDF0] border p-[5px] mt-[4px] w-full">
@@ -61,7 +61,7 @@ const TestSeries = () => {
                   <option>Disable</option>
                 </select>
               </label>
-            </div>
+            </div> */}
 
             <div className="w-[90%] mx-auto mt-[40px] flex md:flex-row flex-col justify-between lg:items-center gap-4">
               <div>

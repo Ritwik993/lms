@@ -271,6 +271,8 @@ const ContentCourse = () => {
       try{
         const token=localStorage.getItem("token");
         const res=await axios.put(`${BASE_URL}/api/v1/curriculum/editLectures/${lectureId}`,{
+          _id:lectureId,
+          subjectId:id,
           title:decodedChapterName,
           notes:notesData,
           dpp:dppData,

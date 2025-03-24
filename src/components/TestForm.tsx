@@ -375,7 +375,7 @@ const TestForm = () => {
             ...formState,
             testSeriesId: id,
             status: "ACTIVE",
-            sections: updatedSection,
+            testSection:updatedSection,
           },
           {
             headers: {
@@ -383,7 +383,7 @@ const TestForm = () => {
             },
           }
         );
-        console.log(res.data);
+        console.log("Final res after edit of test section = "+JSON.stringify(res.data,null,2));
       } else {
         const res = await axios.post(
           `${BASE_URL}/api/v1/testSeries/addTests`,

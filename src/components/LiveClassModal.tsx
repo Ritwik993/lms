@@ -19,7 +19,7 @@ interface LiveClassData {
   title: string;
   description: string;
   courseId: string;
-  subjectName:string;
+  subjectName: string;
   subjectId: string;
   link: string;
   startDate: string;
@@ -48,11 +48,18 @@ const LiveClassModal: React.FC<LiveClassModalProps> = ({ setIsOpen }) => {
   const [subjects, setSubjects] = useState<Subject[]>();
   const [error, setError] = useState<String>();
 
+  useEffect(() => {
+    document.body.style.overflowY = "hidden";
+    return () => {
+      document.body.style.overflowY = "scroll";
+    };
+  }, []);
+
   const [formData, setFormData] = useState<LiveClassData>({
     title: "",
     description: "",
     courseId: "",
-    subjectName:"",
+    subjectName: "",
     subjectId: "",
     link: "",
     startDate: "",
@@ -69,21 +76,18 @@ const LiveClassModal: React.FC<LiveClassModalProps> = ({ setIsOpen }) => {
   const getCourses = async () => {
     const token = localStorage.getItem("token");
     try {
-      const res = await axios.get(
-        `${BASE_URL}/api/v1/course/getCourses`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      const res = await axios.get(`${BASE_URL}/api/v1/course/getCourses`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       setCourses(res.data.data);
     } catch (err) {
       console.error(err);
     }
   };
 
-  const handleChange = async(
+  const handleChange = async (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
     const { name, value } = e.target;
@@ -106,15 +110,12 @@ const LiveClassModal: React.FC<LiveClassModalProps> = ({ setIsOpen }) => {
   const getSubjectId = async (name: string) => {
     try {
       const token = localStorage.getItem("token");
-      const res = await axios.get(
-        `${BASE_URL}/api/v1/course/getSubjects`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-      const foundSubject = res.data.data.find((d:any) => d.title === name);
+      const res = await axios.get(`${BASE_URL}/api/v1/course/getSubjects`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      const foundSubject = res.data.data.find((d: any) => d.title === name);
 
       if (foundSubject) {
         setFormData((prev) => ({
@@ -160,7 +161,10 @@ const LiveClassModal: React.FC<LiveClassModalProps> = ({ setIsOpen }) => {
       );
       console.log(res.data);
       setTimeout(() => {
-        window.scrollTo({ top: document.body.scrollHeight, behavior: "smooth" });
+        window.scrollTo({
+          top: document.body.scrollHeight,
+          behavior: "smooth",
+        });
       }, 300);
       setIsOpen(false);
     } catch (err) {
@@ -171,7 +175,7 @@ const LiveClassModal: React.FC<LiveClassModalProps> = ({ setIsOpen }) => {
 
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-      <div className="bg-white rounded-lg shadow-lg w-96 p-6">
+      <div className="bg-white rounded-lg shadow-lg w-96 p-6 max-h-[90vh] overflow-y-auto">
         <h2 className="text-xl font-semibold mb-4">Live Class</h2>
 
         <div className="mb-4">

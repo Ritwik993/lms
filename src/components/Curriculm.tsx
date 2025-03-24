@@ -7,7 +7,15 @@ import DownArrow from "../assets/CaretDown.svg";
 import { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 // import { addLecture } from "../utils/lectureSlice";
-import { addLectureById, addSubject, deleteLectureById, deleteSubject, deleteSubjectById, updateLectureTitle, updateSubjectName } from "../utils/subjectSlice";
+import {
+  addLectureById,
+  addSubject,
+  deleteLectureById,
+  deleteSubject,
+  deleteSubjectById,
+  updateLectureTitle,
+  updateSubjectName,
+} from "../utils/subjectSlice";
 import { RootState } from "../utils/store";
 import axios from "axios";
 // import {
@@ -68,14 +76,16 @@ const Curriculm = () => {
 
   const subjects = useSelector((store: RootState) => store.subject.subjects);
   const editId = useSelector((store: RootState) => store.edit.editId);
+  const [editNewTopicId, setEditNewTopicId] = useState();
+  const [editNewSectionId, setEditNewSectionId] = useState();
 
   useEffect(() => {
     if (!editId) return;
     dispatch(deleteSubject());
-    console.log("editId = "+editId);
-    console.log("useEffect called !!!");
+    console.log("editId = " + editId);
+    console.log("ritwik useEffect called  !!!");
     getCourseData(editId);
-  }, [editId]);
+  }, []);
 
   // const [sections, setSections] = useState<Section[]>([
   //   { id: 1, name: "Section Name", topics: [{ id: 1, name: "Chapter Name" }] },
@@ -112,18 +122,19 @@ const Curriculm = () => {
 
       // console.log("data of subjects= "+JSON.stringify(result[0].subjects,null,2));
 
-
       result[0].subjects.map((re: any) => {
-        if (re.lectures.length === 0) {
-          return;
-        }
+        // if (re.lectures.length === 0) {
+        //   return;
+        // }
 
         // const id = generateUniqueNumber();
         // const id = Date.now() + index;
         idArray.push(re.id);
 
         // console.log("called !!!");
-        dispatch(addSubject({ id:re.id, subjectTitle: re.subjectTitle,lectures:[] }));
+        dispatch(
+          addSubject({ id: re.id, subjectTitle: re.subjectTitle, lectures: [] })
+        );
       });
 
       result[0].subjects.map((s: any, i: number) => {
@@ -135,7 +146,13 @@ const Curriculm = () => {
           //   name: le.lectureTitle,
           // };
 
-          dispatch(addLectureById({ subjectId: idArray[i],topicId:le.id,lecture:le.lectureTitle }));
+          dispatch(
+            addLectureById({
+              subjectId: idArray[i],
+              topicId: le.id,
+              lecture: le.lectureTitle,
+            })
+          );
         });
       });
     } catch (err) {
@@ -143,7 +160,7 @@ const Curriculm = () => {
     }
   };
 
-  const addSection = (newSectionName: string) => {
+  const addSection = async (newSectionName: string) => {
     if (newSectionName.trim()) {
       // const id = Date.now();
       // // setSections((prev) => [
@@ -151,6 +168,48 @@ const Curriculm = () => {
       // //   { id, name: newSectionName.trim(), topics: [] },
       // // ]);
       // dispatch(addSectionRedux({ id, name: newSectionName }));
+
+      if (editId) {
+        try {
+          const token = localStorage.getItem("token");
+          const res = await axios.post(
+            `${BASE_URL}/api/v1/curriculum/addSubject`,
+            { courseId: editId },
+            {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            }
+          );
+          console.log(res.data);
+
+          const res1 = await axios.put(
+            `${BASE_URL}/api/v1/curriculum/editSections/${res.data.data._id}`,
+            {
+              title: newSectionName,
+            },
+            {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            }
+          );
+
+          console.log("after updating the topic name " + res1.data);
+
+          dispatch(
+            addSubject({
+              id: res.data.data._id,
+              subjectTitle: newSectionName.trim(),
+              lectures: [],
+            })
+          );
+        } catch (err) {
+          console.log(err);
+        }
+        return;
+      }
+
       dispatch(
         addSubject({
           id: nanoid(),
@@ -168,7 +227,7 @@ const Curriculm = () => {
     dispatch(deleteSubjectById(id));
   };
 
-  const updateSectionName = () => {
+  const updateSectionName = async () => {
     if (editingSubjectId !== null && editingSectionName.trim()) {
       // setSections((prev) =>
       //   prev.map((section) =>
@@ -184,8 +243,30 @@ const Curriculm = () => {
       //   })
       // );
 
-      dispatch(updateSubjectName({ subjectId: editingSubjectId, subjectName: editingSectionName }));
-      
+      if (editId) {
+        const token = localStorage.getItem("token");
+        const res1 = await axios.put(
+          `${BASE_URL}/api/v1/curriculum/editSections/${editingSubjectId}`,
+          {
+            title: editingSectionName.trim(),
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+
+        console.log("after updating the topic name " + res1.data);
+      }
+
+      dispatch(
+        updateSubjectName({
+          subjectId: editingSubjectId,
+          subjectName: editingSectionName,
+        })
+      );
+
       // dispatch(
       //   addSubject({
       //     id: editingSubjectId,
@@ -198,7 +279,7 @@ const Curriculm = () => {
     setEditingSectionName("");
   };
 
-  const addTopic = (sectionId: string, topicName: string) => {
+  const addTopic = async (sectionId: string, topicName: string) => {
     // setSections((prev) =>
     //   prev.map((section) =>
     //     section.id === sectionId
@@ -214,7 +295,45 @@ const Curriculm = () => {
     console.log("sectionId=" + sectionId);
     console.log("topicName=" + topicName);
 
-    dispatch(addLectureById({ subjectId: sectionId,topicId:nanoid(), lecture: topicName }));
+    const token = localStorage.getItem("token");
+    if (editId) {
+      try {
+        const res = await axios.post(
+          `${BASE_URL}/api/v1/curriculum/addLecture`,
+          {
+            subjectId: sectionId,
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        console.log(
+          "data after adding topic " + JSON.stringify(res.data, null, 2)
+        );
+        setEditNewTopicId(res.data.data._id);
+
+        dispatch(
+          addLectureById({
+            subjectId: sectionId,
+            topicId: res.data.data._id,
+            lecture: topicName,
+          })
+        );
+        console.log("new editing topic id is " + editNewTopicId);
+      } catch (err) {
+        console.log(err);
+      }
+    } else {
+      dispatch(
+        addLectureById({
+          subjectId: sectionId,
+          topicId: nanoid(),
+          lecture: topicName,
+        })
+      );
+    }
   };
 
   const deleteTopic = (sectionId: string, topicId: string) => {
@@ -306,19 +425,32 @@ const Curriculm = () => {
     });
     const courseId = localStorage.getItem("courseId");
     const data: ResponseData[] = filteredSubjects;
-    console.log("this is " + JSON.stringify(data, null, 2));
+    console.log("this is subject ritwik" + JSON.stringify(subjects, null, 2));
     try {
       // const {id,lectureTitle,...restform}=subjects
-      const res = await axios.post(
-        `${BASE_URL}/api/v1/curriculum/addCurriculum`,
-        { courseId, data },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-      console.log(res.data);
+      if (editId) {
+        const res = await axios.post(
+          `${BASE_URL}/api/v1/curriculum/editCurriculum`,
+          { courseId: editId, data: subjects },
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        console.log("after edit = " + JSON.stringify(res.data, null, 2));
+      } else {
+        const res = await axios.post(
+          `${BASE_URL}/api/v1/curriculum/addCurriculum`,
+          { courseId, data },
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        console.log(res.data);
+      }
       // setActiveTab("publish");
       dispatch(setActiveTab("publish"));
     } catch (err) {
@@ -353,11 +485,11 @@ const Curriculm = () => {
           </p>
         </div>
 
-        <div className="flex gap-2 lg:p-[24px] p-[12px]">
+        {/* <div className="flex gap-2 lg:p-[24px] p-[12px]">
           <img src={plus} alt="" className="object-contain" />
           <img src={pencil} alt="" className="object-contain" />
           <img src={trash} alt="" className="object-contain" />
-        </div>
+        </div> */}
       </div>
 
       {/*  */}
@@ -385,9 +517,23 @@ const Curriculm = () => {
               ) : (
                 <p
                   className="text-[#1D2026] font-medium text-[16px] cursor-pointer"
-                  onClick={() => {
+                  onClick={async () => {
                     setEditingSectionId(subject.id);
                     setEditingSectionName(subject.subjectTitle);
+                    // const token = localStorage.getItem("token");
+                    // const res1 = await axios.put(
+                    //   `${BASE_URL}/api/v1/curriculum/editSections/${subject.id}`,
+                    //   {
+                    //     title: subject.subjectTitle,
+                    //   },
+                    //   {
+                    //     headers: {
+                    //       Authorization: `Bearer ${token}`,
+                    //     },
+                    //   }
+                    // );
+
+                    // console.log("after updating the topic name " + res1.data);
                   }}
                 >
                   {subject.subjectTitle}
@@ -408,10 +554,24 @@ const Curriculm = () => {
                 src={pencil}
                 alt=""
                 className="object-contain"
-                onClick={() => {
+                onClick={async () => {
                   setEditingSectionId(subject.id);
                   setEditingSectionName(subject.subjectTitle);
                   inputRef.current?.focus();
+                  // const token = localStorage.getItem("token");
+                  // const res1 = await axios.put(
+                  //   `${BASE_URL}/api/v1/curriculum/editSections/${subject.id}`,
+                  //   {
+                  //     title: subject.subjectTitle,
+                  //   },
+                  //   {
+                  //     headers: {
+                  //       Authorization: `Bearer ${token}`,
+                  //     },
+                  //   }
+                  // );
+
+                  // console.log("after updating the topic name " + res1.data);
                 }}
               />
               <img

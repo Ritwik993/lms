@@ -3,6 +3,8 @@
 import QuizModal from "@/custom/quiz-modal";
 import { useSearchParams } from "react-router-dom";
 import { Button } from "./ui/button";
+import axios from "axios";
+import { BASE_URL } from "@/constants/url";
 // import { BASE_URL } from "@/constants/url";
 // import axios from "axios";
 
@@ -163,21 +165,54 @@ const SectionForm: React.FC<SectionProps> = ({ sections, setSections }) => {
     }
   };
 
-  const addSection = (e: React.MouseEvent<HTMLButtonElement>) => {
+  const addSection = async(e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
-    setSections([
-      ...sections,
-      {
-        title: "",
-        marksPerQuestion: -1,
-        pdf: null,
-        negativeMarking: 0,
-        isOptional: 1,
-        isFixedTiming: 0,
-        questions: [],
-        edit: false,
-      },
-    ]);
+    if(editValue){
+      const token=localStorage.getItem("token");
+      try{
+        const res=await axios.post(`${BASE_URL}/api/v1/testSeries/addTestSection`,{
+          testId: "67cc0a7f70518fdb9943a465"
+      },{
+        headers:{
+          Authorization:`Bearer ${token}`
+        }
+      })
+      console.log("after getting response from api section id = "+res.data);
+      setSections([
+        ...sections,
+        {
+          _id:res.data.data._id,
+          title: "",
+          marksPerQuestion: -1,
+          pdf: null,
+          negativeMarking: 0,
+          isOptional: 1,
+          isFixedTiming: 0,
+          questions: [],
+          edit: false,
+        },
+      ]);
+      }catch(err){
+        console.log(err);
+      }
+
+      
+    }else{
+
+      setSections([
+        ...sections,
+        {
+          title: "",
+          marksPerQuestion: -1,
+          pdf: null,
+          negativeMarking: 0,
+          isOptional: 1,
+          isFixedTiming: 0,
+          questions: [],
+          edit: false,
+        },
+      ]);
+    }
   };
 
   return (
