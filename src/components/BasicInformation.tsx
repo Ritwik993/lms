@@ -225,7 +225,7 @@ const BasicInformation: FC<BasicInformationProps> = ({
       // Make the request with the token in the headers
       if (editId) {
         console.log("Inside Edit api")
-        console.log("editId = "+editId);
+        console.log("editId = " + editId);
         const res = await axios.put(
           `${BASE_URL}/api/v1/course/updateCourse/${editId}`,
           restFormState,
@@ -235,7 +235,7 @@ const BasicInformation: FC<BasicInformationProps> = ({
             },
           }
         );
-        console.log("data after edit is "+JSON.stringify(res.data,null,2));
+        console.log("data after edit is " + JSON.stringify(res.data, null, 2));
       } else {
         const res = await axios.post(
           `${BASE_URL}/api/v1/course/addCourse`,
@@ -324,10 +324,10 @@ const BasicInformation: FC<BasicInformationProps> = ({
               value={basicInfo.category}
             >
               <option value="">Select</option>
-              <option value="course1">Course 1</option>
-              <option value="course2">Course 2</option>
-              <option value="course3">Course 3</option>
-              <option value="course4">Course 4</option>
+              <option value="JEE">JEE</option>
+              <option value="NEET">NEET</option>
+              <option value="KCET">KCET</option>
+              <option value="COMEDK">COMEDK</option>
             </select>
           </div>
 

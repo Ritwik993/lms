@@ -26,6 +26,7 @@ interface LiveClassData {
   startTime: string;
   courseCategory: string;
   status: string;
+  lectureId: string;
   thumbNail: string;
 }
 
@@ -46,6 +47,7 @@ type Subject = {
 const LiveClassModal: React.FC<LiveClassModalProps> = ({ setIsOpen }) => {
   const [courses, setCourses] = useState<Course[]>([]);
   const [subjects, setSubjects] = useState<Subject[]>();
+  const [lectures, setLectures] = useState<any[]>();
   const [error, setError] = useState<String>();
 
   useEffect(() => {
@@ -63,6 +65,7 @@ const LiveClassModal: React.FC<LiveClassModalProps> = ({ setIsOpen }) => {
     subjectId: "",
     link: "",
     startDate: "",
+    lectureId: "",
     startTime: "",
     courseCategory: "",
     status: "UPCOMING",
@@ -81,6 +84,7 @@ const LiveClassModal: React.FC<LiveClassModalProps> = ({ setIsOpen }) => {
           Authorization: `Bearer ${token}`,
         },
       });
+
       setCourses(res.data.data);
     } catch (err) {
       console.error(err);
@@ -139,8 +143,11 @@ const LiveClassModal: React.FC<LiveClassModalProps> = ({ setIsOpen }) => {
           },
         }
       );
-      // console.log(res.data.data[0].subjects);
+      console.log("Ritwik subjects data = " + JSON.stringify(res.data.data[0].subjects, null, 2));
       setSubjects(res.data.data[0].subjects);
+      console.log("Ritwik lectures data = " + JSON.stringify(res.data.data[0].subjects[0].lectures, null, 2));
+
+      setLectures(res.data.data[0].subjects.lectures);
     } catch (err) {
       console.error(err);
     }
@@ -246,6 +253,25 @@ const LiveClassModal: React.FC<LiveClassModalProps> = ({ setIsOpen }) => {
 
         <div className="mb-4">
           <label className="block text-sm font-medium mb-1">
+            Select Lecture
+          </label>
+          <select
+            name="lectureId"
+            value={formData.lectureId}
+            onChange={handleChange}
+            className="w-full border rounded-md p-2 text-sm focus:ring-blue-500 focus:border-blue-500"
+          >
+            <option value="">Select Lecture</option>
+            {lectures?.map((l, i) => (
+              <option key={i} value={l._id}>
+                {l.lectureTitle}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        <div className="mb-4">
+          <label className="block text-sm font-medium mb-1">
             Select Category
           </label>
           <select
@@ -255,11 +281,16 @@ const LiveClassModal: React.FC<LiveClassModalProps> = ({ setIsOpen }) => {
             className="w-full border rounded-md p-2 text-sm focus:ring-blue-500 focus:border-blue-500"
           >
             <option value="">Select Category</option>
-            {courses.map((c) => (
+            {/* {courses.map((c) => (
               <option key={c._id} value={c._id}>
                 {c.category}
               </option>
-            ))}
+            ))} */}
+            <option value="JEE">JEE</option>
+            <option value="NEET">NEET</option>
+            <option value="KCET">KCET</option>
+            <option value="COMEDK">COMEDK</option>
+
 
             {/* <option value="JEE">JEE</option>
             <option value="NEET">NEET</option>
