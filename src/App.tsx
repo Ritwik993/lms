@@ -29,6 +29,7 @@ import FreeVideos from "./pages/FreeVideos";
 import ViewDetails from "./pages/viewDetails";
 import VideoLinkCard from "./custom/video-link-card";
 import DocumentCard from "./custom/document-card";
+import Management from "./pages/Management";
 
 
 
@@ -156,6 +157,10 @@ function App() {
         {
           path:"/view/:id",
           element:<ViewDetails/>
+        },
+        {
+          path:"/management",
+          element:<Management/>
         }
       ],
     }, 

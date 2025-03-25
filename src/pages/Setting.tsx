@@ -355,7 +355,7 @@ const Setting = () => {
       <div className="pb-[100px] pt-[40px] bg-gray-100 flex justify-center items-center w-[90%] mx-auto">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 w-full   rounded-lg ">
           {/* Notifications Section */}
-          <div className="p-8 bg-white shadow-lg rounded-lg">
+          {/* <div className="p-8 bg-white shadow-lg rounded-lg">
             <h2 className="text-xl font-semibold mb-4">Notifications</h2>
             <div className="space-y-2">
               {[
@@ -415,7 +415,7 @@ const Setting = () => {
             >
               Save Changes
             </button>
-          </div>
+          </div> */}
 
           {/* Change Password Section */}
           <div className="p-8 bg-white shadow-lg rounded-lg">

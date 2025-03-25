@@ -11,6 +11,7 @@ import { ChevronUp } from "lucide-react";
 import { TvMinimalPlay } from "lucide-react";
 import { BadgeIndianRupee } from "lucide-react";
 import { Facebook } from "lucide-react";
+import { UserCog } from "lucide-react";
 
 import { useState } from "react";
 import { Link } from "react-router-dom";
@@ -25,6 +26,7 @@ import { deleteSubject } from "@/utils/subjectSlice";
 
 const Sidebar = () => {
   const [active, setActive] = useState(false);
+  // const [showMgmt, setShowMgmt] = useState(false);
   const isOpen = useSelector((store: RootState) => store.toggle);
   const dispatch = useDispatch();
   // const sections = useSelector((store: RootState) => store.section.sections);
@@ -286,6 +288,7 @@ const Sidebar = () => {
               onClick={() => {
                 dispatch(emptySection());
                 dispatch(deleteSubject());
+                // setShowMgmt((prev) => !prev);
               }}
             >
               <img
@@ -294,6 +297,22 @@ const Sidebar = () => {
               />
               <p className=" font-medium md:text-[14px] text-[12px] leading-[20px]">
                 Settings
+              </p>
+            </div>
+          </Link>
+
+          <Link to="/management">
+            <div
+              className="flex gap-[12px] text-[#8C94A3]  hover:bg-[#3A6BE4] hover:text-white px-[24px] py-[12px] items-center  cursor-pointer group"
+              onClick={() => {
+                dispatch(emptySection());
+                dispatch(deleteSubject());
+                // setShowMgmt((prev) => !prev);
+              }}
+            >
+              <UserCog className="object-contain group-hover:filter group-hover:brightness-0 group-hover:invert" />
+              <p className="font-medium md:text-[14px] text-[12px] leading-[20px] min-w-max">
+                Management
               </p>
             </div>
           </Link>
@@ -587,6 +606,22 @@ const Sidebar = () => {
               </div>
             </Link>
 
+            <Link to="/management">
+            <div
+              className="flex gap-[12px] text-[#8C94A3]  hover:bg-[#3A6BE4] hover:text-white px-[24px] py-[12px] items-center  cursor-pointer group"
+              onClick={() => {
+                dispatch(emptySection());
+                dispatch(deleteSubject());
+                // setShowMgmt((prev) => !prev);
+              }}
+            >
+              <UserCog className="object-contain group-hover:filter group-hover:brightness-0 group-hover:invert" />
+              <p className="font-medium md:text-[14px] text-[12px] leading-[20px] min-w-max">
+                Management
+              </p>
+            </div>
+          </Link>
+
             <div
               className="flex gap-[12px] text-[#8C94A3]  hover:bg-[#3A6BE4] hover:text-white px-[24px] py-[12px] items-center  cursor-pointer mt-auto group"
               onClick={() => {
@@ -610,8 +645,6 @@ const Sidebar = () => {
 };
 
 export default Sidebar;
-
-
 
 // import icon from "../assets/icon1.svg"
 // import chartBar from "../assets/ChartBar1.svg"
@@ -1103,5 +1136,3 @@ export default Sidebar;
 // }
 
 // export default Sidebar
-
-
