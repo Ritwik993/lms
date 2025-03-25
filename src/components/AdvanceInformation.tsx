@@ -205,9 +205,11 @@ const AdvanceInformation: FC<AdvanceInformationProps> = ({
 
     try {
       const token = localStorage.getItem("token");
-      const courseUrl = await uploadImage(advanceInfo.courseThumbnail);
+      if(advanceInfo.courseThumbnail instanceof File){
+        const courseUrl = await uploadImage(advanceInfo.courseThumbnail);
+        advanceInfo.courseThumbnail = courseUrl;
+      }
       // const trailerUrl = await uploadVideo(advanceInfo.courseTrailer);
-      advanceInfo.courseThumbnail = courseUrl;
       advanceInfo.courseTrailer = videoUrl;
       // Make the request with the token in the headers
       // const { courseThumbnail, courseTrailer, ...restFormState } = formState;

@@ -101,7 +101,7 @@ const ScheduleClassTable: React.FC<ScheduleClassTableProps> = ({data,setData,isO
         status: item.status,
         startDate:item.startDate,
         startTime:item.startTime,
-        image: img1,
+        image: item.thumbNail,
       }));
 
       setData(formattedData);
@@ -233,7 +233,7 @@ const ScheduleClassTable: React.FC<ScheduleClassTableProps> = ({data,setData,isO
             <img
               src={row.original.image}
               alt="Course Thumbnail"
-              className="w-full md:w-[150px] aspect-square h-full object-cover  shadow-md"
+              className="w-full md:w-[150px]  h-full object-contain  shadow-md"
             />
             <div className=" w-full h-full flex flex-col gap-[30px]">
               <div className="font-bold text-gray-800 text-sm md:text-base">

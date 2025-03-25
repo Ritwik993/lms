@@ -76,6 +76,36 @@ const LiveClassModal: React.FC<LiveClassModalProps> = ({ setIsOpen }) => {
     getCourses();
   }, []);
 
+
+  const handleFileChange = async(
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    if (e.target.files && e.target?.files.length > 0) {
+      const file = e.target.files[0];
+     const imgUrl= await uploadImage(file);
+      setFormData((prev) => ({ ...prev, thumbNail: imgUrl}));
+    }
+  };
+
+
+  const uploadImage = async (file: File | null) => {
+    if (!file) return null;
+    const token = localStorage.getItem("token");
+    const formData = new FormData();
+    formData.append("file", file);
+    const res = await axios.post(
+      `${BASE_URL}/api/v1/assets/upload/image`,
+      formData,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "multipart/form-data",
+        },
+      }
+    );
+    return res.data.fileUrl;
+  };
+
   const getCourses = async () => {
     const token = localStorage.getItem("token");
     try {
@@ -91,6 +121,21 @@ const LiveClassModal: React.FC<LiveClassModalProps> = ({ setIsOpen }) => {
     }
   };
 
+  const getLecturesData=async(value:string)=>{
+    try{
+      const token=localStorage.getItem("token");
+      const res=await axios.get(`${BASE_URL}/api/v1/course/getLectures?subjectId=${value}`,{
+        headers:{
+          Authorization:`Bearer ${token}`
+        }
+      })
+      console.log("Lectures data = "+JSON.stringify(res.data,null,2));
+      setLectures(res.data.data);
+    }catch(err){
+      console.log(err);
+    }
+  }
+
   const handleChange = async (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
@@ -100,10 +145,17 @@ const LiveClassModal: React.FC<LiveClassModalProps> = ({ setIsOpen }) => {
       await getSubjectsData(value);
     }
 
-    if (name === "subjectName") {
-      await getSubjectId(value);
-      // return;
+    // if (name === "subjectName") {
+    //   await getSubjectId(value);
+    //   // return;
+    // }
+
+
+    if(name==="subjectId"){
+      await getLecturesData(value);
     }
+
+    
 
     setFormData((prev) => ({
       ...prev,
@@ -111,26 +163,26 @@ const LiveClassModal: React.FC<LiveClassModalProps> = ({ setIsOpen }) => {
     }));
   };
 
-  const getSubjectId = async (name: string) => {
-    try {
-      const token = localStorage.getItem("token");
-      const res = await axios.get(`${BASE_URL}/api/v1/course/getSubjects`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      const foundSubject = res.data.data.find((d: any) => d.title === name);
+  // const getSubjectId = async (name: string) => {
+  //   try {
+  //     const token = localStorage.getItem("token");
+  //     const res = await axios.get(`${BASE_URL}/api/v1/course/getSubjects`, {
+  //       headers: {
+  //         Authorization: `Bearer ${token}`,
+  //       },
+  //     });
+  //     const foundSubject = res.data.data.find((d: any) => d.title === name);
 
-      if (foundSubject) {
-        setFormData((prev) => ({
-          ...prev,
-          subjectId: foundSubject._id,
-        }));
-      }
-    } catch (err) {
-      console.log(err);
-    }
-  };
+  //     if (foundSubject) {
+  //       setFormData((prev) => ({
+  //         ...prev,
+  //         subjectId: foundSubject._id,
+  //       }));
+  //     }
+  //   } catch (err) {
+  //     console.log(err);
+  //   }
+  // };
 
   const getSubjectsData = async (cid: string) => {
     try {
@@ -145,9 +197,9 @@ const LiveClassModal: React.FC<LiveClassModalProps> = ({ setIsOpen }) => {
       );
       console.log("Ritwik subjects data = " + JSON.stringify(res.data.data[0].subjects, null, 2));
       setSubjects(res.data.data[0].subjects);
-      console.log("Ritwik lectures data = " + JSON.stringify(res.data.data[0].subjects[0].lectures, null, 2));
+      // console.log("Ritwik lectures data = " + JSON.stringify(res.data.data[0].subjects[0].lectures, null, 2));
 
-      setLectures(res.data.data[0].subjects.lectures);
+      // setLectures(res.data.data[0].subjects.lectures);
     } catch (err) {
       console.error(err);
     }
@@ -237,14 +289,14 @@ const LiveClassModal: React.FC<LiveClassModalProps> = ({ setIsOpen }) => {
             Select Subject
           </label>
           <select
-            name="subjectName"
-            value={formData.subjectName}
+            name="subjectId"
+            value={formData.subjectId}
             onChange={handleChange}
             className="w-full border rounded-md p-2 text-sm focus:ring-blue-500 focus:border-blue-500"
           >
             <option value="">Select Subject</option>
-            {subjects?.map((s, i) => (
-              <option key={i} value={s.subjectTitle}>
+            {subjects?.map((s:any, i) => (
+              <option key={i} value={s.id}>
                 {s.subjectTitle}
               </option>
             ))}
@@ -264,7 +316,7 @@ const LiveClassModal: React.FC<LiveClassModalProps> = ({ setIsOpen }) => {
             <option value="">Select Lecture</option>
             {lectures?.map((l, i) => (
               <option key={i} value={l._id}>
-                {l.lectureTitle}
+                {l.title}
               </option>
             ))}
           </select>
@@ -297,6 +349,19 @@ const LiveClassModal: React.FC<LiveClassModalProps> = ({ setIsOpen }) => {
             <option value="KCET">KCET</option>
             <option value="COMEDK">COMEDK</option> */}
           </select>
+        </div>
+
+        <div className="mb-4">
+          <label className="block text-sm font-medium mb-1">
+            Thumbnail
+          </label>
+          <input
+            name="thumbNail"
+            type="file"
+            // value={formData.thumbNail}
+            onChange={handleFileChange}
+            className="w-full border rounded-md p-2 text-sm focus:ring-blue-500 focus:border-blue-500"
+          />
         </div>
 
         <div className="mb-4">

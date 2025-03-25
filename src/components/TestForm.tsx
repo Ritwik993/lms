@@ -37,6 +37,7 @@ type FormState = {
 // };
 
 interface Section {
+  _id?:string;
   title: string;
   marksPerQuestion: number | null;
   pdf: File | null;

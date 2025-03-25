@@ -111,6 +111,7 @@ import { BASE_URL } from "@/constants/url";
 // import React, { useState } from "react";
 
 interface Section {
+  _id?:string;
   title: string;
   marksPerQuestion: number | null;
   pdf: File | null;

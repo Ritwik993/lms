@@ -77,7 +77,7 @@ const Curriculm = () => {
   const subjects = useSelector((store: RootState) => store.subject.subjects);
   const editId = useSelector((store: RootState) => store.edit.editId);
   const [editNewTopicId, setEditNewTopicId] = useState();
-  const [editNewSectionId, setEditNewSectionId] = useState();
+  // const [editNewSectionId, setEditNewSectionId] = useState();
 
   useEffect(() => {
     if (!editId) return;
