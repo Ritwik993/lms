@@ -32,8 +32,8 @@ const Sidebar = () => {
   // const sections = useSelector((store: RootState) => store.section.sections);
 
   return (
-    <div className="sidebar">
-      <div className="hidden lg:block  bg-[#1D2026] fixed top-0 bottom-0 w-[250px] z-10 ">
+    <div className="sidebar ">
+      <div className="hidden lg:block  bg-[#1D2026] fixed top-0 bottom-0 w-[250px] z-10  overflow-y-scroll  scrollbar-hidden ">
         <div className="header flex gap-[10px] px-[24px] py-[20px] border-b-[2px] border-opacity-30 border-b-[#6E7485] mb-[10px]">
           <img src={icon} alt="icon" className="object-contain" />
           <p className="text-white font-semibold lg:text-[24px] text-[20px]">

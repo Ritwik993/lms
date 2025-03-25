@@ -55,15 +55,15 @@ const Setting = () => {
     youtube: "",
   });
 
-  const [notifications] = useState({
-    coursePurchase: false,
-    courseReview: true,
-    lectureComment: false,
-    lectureNotesDownload: true,
-    commentReply: false,
-    profileVisit: false,
-    attachmentDownload: true,
-  });
+  // const [notifications] = useState({
+  //   coursePurchase: false,
+  //   courseReview: true,
+  //   lectureComment: false,
+  //   lectureNotesDownload: true,
+  //   commentReply: false,
+  //   profileVisit: false,
+  //   attachmentDownload: true,
+  // });
 
   const [password, setPassword] = useState({
     currentPassword: "",
