@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { useTable, Column } from "react-table";
-import img1 from "../assets/Course image1.svg";
+// import img1 from "../assets/Course image1.svg";
 // import img2 from '../assets/Course image 2.svg';
 // import img3 from '../assets/Course image 3.svg';
 import axios from "axios";
