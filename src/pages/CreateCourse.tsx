@@ -99,15 +99,15 @@ const CreateCourse = () => {
     }, [editId]);
 
 
-    const getUserName=async(id:string)=>{
-      const res=await axios.get(`${BASE_URL}/api/v1/auth/getUsers?userId=${id}`,{
-        headers:{
-          Authorization:`Bearer ${localStorage.getItem("token")}`
-        }
-      })
-      console.log(res.data.data);
-      return res.data.data.firstName+" "+res.data.data.lastName;
-    }
+    // const getUserName=async(id:string)=>{
+    //   const res=await axios.get(`${BASE_URL}/api/v1/auth/getUsers?userId=${id}`,{
+    //     headers:{
+    //       Authorization:`Bearer ${localStorage.getItem("token")}`
+    //     }
+    //   })
+    //   console.log(res.data.data);
+    //   return res.data.data.firstName+" "+res.data.data.lastName;
+    // }
 
 
     const getCourseData = async (editId: string | null) => {
