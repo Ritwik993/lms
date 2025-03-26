@@ -99,6 +99,17 @@ const CreateCourse = () => {
     }, [editId]);
 
 
+    const getUserName=async(id:string)=>{
+      const res=await axios.get(`${BASE_URL}/api/v1/auth/getUsers?userId=${id}`,{
+        headers:{
+          Authorization:`Bearer ${localStorage.getItem("token")}`
+        }
+      })
+      console.log(res.data.data);
+      return res.data.data.firstName+" "+res.data.data.lastName;
+    }
+
+
     const getCourseData = async (editId: string | null) => {
       if (editId === null || editId === "") {
         return;
@@ -114,7 +125,24 @@ const CreateCourse = () => {
           }
         );
         const result = res.data.data;
-        console.log(result[0]);
+        console.log("Ritwik here data of course is "+JSON.stringify(result[0],null,2));
+        console.log("Ritwik here data is "+JSON.stringify((result[0].instructors[0])[1],null,2));
+
+        // Await instructor names before setting the state
+    // const [
+    //   instructor1,
+    //   instructor2,
+    //   instructor3,
+    //   instructor4,
+    //   instructor
+    // ] = await Promise.all([
+    //   getUserName(result[0].instructor1),
+    //   getUserName(result[0].instructor2),
+    //   getUserName(result[0].instructor3),
+    //   getUserName(result[0].instructor4),
+    //   getUserName(result[0].instructor),
+    // ]);
+
         const basicData={
           title: result[0].title,
           subTitle: result[0].subTitle,
@@ -125,11 +153,11 @@ const CreateCourse = () => {
           subtitleLanguage: result[0].subtitleLanguage,
           courseLevels: result[0].courseLevels,
           courseDurations: result[0].courseDurations,
-          instructor1: result[0].instructor1,
-          instructor2: result[0].instructor2,
-          instructor3: result[0].instructor3,
-          instructor4: result[0].instructor4,
-          instructor: result[0].instructor,
+          instructor1: (result[0].instructors[0])[0],
+          instructor2:(result[0].instructors[0])[1],
+          instructor3: (result[0].instructors[0])[2],
+          instructor4: (result[0].instructors[0])[3],
+          instructor: [...result[0].instructors],
           isPaid:result[0].isPaid,
           startDate:result[0].startDate||new Date(),
           endDate:result[0].endDate||new Date(),

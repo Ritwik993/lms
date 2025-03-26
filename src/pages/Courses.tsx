@@ -9,7 +9,8 @@ type VideoDataType = {
   courseThumbnail: string;
   category: string;
   courseDescription: string;
-  price: number;
+  actualPrice: number;
+  discountedPrice: number;
   _id:string;
 };
 
@@ -32,11 +33,12 @@ const Courses = () => {
         },
       });
       const videos = res.data.data;
-      const formattedData = videos.map((v: VideoDataType) => ({
+      const formattedData = videos.map((v: any) => ({
         courseThumbnail: v.courseThumbnail,
         category: v.category,
         courseDescription: v.courseDescription,
-        price: v.price || 24,
+        actualPrice: v.actualPrice,
+        discountedPrice: v.discountedPrice,
         _id:v._id,
       }));
       setVideoData(formattedData);
@@ -45,6 +47,28 @@ const Courses = () => {
       console.log(err);
     }
   };
+
+  // const getVideos1=async()=>{
+  //   try{
+  //     const token=localStorage.getItem("token");
+  //     const res=await axios.get(`${BASE_URL}/api/v1/course/getWebHomeCourses`,{
+  //       headers:{
+  //         Authorization:`Bearer ${token}`
+  //       }
+  //     }); 
+  //     console.log("response for getWebHomeCourses",res.data);
+  //     const videos = res.data.data;
+  //     const formattedData = videos.map((v: VideoDataType) => ({
+  //       courseThumbnail: v.courseThumbnail,
+  //       category: v.category,
+  //       courseDescription: v.courseDescription,
+  //       price: v.price || 24,
+  //       _id:v._id,
+  //     }));
+  //   }catch(err){
+  //     console.log(err);
+  //   }
+  // }
   return (
     <div className="flex-1 lg:ml-[250px] bg-[#F5F7FA] overflow-x-hidden pb-[100px]">
       <Navbar />

@@ -178,7 +178,8 @@ type VideoDataType = {
   courseThumbnail: string
   category: string
   courseDescription: string
-  price: number
+  actualPrice: number;
+  discountedPrice: number;
   _id: string
 }
 
@@ -259,7 +260,7 @@ const VideoCard: FC<VideoCardProps> = ({ activeCardId, onToggle, id, data }) => 
       </CardContent>
 
       <CardFooter className="p-4 pt-2 flex items-center justify-between">
-        <div className="text-primary text-lg font-bold">₹{data.price}</div>
+        <div className="text-primary text-lg font-bold "><span className="line-through decoration-red-500 decoration-2">₹{data.actualPrice}</span> <span className="ml-2">₹{data.discountedPrice}</span></div>
 
         <DropdownMenu>
           <DropdownMenuTrigger className="focus:outline-none">
