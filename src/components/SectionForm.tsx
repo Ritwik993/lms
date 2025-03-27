@@ -130,7 +130,7 @@ type SectionProps = {
 const SectionForm: React.FC<SectionProps> = ({ sections, setSections }) => {
   const [searchParams] = useSearchParams();
   const editValue = searchParams.get("edit") === "true";
-  // const editId = searchParams.get("editId");
+  const editId = searchParams.get("editId");
 
 
   const handleChange = async(
@@ -172,7 +172,7 @@ const SectionForm: React.FC<SectionProps> = ({ sections, setSections }) => {
       const token=localStorage.getItem("token");
       try{
         const res=await axios.post(`${BASE_URL}/api/v1/testSeries/addTestSection`,{
-          testId: "67cc0a7f70518fdb9943a465"
+          testId: editId,
       },{
         headers:{
           Authorization:`Bearer ${token}`
