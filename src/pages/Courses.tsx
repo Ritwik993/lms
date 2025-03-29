@@ -4,6 +4,7 @@ import VideoCard from "../components/VideoCard";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { BASE_URL } from "../constants/url";
+import Pagination from "@/components/Pagination";
 
 type VideoDataType = {
   courseThumbnail: string;
@@ -17,22 +18,30 @@ type VideoDataType = {
 const Courses = () => {
   const [activeCardId, setActiveCardId] = useState<number | null>(null);
   const [videoData, setVideoData] = useState<VideoDataType[]>([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages,setTotalPages]=useState(0);
+  const handlePageChange = (page: number) => {
+    console.log(page);
+    setCurrentPage(page);
+  };
+
   const handleToggle = (id: number | null) => {
     setActiveCardId((prev) => (prev === id ? null : id));
   };
   useEffect(() => {
     getVideos();
-  }, []);
+  }, [currentPage]);
 
   const getVideos = async () => {
     try {
       const token = localStorage.getItem("token");
-      const res = await axios.get(`${BASE_URL}/api/v1/course/getCourses`, {
+      const res = await axios.get(`${BASE_URL}/api/v1/course/getWebHomeCourses?page=${currentPage}&limit=5`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
-      const videos = res.data.data;
+      const videos = res.data.data.courses;
+      setTotalPages(res.data.data.totalPages);
       const formattedData = videos.map((v: any) => ({
         courseThumbnail: v.courseThumbnail,
         category: v.category,
@@ -155,6 +164,15 @@ const Courses = () => {
           </button>
         </div>
       </div> */}
+      </div>
+
+      <div className="flex flex-col items-center justify-center mt-[50px]">
+        
+      <Pagination
+        totalPages={totalPages}
+        currentPage={currentPage}
+        onPageChange={handlePageChange}
+      />
       </div>
     </div>
   );

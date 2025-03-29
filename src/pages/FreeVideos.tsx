@@ -7,6 +7,7 @@ type FormData={
   freeVideos: string;
   thumbnailLink: string;
   videoLink: string;
+  type:string;
 }
 
 const FreeVideos: React.FC = () => {
@@ -17,13 +18,15 @@ const FreeVideos: React.FC = () => {
     freeVideos: "",
     thumbnailLink: "",
     videoLink: "",
+    type:"",
   });
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [youtubeLink, setYoutubeLink] = useState("");
+  const [typeOf,setTypeOf]=useState("");
   const [link,setLink]=useState("");
   const [thumbnail, setThumbnail] = useState<File | null>(null);
   const [videoList, setVideoList] = useState<
-    { id: number; link: string; date: string }[]
+    { id: number; link: string; date: string;typeOf:string }[]
   >([]);
 
 
@@ -50,6 +53,8 @@ const FreeVideos: React.FC = () => {
   useEffect(()=>{
     setYoutubeLink(formData.videoLink);
     setLink(formData.videoLink);
+    setTypeOf(formData.type);
+    
   },[success])
 
  
@@ -67,6 +72,7 @@ const FreeVideos: React.FC = () => {
       id: videoList.length + 1,
       link: youtubeLink,
       date: new Date().toISOString().split("T")[0],
+      typeOf:formData.type,
     };
 
     setVideoList([...videoList, newEntry]);
@@ -134,7 +140,7 @@ const FreeVideos: React.FC = () => {
                 <th className="border border-gray-300 px-4 py-2">Sno</th>
                 <th className="border border-gray-300 px-4 py-2">YouTube Link</th>
                 <th className="border border-gray-300 px-4 py-2">Date</th>
-                <th className="border border-gray-300 px-4 py-2">Actions</th>
+                <th className="border border-gray-300 px-4 py-2">Type</th>
               </tr>
             </thead>
             <tbody>
@@ -148,7 +154,8 @@ const FreeVideos: React.FC = () => {
                   </td>
                   <td className="border border-gray-300 px-4 py-2">{video.date}</td>
                   <td className="border border-gray-300 px-4 py-2">
-                    <button className="text-gray-500 hover:text-gray-700">⋮</button>
+                    {/* <button className="text-gray-500 hover:text-gray-700">⋮</button> */}
+                    {video?.typeOf}
                   </td>
                 </tr>
               ))}
