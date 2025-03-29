@@ -155,7 +155,8 @@ const FreeVideos: React.FC = () => {
                   <td className="border border-gray-300 px-4 py-2">{video.date}</td>
                   <td className="border border-gray-300 px-4 py-2">
                     {/* <button className="text-gray-500 hover:text-gray-700">⋮</button> */}
-                    {video?.typeOf}
+                    {/* {video?.typeOf} */}
+                    {typeOf}
                   </td>
                 </tr>
               ))}
