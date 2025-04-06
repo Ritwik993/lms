@@ -126,7 +126,7 @@ const CreateCourse = () => {
         );
         const result = res.data.data;
         console.log("Ritwik here data of course is "+JSON.stringify(result[0],null,2));
-        console.log("Ritwik here data is "+JSON.stringify((result[0].instructors[0])[1],null,2));
+        console.log("Ritwik here data is "+JSON.stringify((result[0].instructors),null,2));
 
         // Await instructor names before setting the state
     // const [
@@ -153,11 +153,11 @@ const CreateCourse = () => {
           subtitleLanguage: result[0].subtitleLanguage,
           courseLevels: result[0].courseLevels,
           courseDurations: result[0].courseDurations,
-          instructor1: (result[0].instructors[0])[0],
-          instructor2:(result[0].instructors[0])[1],
-          instructor3: (result[0].instructors[0])[2],
-          instructor4: (result[0].instructors[0])[3],
-          instructor: [...result[0].instructors],
+          instructor1:(result[0].instructors)[0]._id,
+          instructor2:(result[0].instructors)[1]._id,
+          instructor3: (result[0].instructors)[2]._id,
+          instructor4: (result[0].instructors)[3]._id,
+          instructor: result[0].instructors,
           isPaid:result[0].isPaid,
           startDate:result[0].startDate||new Date(),
           endDate:result[0].endDate||new Date(),

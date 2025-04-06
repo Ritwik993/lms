@@ -198,6 +198,9 @@ const BasicInformation: FC<BasicInformationProps> = ({
   const handleSubmit = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     setIsDisable(true);
+    if(editId){
+      basicInfo.instructor=[];
+    }
     if (basicInfo.instructor1)
       basicInfo.instructor?.push(basicInfo.instructor1);
     if (basicInfo.instructor2)
