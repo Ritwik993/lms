@@ -8,18 +8,21 @@ import Pagination from "@/components/Pagination";
 
 type VideoDataType = {
   courseThumbnail: string;
+  title: string;
   category: string;
   courseDescription: string;
   actualPrice: number;
   discountedPrice: number;
-  _id:string;
+  _id: string;
 };
 
 const Courses = () => {
   const [activeCardId, setActiveCardId] = useState<number | null>(null);
   const [videoData, setVideoData] = useState<VideoDataType[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [totalPages,setTotalPages]=useState(0);
+  const [totalPages, setTotalPages] = useState(0);
+  const [searchText, setSearchText] = useState("");
+  const[filteredVideoData,setFilteredVideoData]=useState<VideoDataType[]>(videoData);
   const handlePageChange = (page: number) => {
     console.log(page);
     setCurrentPage(page);
@@ -35,26 +38,36 @@ const Courses = () => {
   const getVideos = async () => {
     try {
       const token = localStorage.getItem("token");
-      const res = await axios.get(`${BASE_URL}/api/v1/course/getWebHomeCourses?page=${currentPage}&limit=5`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const res = await axios.get(
+        `${BASE_URL}/api/v1/course/getWebHomeCourses?page=${currentPage}&limit=5`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
       const videos = res.data.data.courses;
       setTotalPages(res.data.data.totalPages);
       const formattedData = videos.map((v: any) => ({
+        title: v.title,
         courseThumbnail: v.courseThumbnail,
         category: v.category,
         courseDescription: v.courseDescription,
         actualPrice: v.actualPrice,
         discountedPrice: v.discountedPrice,
-        _id:v._id,
+        _id: v._id,
       }));
       setVideoData(formattedData);
+      setFilteredVideoData(formattedData);
       // console.log(res.data);
     } catch (err) {
       console.log(err);
     }
+  };
+
+  const filterData = (searchText: string) => {
+    const data = videoData.filter((v) => v.title.includes(searchText));
+    setFilteredVideoData(data);
   };
 
   // const getVideos1=async()=>{
@@ -64,7 +77,7 @@ const Courses = () => {
   //       headers:{
   //         Authorization:`Bearer ${token}`
   //       }
-  //     }); 
+  //     });
   //     console.log("response for getWebHomeCourses",res.data);
   //     const videos = res.data.data;
   //     const formattedData = videos.map((v: VideoDataType) => ({
@@ -94,8 +107,13 @@ const Courses = () => {
               />
               <input
                 type="text"
-                placeholder="Search in your courses..."
+                value={searchText}
+                placeholder="Search in your courses title..."
                 className="w-full h-full border-none outline-none placeholder-[#8C94A3]  lg:text-[16px] text-[12px] leading-[24px] bg-white  "
+                onChange={(e) => {
+                  setSearchText(e.target.value);
+                  filterData(e.target.value);
+                }}
               />
             </div>
           </div>
@@ -140,15 +158,15 @@ const Courses = () => {
               id={id}
             />
           ))} */}
-          {
-            videoData.map((v,id)=>
-            (
-              <VideoCard key={id}  data={v} activeCardId={activeCardId}
+          {filteredVideoData.map((v, id) => (
+            <VideoCard
+              key={id}
+              data={v}
+              activeCardId={activeCardId}
               onToggle={handleToggle}
-              id={id}/>
-            )
-            )
-          }
+              id={id}
+            />
+          ))}
         </div>
 
         {/* <div className=" w-[96%] mx-auto flex justify-between mt-[40px] items-center">
@@ -167,12 +185,11 @@ const Courses = () => {
       </div>
 
       <div className="flex flex-col items-center justify-center mt-[50px]">
-        
-      <Pagination
-        totalPages={totalPages}
-        currentPage={currentPage}
-        onPageChange={handlePageChange}
-      />
+        <Pagination
+          totalPages={totalPages}
+          currentPage={currentPage}
+          onPageChange={handlePageChange}
+        />
       </div>
     </div>
   );

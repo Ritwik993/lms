@@ -175,8 +175,9 @@ import { Badge } from "@/components/ui/badge"
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card"
 
 type VideoDataType = {
-  courseThumbnail: string
-  category: string
+  courseThumbnail: string;
+  title:string;
+  category: string;
   courseDescription: string
   actualPrice: number;
   discountedPrice: number;
@@ -237,6 +238,10 @@ const VideoCard: FC<VideoCardProps> = ({ activeCardId, onToggle, id, data }) => 
       </div>
 
       <CardHeader className="p-4 pb-2">
+            <div
+          className="font-medium  text-black">
+            {data.title}
+          </div>
         <div
           className="text-base font-medium line-clamp-2 h-12"
           dangerouslySetInnerHTML={{
