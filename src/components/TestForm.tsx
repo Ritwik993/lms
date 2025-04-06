@@ -4,7 +4,7 @@ import SectionForm from "./SectionForm";
 import axios from "axios";
 import { toast } from "react-toastify";
 import moment from "moment";
-import { useParams, useSearchParams } from "react-router-dom";
+import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { BASE_URL } from "../constants/url";
 
 type FormState = {
@@ -69,9 +69,11 @@ const TestForm = () => {
   console.log("searchParams = " + searchParams.toString());
   const editValue = searchParams.get("edit") === "true"; //converting to boolean
   const editId = searchParams.get("editId");
+  const navigate=useNavigate();
   // const edit =searchParams.get("edit");
 
   const { id } = useParams();
+  console.log("Ritwik id u are looking for "+ id);
   // const tests = useSelector((store: RootState) => store.test.tests);
   // let testData:any[]=[];
   // if(test){
@@ -385,6 +387,7 @@ const TestForm = () => {
           }
         );
         console.log("Final res after edit of test section = "+JSON.stringify(res.data,null,2));
+        navigate(`/createtest/${id}`);
       } else {
         const res = await axios.post(
           `${BASE_URL}/api/v1/testSeries/addTests`,
@@ -428,6 +431,7 @@ const TestForm = () => {
       //   endDate: "",
       //   testMaterial: null,
       // })
+      navigate(`/createtest/${id}`);
     } catch (err) {
       console.error(err);
       toast.error("Error", {
