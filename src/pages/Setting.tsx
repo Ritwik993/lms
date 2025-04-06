@@ -13,6 +13,8 @@ import {
 } from "lucide-react";
 
 import noavatar from "../assets/no_avatar.jpg";
+import axios from "axios";
+import { BASE_URL } from "@/constants/url";
 
 type SocialProfile = {
   personalWebsite: string;
@@ -85,7 +87,27 @@ const Setting = () => {
     if (e.target.files && e.target.files.length > 0) {
       setFormState((prev) => ({ ...prev, photo: e.target.files![0] }));
     }
+   
   };
+
+  const uploadImage = async (file: File | null) => {
+    if (!file) return null;
+    const token = localStorage.getItem("token");
+    const formData = new FormData();
+    formData.append("file", file);
+    const res = await axios.post(
+      `${BASE_URL}/api/v1/assets/upload/image`,
+      formData,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "multipart/form-data",
+        },
+      }
+    );
+    return res.data.fileUrl;
+  };
+
 
   const togglePasswordVisibility = (key: keyof typeof password) => {
     setPassword((prev) => ({
@@ -94,9 +116,33 @@ const Setting = () => {
     }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  // const handleFileChange = (
+  //   e: React.ChangeEvent<HTMLInputElement>
+  // ) => {
+  //   if (e.target.files && e.target?.files.length > 0) {
+  //     const file = e.target.files[0];
+  //     setAdvanceInfo((prev) => ({ ...prev, [field]: file }));
+  //   }
+  // };
+
+  const handleSubmit = async(e: React.FormEvent) => {
     e.preventDefault();
+    formState.photo=await uploadImage(formState.photo)
+    console.log(formState.photo);
+    const userId=localStorage.getItem("userId");
+    const token=localStorage.getItem("token");
     console.log("Form submitted:", formState);
+    try{
+      const res=await axios.put(`${BASE_URL}/api/v1/auth/updateUserDetails/${userId}`,formState,
+        {
+        headers:{
+          Authorization:`Bearer ${token}`
+        }
+      })
+      console.log("After successful form submission = "+res.data);
+    }catch(err){
+      console.log(err);
+    }
   };
 
   return (
@@ -162,7 +208,7 @@ const Setting = () => {
                 </label>
                 <div className="flex">
                   <span className="px-3 py-2 bg-gray-200 border border-r-0 rounded-l-md">
-                    +880
+                    +91
                   </span>
                   <input
                     type="text"
