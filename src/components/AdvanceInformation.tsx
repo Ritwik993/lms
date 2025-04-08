@@ -6,10 +6,11 @@ import "react-quill/dist/quill.snow.css";
 import { FC, useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import axios from "axios";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { setActiveTab } from "../utils/activeTabSlice";
 import { BASE_URL } from "../constants/url";
 import VideoUploader from "@/custom/video-uploader";
+import { RootState } from "@/utils/store";
 
 // type Tab = "basic" | "advance" | "curriculum" | "publish";
 
@@ -56,6 +57,8 @@ const AdvanceInformation: FC<AdvanceInformationProps> = ({
   const dispatch = useDispatch();
   const { pathname } = useLocation();
   const [isDisable, setIsDisable] = useState(false);
+  const editId = useSelector((store: RootState) => store.edit.editId);
+
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -218,17 +221,33 @@ const AdvanceInformation: FC<AdvanceInformationProps> = ({
       // const modifiedFormState = {
       //   ...restFormState,
       // };
-      const res = await axios.put(
-        `${BASE_URL}/api/v1/course/updateCourse/${cid}`,
-        { ...advanceInfo, welcomeMsg: "", congratulationsMsg: "" },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      if(editId){
+        console.log("editId is from AdvanceInformation = "+editId);
+        const res = await axios.put(
+          `${BASE_URL}/api/v1/course/updateCourse/${editId}`,
+          { ...advanceInfo, welcomeMsg: "", congratulationsMsg: "" },
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );  
+        console.log(res.data);
 
-      console.log(res.data);
+      }else{
+        const res = await axios.put(
+          `${BASE_URL}/api/v1/course/updateCourse/${cid}`,
+          { ...advanceInfo, welcomeMsg: "", congratulationsMsg: "" },
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+  
+        console.log(res.data);
+      }
+      
       // setActiveTab("curriculum");
       dispatch(setActiveTab("curriculum"));
     } catch (err) {

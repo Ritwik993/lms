@@ -3,10 +3,11 @@ import MagnifyingGlass from "../assets/MagnifyingGlass.svg";
 import Instructor from "./Instructor";
 import { useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { setActiveTab } from "../utils/activeTabSlice";
 import { BASE_URL } from "../constants/url";
 import { toast } from "react-toastify";
+import { RootState } from "@/utils/store";
 
 // type Tab = "basic" | "advance" | "curriculum" | "publish";
 
@@ -25,6 +26,8 @@ const PublishCourse: FC<PublishCourseProps> = ({ publishFormState,setPublishForm
   const { pathname } = useLocation();
   const dispatch=useDispatch();
   const navigate=useNavigate();
+  const editId = useSelector((store: RootState) => store.edit.editId);
+
   // const [curriculumFormState,setCurriculumFormState]=useState<FormState>({
   //   welcomeMsg:"",
   //   congratulationsMsg:"",
@@ -44,6 +47,30 @@ const PublishCourse: FC<PublishCourseProps> = ({ publishFormState,setPublishForm
     const cid = localStorage.getItem("courseId");
     const token = localStorage.getItem("token");
     try {
+     if(editId){
+      console.log("Inside publish info "+editId);
+      const res = await axios.put(
+        `${BASE_URL}/api/v1/course/updateCourse/${editId}`,
+        publishFormState,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+       toast.success('Course Edited Successfully', {
+              position: "top-right",
+              autoClose: 5000,
+              hideProgressBar: false,
+              closeOnClick: false,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+              theme: "colored"
+              });
+            navigate('/course');
+      console.log(res.data);
+     }else{
       const res = await axios.put(
         `${BASE_URL}/api/v1/course/updateCourse/${cid}`,
         publishFormState,
@@ -65,6 +92,7 @@ const PublishCourse: FC<PublishCourseProps> = ({ publishFormState,setPublishForm
               });
             navigate('/course');
       console.log(res.data);
+     }
     } catch (err) {
       console.error(err);
         toast.error("Error", {
